@@ -1,9 +1,32 @@
-import { Routes,Route } from "react-router-dom"
+import { Routes, Route } from "react-router-dom";
+import { lazy, Suspense } from "react";
+import Loading from "../components/Loading/Loading";
+import Authentication from "../utils/Authentication/AdminAuth";
+
+// Lazy loading components
+const LoginPage = lazy(() => import("../pages/admin/LoginPage"));
+const Dashboard = lazy(() => import("../pages/admin/Dashboard"));
+const LayoutWrapper = lazy(() => import("../container/admin/Layout/LayoutWrapper"));
+const CardManagement = lazy(() => import("../pages/admin/CardManagement"));
+const CreateCard = lazy(() => import("../pages/admin/CreateCard"));
+const ImageManagement = lazy(() => import("../pages/admin/ImageManagement"));
 
 export default function AdminRoutes() {
   return (
-    <Routes>
-      <Route path="/" element={<></>}/>
-    </Routes>
-  )
+    <Suspense fallback={<Loading />}>
+      <Authentication>
+        <Routes>
+          <Route path="/" element={<LoginPage />} />
+          {/* <Routes> */}
+          <Route element={<LayoutWrapper />}>
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/cards" element={<CardManagement />} />
+            <Route path="/createCard" element={<CreateCard/>}/>
+            <Route path="/uploadImage" element={<ImageManagement/>}/>
+          </Route>
+          {/* </Routes> */}
+        </Routes>
+      </Authentication>
+    </Suspense>
+  );
 }
