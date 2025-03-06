@@ -3,6 +3,7 @@ import { RxDashboard } from "react-icons/rx";
 import { FaUsers } from "react-icons/fa";
 import { TbCards } from "react-icons/tb";
 import { FaRegImages } from "react-icons/fa6";
+import { ImFilePicture } from "react-icons/im";
 
 export default function SideBar() {
   const navigate = useNavigate();
@@ -33,8 +34,15 @@ export default function SideBar() {
           <FaRegImages size={20} className="text-white" />
           <p className="w-full truncate"> Upload Card Image</p>
         </li>
+        <li
+          className="w-full  hover:bg-admin-active-color p-2 rounded-lg cursor-pointer text-sm flex items-center gap-1"
+          onClick={() => navigate("/admin/arts")}
+        >
+          <ImFilePicture size={18} className="text-white" />
+          <p className="w-full truncate"> Arts</p>
+        </li>
         <hr className="text-gray-400" />
-        <li className="hover:bg-admin-active-color p-2 rounded-lg cursor-pointer"></li>
+        
       </ul>
     </div>
   );

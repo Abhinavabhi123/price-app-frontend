@@ -35,7 +35,7 @@ export default function CreateCardForm() {
 
     premium: Yup.number()
       .required("Premium amount is required")
-      .min(0, "Premium must be at least 0")
+      .min(1, "Premium  must be greater than 0")
       .typeError("Premium must be a valid number"),
 
     startDate: Yup.date()
@@ -73,7 +73,7 @@ export default function CreateCardForm() {
     },
     validationSchema,
     onSubmit: (values) => {
-      postCard(values, setSubmitting);
+      postCard(values, setSubmitting,navigate);
       console.log(values, "values");
     },
   });

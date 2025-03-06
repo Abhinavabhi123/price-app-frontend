@@ -6,10 +6,13 @@ import Authentication from "../utils/Authentication/AdminAuth";
 // Lazy loading components
 const LoginPage = lazy(() => import("../pages/admin/LoginPage"));
 const Dashboard = lazy(() => import("../pages/admin/Dashboard"));
-const LayoutWrapper = lazy(() => import("../container/admin/Layout/LayoutWrapper"));
+const LayoutWrapper = lazy(() =>
+  import("../container/admin/Layout/LayoutWrapper")
+);
 const CardManagement = lazy(() => import("../pages/admin/CardManagement"));
 const CreateCard = lazy(() => import("../pages/admin/CreateCard"));
 const ImageManagement = lazy(() => import("../pages/admin/ImageManagement"));
+const ArtManagement = lazy(() => import("../pages/admin/ArtManagement"));
 
 export default function AdminRoutes() {
   return (
@@ -21,8 +24,9 @@ export default function AdminRoutes() {
           <Route element={<LayoutWrapper />}>
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/cards" element={<CardManagement />} />
-            <Route path="/createCard" element={<CreateCard/>}/>
-            <Route path="/uploadImage" element={<ImageManagement/>}/>
+            <Route path="/createCard" element={<CreateCard />} />
+            <Route path="/uploadImage" element={<ImageManagement />} />
+            <Route path="/arts" element={<ArtManagement />} />
           </Route>
           {/* </Routes> */}
         </Routes>

@@ -21,6 +21,12 @@ export default function ImageManagement() {
       imageRef.current.value = "";
     }
   }, [imageUploaded]);
+  useEffect(() => {
+    if (isModalOpen === false&&imageRef.current) {
+      imageRef.current.value = "";
+      setPreview(null)
+    }
+  }, [isModalOpen]);
 
   const showModal = () => {
     setIsModalOpen(true);

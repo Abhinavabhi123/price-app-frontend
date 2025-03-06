@@ -4,6 +4,7 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import SubmissionLoading from "../../components/Loading/SubmissionLoading";
 import { UploadCardImage } from "../../services/adminApiServices";
+import { useEffect } from "react";
 
 export default function CardImageModal(Props) {
   const {
@@ -14,6 +15,7 @@ export default function CardImageModal(Props) {
     preview,
     imageRef,
   } = Props;
+
   const validationSchema = Yup.object().shape({
     imageName: Yup.string()
       .required("Image name is required")
@@ -43,6 +45,7 @@ export default function CardImageModal(Props) {
       setFieldValue("image", file);
     }
   };
+
   const {
     values,
     errors,
@@ -72,6 +75,12 @@ export default function CardImageModal(Props) {
     },
   });
 
+  useEffect(() => {
+    if (isModalOpen === false) {
+      resetForm();
+    }
+  }, [isModalOpen, resetForm]);
+
   return (
     <Modal
       title="Upload Image"
@@ -84,7 +93,13 @@ export default function CardImageModal(Props) {
         <form
           className="my-2 space-y-4"
           onSubmit={handleSubmit}
-          onReset={handleReset}
+          onReset={() => {
+            handleReset();
+            setPreview(null);
+            if (imageRef.current) {
+              imageRef.current.value = "";
+            }
+          }}
         >
           <div>
             <input
@@ -106,7 +121,7 @@ export default function CardImageModal(Props) {
             <div>
               <label
                 htmlFor="image"
-                className="w-32 h-8 rounded-xl flex justify-center items-center bg-red-500 text-white cursor-pointer relative"
+                className="w-32 h-8 rounded-xl flex justify-center items-center bg-admin-active-color text-white cursor-pointer relative"
               >
                 <input
                   type="file"

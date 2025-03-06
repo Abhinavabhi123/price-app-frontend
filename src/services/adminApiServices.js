@@ -6,6 +6,14 @@ import {
   getCardImagesUrl,
   deleteCardImageUrl,
   postCardDetailsUrl,
+  getCardsUrl,
+  deleteCardDetailsUrl,
+  activateCardUrl,
+  postArtDetailsUrl,
+  getArtsUrl,
+  editArtDetailsUrl,
+  editArtWithImageUrl,
+  deleteArtDetailsUrl,
 } from "./urls";
 import {
   errorToast,
@@ -172,7 +180,7 @@ export async function deleteCardImage(id, setImageUploaded = () => {}) {
 }
 
 // function for posting card details
-export async function postCard(cardData, setSubmitting) {
+export async function postCard(cardData, setSubmitting, navigate) {
   try {
     const response = await axios.post(
       postCardDetailsUrl,
@@ -186,6 +194,7 @@ export async function postCard(cardData, setSubmitting) {
     );
     if (response?.status === 200 && response?.data?.isSuccess) {
       successToast(response?.data?.message);
+      navigate("/admin/cards");
     }
   } catch (error) {
     if (error.response) {
@@ -200,5 +209,269 @@ export async function postCard(cardData, setSubmitting) {
     }
   } finally {
     setSubmitting(false);
+  }
+}
+
+// function to get cards from server
+export async function getCards(updateState) {
+  try {
+    const response = await axios.get(getCardsUrl, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+    if (response?.status === 200 && response?.data?.isSuccess) {
+      updateState(response?.data?.data);
+    }
+  } catch (error) {
+    if (error.response) {
+      errorToast(error.response.data.message || "Something went wrong!");
+      console.error("Server Error:", error.response.data);
+    } else if (error.request) {
+      errorToast("No response from server. Please try again later.");
+      console.error("Request Error:", error.request);
+    } else {
+      errorToast("An unexpected error occurred.");
+      console.error("Unexpected Error:", error.message);
+    }
+  }
+}
+
+// function to delete card details
+export async function deleteCardDetails(id, setChanged) {
+  try {
+    const response = await axios.delete(deleteCardDetailsUrl, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+        cardId: id,
+      },
+    });
+
+    if (response?.status === 200 && response?.data?.isSuccess) {
+      successToast(response?.data?.message);
+      setChanged((prev) => !prev);
+    }
+  } catch (error) {
+    if (error.response) {
+      errorToast(error.response.data.message || "Something went wrong!");
+      console.error("Server Error:", error.response.data);
+    } else if (error.request) {
+      errorToast("No response from server. Please try again later.");
+      console.error("Request Error:", error.request);
+    } else {
+      errorToast("An unexpected error occurred.");
+      console.error("Unexpected Error:", error.message);
+    }
+  }
+}
+
+// function to change the card status to active
+export async function activateCard(id, setChanged) {
+  try {
+    const response = await axios.put(
+      activateCardUrl,
+      {},
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+          cardId: id,
+        },
+      }
+    );
+    if (response?.status === 200 && response?.data?.isSuccess) {
+      successToast(response?.data?.message);
+      setChanged((prev) => !prev);
+    }
+  } catch (error) {
+    if (error.response) {
+      errorToast(error.response.data.message || "Something went wrong!");
+      console.error("Server Error:", error.response.data);
+    } else if (error.request) {
+      errorToast("No response from server. Please try again later.");
+      console.error("Request Error:", error.request);
+    } else {
+      errorToast("An unexpected error occurred.");
+      console.error("Unexpected Error:", error.message);
+    }
+  }
+}
+
+// function for set art details
+export async function postArtDetails(
+  data,
+  setSubmitting,
+  setChange,
+  handleCancel
+) {
+  try {
+    const response = await axios.post(
+      postArtDetailsUrl,
+      { ...data },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
+    if (response?.status === 200 && response?.data?.isSuccess) {
+      successToast(response?.data?.message);
+      setChange((prev) => !prev);
+      handleCancel();
+    }
+  } catch (error) {
+    if (error.response) {
+      errorToast(error.response.data.message || "Something went wrong!");
+      console.error("Server Error:", error.response.data);
+    } else if (error.request) {
+      errorToast("No response from server. Please try again later.");
+      console.error("Request Error:", error.request);
+    } else {
+      errorToast("An unexpected error occurred.");
+      console.error("Unexpected Error:", error.message);
+    }
+  } finally {
+    setSubmitting(false);
+  }
+}
+
+// function for fetching arts
+export async function getArts(updateState) {
+  try {
+    const response = await axios.get(getArtsUrl, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+    if (response.status === 200 && response?.data?.isSuccess) {
+      updateState(response?.data?.data);
+    }
+  } catch (error) {
+    if (error.response) {
+      errorToast(error.response.data.message || "Something went wrong!");
+      console.error("Server Error:", error.response.data);
+    } else if (error.request) {
+      errorToast("No response from server. Please try again later.");
+      console.error("Request Error:", error.request);
+    } else {
+      errorToast("An unexpected error occurred.");
+      console.error("Unexpected Error:", error.message);
+    }
+  }
+}
+
+// function for edit art details
+export async function editArtDetails(
+  data,
+  id,
+  setChange,
+  handleCancel,
+  setSubmitting
+) {
+  try {
+    const response = await axios.patch(
+      editArtDetailsUrl,
+      { ...data },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+          artId: id,
+        },
+      }
+    );
+    if (response.status === 200 && response?.data?.isSuccess) {
+      successToast(response?.data?.message);
+      setChange((prev) => !prev);
+      handleCancel();
+    }
+  } catch (error) {
+    if (error.response) {
+      errorToast(error.response.data.message || "Something went wrong!");
+      console.error("Server Error:", error.response.data);
+    } else if (error.request) {
+      errorToast("No response from server. Please try again later.");
+      console.error("Request Error:", error.request);
+    } else {
+      errorToast("An unexpected error occurred.");
+      console.error("Unexpected Error:", error.message);
+    }
+  } finally {
+    setSubmitting(false);
+  }
+}
+
+export async function editArtWithImage(
+  data,
+  id,
+  setChange,
+  handleCancel,
+  setSubmitting
+) {
+  try {
+    const response = await axios.patch(
+      editArtWithImageUrl,
+      { ...data },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "multipart/form-data",
+          artId: id,
+        },
+      }
+    );
+    if (response.status === 200 && response?.data?.isSuccess) {
+      successToast(response?.data?.message);
+      setChange((prev) => !prev);
+      handleCancel();
+    }
+  } catch (error) {
+    if (error.response) {
+      errorToast(error.response.data.message || "Something went wrong!");
+      console.error("Server Error:", error.response.data);
+    } else if (error.request) {
+      errorToast("No response from server. Please try again later.");
+      console.error("Request Error:", error.request);
+    } else {
+      errorToast("An unexpected error occurred.");
+      console.error("Unexpected Error:", error.message);
+    }
+  } finally {
+    setSubmitting(false);
+  }
+}
+
+export async function deleteArtDetails(id, setChange) {
+  try {
+    const response = await axios.put(
+      deleteArtDetailsUrl,
+      {},
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+          artId: id,
+        },
+      }
+    );
+    if (response.status === 200 && response?.data?.isSuccess) {
+      successToast(response?.data?.message);
+      setChange((prev) => !prev);
+    }
+  } catch (error) {
+    if (error.response) {
+      errorToast(error.response.data.message || "Something went wrong!");
+      console.error("Server Error:", error.response.data);
+    } else if (error.request) {
+      errorToast("No response from server. Please try again later.");
+      console.error("Request Error:", error.request);
+    } else {
+      errorToast("An unexpected error occurred.");
+      console.error("Unexpected Error:", error.message);
+    }
   }
 }
