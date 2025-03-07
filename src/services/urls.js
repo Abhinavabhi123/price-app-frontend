@@ -18,3 +18,6 @@ export const deleteArtDetailsUrl = serverUrl+"/admin/deleteArtDetails";
 // user Urls
 export const googleAuthUrl = serverUrl + "/googleAuth";
 export const userLoginUrl = serverUrl + "/userLogin";
+export const getUserDetailsUrl = serverUrl+'/getUserDetails';
+export const getGamesAndArtsUrl = serverUrl+"/getGamesAndArts";
+export const checkAnswerUrl = serverUrl+"/checkAnswer";

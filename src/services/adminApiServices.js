@@ -23,16 +23,28 @@ import {
 const token = localStorage.getItem("prizeAdminTkn");
 
 // Admin sign up function
-export async function AdminSignUp(data) {
+export async function AdminSignUp(data, setSubmitting) {
   try {
-    await axios.post(adminSignupUrl, data).then((response) => {
-      if (response.status === 200 && response.data.isSuccess) {
-        console.log(response.data.message);
-      }
-    });
+    await axios
+      .post(adminSignupUrl, data, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+      .then((response) => {
+        if (response.status === 200 && response.data.isSuccess) {
+          console.log(response.data.message);
+        }
+      });
   } catch (error) {
     if (error.response) {
-      errorToast(error.response.data.message || "Something went wrong!");
+      const { data } = error.response;
+      if (data.errors && Array.isArray(data.errors)) {
+        // Show each validation error
+        data.errors.forEach((err) => errorToast(err.msg));
+      } else {
+        errorToast(error.response.data.message || "Something went wrong!");
+      }
       console.error("Server Error:", error.response.data);
     } else if (error.request) {
       errorToast("No response from server. Please try again later.");
@@ -41,6 +53,8 @@ export async function AdminSignUp(data) {
       errorToast("An unexpected error occurred.");
       console.error("Unexpected Error:", error.message);
     }
+  } finally {
+    setSubmitting(false);
   }
 }
 
@@ -50,7 +64,8 @@ export async function AdminLogin(data, navigate, setSubmitting) {
     await axios
       .get(adminLoginUrl, {
         headers: {
-          data: JSON.stringify(data),
+          ...data,
+          "Content-Type": "application/json",
         },
       })
       .then((response) => {
@@ -62,7 +77,13 @@ export async function AdminLogin(data, navigate, setSubmitting) {
       });
   } catch (error) {
     if (error.response) {
-      errorToast(error.response.data.message || "Something went wrong!");
+      const { data } = error.response;
+      if (data.errors && Array.isArray(data.errors)) {
+        // Show each validation error
+        data.errors.forEach((err) => errorToast(err.msg));
+      } else {
+        errorToast(error.response.data.message || "Something went wrong!");
+      }
       console.error("Server Error:", error.response.data);
     } else if (error.request) {
       errorToast("No response from server. Please try again later.");
@@ -85,10 +106,6 @@ export async function UploadCardImage(
   resetForm
 ) {
   try {
-    const token = localStorage.getItem("prizeAdminTkn");
-    if (!token) {
-      throw new Error("Invalid token");
-    }
     const response = await axios.post(
       postCardImageUrl,
       { ...cardImageData },
@@ -107,7 +124,13 @@ export async function UploadCardImage(
     }
   } catch (error) {
     if (error.response) {
-      errorToast(error.response.data.message || "Something went wrong!");
+      const { data } = error.response;
+      if (data.errors && Array.isArray(data.errors)) {
+        // Show each validation error
+        data.errors.forEach((err) => errorToast(err.msg));
+      } else {
+        errorToast(error.response.data.message || "Something went wrong!");
+      }
       console.error("Server Error:", error.response.data);
     } else if (error.request) {
       errorToast("No response from server. Please try again later.");
@@ -128,6 +151,7 @@ export async function getCardImages(updateState) {
       .get(getCardImagesUrl, {
         headers: {
           Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
         },
       })
       .then((response) => {
@@ -157,6 +181,7 @@ export async function deleteCardImage(id, setImageUploaded = () => {}) {
         headers: {
           id,
           Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
         },
       })
       .then((response) => {
@@ -167,7 +192,13 @@ export async function deleteCardImage(id, setImageUploaded = () => {}) {
       });
   } catch (error) {
     if (error.response) {
-      errorToast(error.response.data.message || "Something went wrong!");
+      const { data } = error.response;
+      if (data.errors && Array.isArray(data.errors)) {
+        // Show each validation error
+        data.errors.forEach((err) => errorToast(err.msg));
+      } else {
+        errorToast(error.response.data.message || "Something went wrong!");
+      }
       console.error("Server Error:", error.response.data);
     } else if (error.request) {
       errorToast("No response from server. Please try again later.");
@@ -198,7 +229,13 @@ export async function postCard(cardData, setSubmitting, navigate) {
     }
   } catch (error) {
     if (error.response) {
-      errorToast(error.response.data.message || "Something went wrong!");
+      const { data } = error.response;
+      if (data.errors && Array.isArray(data.errors)) {
+        // Show each validation error
+        data.errors.forEach((err) => errorToast(err.msg));
+      } else {
+        errorToast(error.response.data.message || "Something went wrong!");
+      }
       console.error("Server Error:", error.response.data);
     } else if (error.request) {
       errorToast("No response from server. Please try again later.");
@@ -255,7 +292,13 @@ export async function deleteCardDetails(id, setChanged) {
     }
   } catch (error) {
     if (error.response) {
-      errorToast(error.response.data.message || "Something went wrong!");
+      const { data } = error.response;
+      if (data.errors && Array.isArray(data.errors)) {
+        // Show each validation error
+        data.errors.forEach((err) => errorToast(err.msg));
+      } else {
+        errorToast(error.response.data.message || "Something went wrong!");
+      }
       console.error("Server Error:", error.response.data);
     } else if (error.request) {
       errorToast("No response from server. Please try again later.");
@@ -324,7 +367,13 @@ export async function postArtDetails(
     }
   } catch (error) {
     if (error.response) {
-      errorToast(error.response.data.message || "Something went wrong!");
+      const { data } = error.response;
+      if (data.errors && Array.isArray(data.errors)) {
+        // Show each validation error
+        data.errors.forEach((err) => errorToast(err.msg));
+      } else {
+        errorToast(error.response.data.message || "Something went wrong!");
+      }
       console.error("Server Error:", error.response.data);
     } else if (error.request) {
       errorToast("No response from server. Please try again later.");
@@ -391,7 +440,13 @@ export async function editArtDetails(
     }
   } catch (error) {
     if (error.response) {
-      errorToast(error.response.data.message || "Something went wrong!");
+      const { data } = error.response;
+      if (data.errors && Array.isArray(data.errors)) {
+        // Show each validation error
+        data.errors.forEach((err) => errorToast(err.msg));
+      } else {
+        errorToast(error.response.data.message || "Something went wrong!");
+      }
       console.error("Server Error:", error.response.data);
     } else if (error.request) {
       errorToast("No response from server. Please try again later.");
@@ -431,7 +486,13 @@ export async function editArtWithImage(
     }
   } catch (error) {
     if (error.response) {
-      errorToast(error.response.data.message || "Something went wrong!");
+      const { data } = error.response;
+      if (data.errors && Array.isArray(data.errors)) {
+        // Show each validation error
+        data.errors.forEach((err) => errorToast(err.msg));
+      } else {
+        errorToast(error.response.data.message || "Something went wrong!");
+      }
       console.error("Server Error:", error.response.data);
     } else if (error.request) {
       errorToast("No response from server. Please try again later.");
@@ -464,7 +525,13 @@ export async function deleteArtDetails(id, setChange) {
     }
   } catch (error) {
     if (error.response) {
-      errorToast(error.response.data.message || "Something went wrong!");
+      const { data } = error.response;
+      if (data.errors && Array.isArray(data.errors)) {
+        // Show each validation error
+        data.errors.forEach((err) => errorToast(err.msg));
+      } else {
+        errorToast(error.response.data.message || "Something went wrong!");
+      }
       console.error("Server Error:", error.response.data);
     } else if (error.request) {
       errorToast("No response from server. Please try again later.");

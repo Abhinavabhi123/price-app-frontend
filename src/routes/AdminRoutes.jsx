@@ -16,7 +16,7 @@ const ArtManagement = lazy(() => import("../pages/admin/ArtManagement"));
 
 export default function AdminRoutes() {
   return (
-    <Suspense fallback={<Loading />}>
+    <Suspense fallback={<Loading type="Admin" />}>
       <Authentication>
         <Routes>
           <Route path="/" element={<LoginPage />} />

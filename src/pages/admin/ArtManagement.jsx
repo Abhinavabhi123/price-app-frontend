@@ -24,6 +24,8 @@ export default function ArtManagement() {
     getArts(setArtData);
   }, [change]);
 
+  console.log(artData,"data");
+  
 
   const showModal = () => {
     setIsModalOpen(true);
@@ -66,6 +68,7 @@ export default function ArtManagement() {
           title="Art Management"
           btnText="Create Art"
           handleClick={() => showModal(true)}
+          backBtnActive={false}
         />
       </div>
       {/* Modal for creating new art */}
@@ -95,7 +98,7 @@ export default function ArtManagement() {
             <table className="table table-md">
               <thead className="border-y sticky top-0 bg-admin-primary-color z-10">
                 <tr className="text-center">
-                  <th className="border-r">SI No.</th>
+                  <th className="border-x">SI No.</th>
                   <th className="border-r w-48">Name</th>
                   <th className="border-r w-56">Description</th>
                   <th className="border-r">Price</th>

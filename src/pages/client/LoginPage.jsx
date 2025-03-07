@@ -21,7 +21,7 @@ export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const handleMouseDown = () => setShowPassword(true);
   const handleMouseUp = () => setShowPassword(false);
-  const dispatch = useDispatch(); 
+  const dispatch = useDispatch();
 
   const clientId = import.meta.env.VITE_AUTH_CLIENT_ID;
 
@@ -54,7 +54,7 @@ export default function LoginPage() {
     validationSchema,
     onSubmit: (values) => {
       console.log(values);
-      userLogin(values, navigate, setSubmitting);
+      userLogin(values, navigate, setSubmitting, dispatch);
     },
   });
 
@@ -63,9 +63,9 @@ export default function LoginPage() {
     const token = response.credential;
     const user = jwtDecode(token);
     if (user?.email_verified) {
-      GoogleAuthentication(user,navigate,dispatch);
-    }else{
-      errorToast("Google authentication failed !!")
+      GoogleAuthentication(user, navigate, dispatch);
+    } else {
+      errorToast("Google authentication failed !!");
     }
   };
 
@@ -78,12 +78,12 @@ export default function LoginPage() {
     <div className="w-full h-dvh bg-primary-color">
       <div className="p-5 w-full h-[10%]">
         <button className="text-gray-300 flex justify-center items-center cursor-pointer">
-          <MdKeyboardArrowLeft size={20} />
+          <MdKeyboardArrowLeft size={20} onClick={() => navigate("/home")} />
           <p className="text-sm font-semibold">Home</p>
         </button>
       </div>
-      <div className="w-full h-[90%] flex justify-center ">
-        <div className="w-1/3 h-[60%] bg-red-0 p-3">
+      <div className="w-full h-[90%] flex justify-center items-center">
+        <div className="w-full md:w-1/3 h-[60%] bg-red-0 px-10 md:px-0 p-3">
           <p className="text-xl font-semibold text-white">Log in</p>
           <div className="flex py-5">
             <p className="text-white">{`Don't have an account? `}</p>
@@ -131,7 +131,7 @@ export default function LoginPage() {
               <button
                 disabled={isSubmitting}
                 type="submit"
-                className="w-full h-fit rounded-md bg-white flex justify-center items-center gap-2 py-2 mt-10 font-semibold cursor-pointer"
+                className="w-full h-fit rounded-md bg-white text-black flex justify-center items-center gap-2 py-2 mt-10 font-semibold cursor-pointer"
               >
                 Continue
                 <IoArrowForwardOutline size={20} />
@@ -161,7 +161,6 @@ export default function LoginPage() {
                 />
               </div>
             </div>
-            y
           </GoogleOAuthProvider>
           {/* </div> */}
         </div>

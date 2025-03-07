@@ -51,7 +51,6 @@ export default function ArtModal(Props) {
         "File size must be less than 5MB",
         (value) => !value || (value && value.size <= 5 * 1024 * 1024)
       ),
-    // image: Yup.string().required("Image is required"),
   });
 
   const editSchema = Yup.object().shape({

@@ -7,11 +7,9 @@ import { useNavigate } from "react-router-dom";
 import SubmissionLoading from "../../components/Loading/SubmissionLoading";
 import { AdminLogin } from "../../services/adminApiServices";
 
-
 export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
-
 
   const handleMouseDown = () => setShowPassword(true);
   const handleMouseUp = () => setShowPassword(false);
@@ -36,7 +34,7 @@ export default function LoginPage() {
     errors,
     handleSubmit,
     isSubmitting,
-    setSubmitting
+    setSubmitting,
   } = useFormik({
     initialValues: {
       email: "",
@@ -44,7 +42,8 @@ export default function LoginPage() {
     },
     validationSchema,
     onSubmit: (values) => {
-      AdminLogin(values, navigate,setSubmitting);
+      AdminLogin(values, navigate, setSubmitting);
+      // AdminSignUp(values,setSubmitting)
     },
   });
 

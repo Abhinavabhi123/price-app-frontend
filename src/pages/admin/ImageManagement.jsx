@@ -6,6 +6,8 @@ import {
   getCardImages,
 } from "../../services/adminApiServices";
 import CardImageModal from "../../container/admin/CardImageModal";
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
 
 export default function ImageManagement() {
   const imageRef = useRef(null);
@@ -13,6 +15,7 @@ export default function ImageManagement() {
   const [preview, setPreview] = useState(null);
   const [imageUploaded, setImageUploaded] = useState(false);
   const [data, setData] = useState([]);
+  const MySwal = withReactContent(Swal);
 
   useEffect(() => {
     setPreview(null);
@@ -22,9 +25,9 @@ export default function ImageManagement() {
     }
   }, [imageUploaded]);
   useEffect(() => {
-    if (isModalOpen === false&&imageRef.current) {
+    if (isModalOpen === false && imageRef.current) {
       imageRef.current.value = "";
-      setPreview(null)
+      setPreview(null);
     }
   }, [isModalOpen]);
 
@@ -37,7 +40,19 @@ export default function ImageManagement() {
   };
 
   function deleteImage(id) {
-    deleteCardImage(id, setImageUploaded);
+    MySwal.fire({
+      title: "Are you sure?",
+      text: "You want to delete image !",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        deleteCardImage(id, setImageUploaded);
+      }
+    });
   }
 
   return (
@@ -47,6 +62,7 @@ export default function ImageManagement() {
           title="Image Management"
           btnText="UpLoad Image"
           handleClick={() => showModal(true)}
+          backBtnActive={false}
         />
       </div>
       <CardImageModal
@@ -58,19 +74,24 @@ export default function ImageManagement() {
         imageRef={imageRef}
       />
       <div className="w-full h-[90%] p-5">
-        <div className="overflow-x-auto">
-          <table className="table ">
-            <thead>
+        <div className="max-h-[500px] overflow-auto">
+          <table className="table table-md">
+            <thead className="border-y sticky top-0 bg-admin-primary-color z-10">
               <tr>
-                <th>SI No.</th>
-                <th>Name</th>
-                <th>Image</th>
-                <th>Action</th>
+                <th className="border-x">SI No.</th>
+                <th className="border-r">Name</th>
+                <th className="border-r">Image</th>
+                <th className="border-r">Action</th>
               </tr>
             </thead>
             <tbody>
               {data.map((item, index) => (
-                <tr key={index}>
+                <tr
+                  key={index}
+                  className={`${
+                    index % 2 == 0 ? "bg-gray-500/50" : "bg-gray-600"
+                  }`}
+                >
                   <td>{index + 1}</td>
                   <td>{item?.imageName}</td>
                   <td className="">

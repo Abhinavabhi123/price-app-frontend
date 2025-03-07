@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import Logo from "../../assets/icon.svg";
 import { MdKeyboardArrowRight } from "react-icons/md";
 import { useSelector } from "react-redux";
@@ -6,6 +6,26 @@ import UserImage from "../../assets/userImage.png";
 import MenuButton from "../../components/client/MenuButton";
 import { useState } from "react";
 import { IoMdClose } from "react-icons/io";
+
+function NavLink(Props) {
+  const { title, link, activeLink, setShow } = Props;
+  const location = useLocation().pathname;
+  const navigate = useNavigate();
+
+  return (
+    <li
+      className={`w-full hover:bg-gray-400 py-2 rounded-lg backdrop-blur-md shadow-lg px-4 ${
+        location === activeLink && "bg-gray-400"
+      }`}
+      onClick={() => {
+        navigate(link);
+        setShow(false);
+      }}
+    >
+      {title}
+    </li>
+  );
+}
 
 export default function Header() {
   const navigate = useNavigate();
@@ -15,7 +35,7 @@ export default function Header() {
 
   return (
     <header
-      className={`w-full relative h-16 flex items-center justify-between px-10 md:px-20 lg:px-32 text-white sticky top-0 left-0 transition-all duration-300 z-40 backdrop-blur-lg border border-white/20 shadow-lg`}
+      className={`w-full  h-16 flex items-center justify-between px-10 md:px-20 lg:px-32 text-white sticky top-0 left-0 transition-all duration-300 z-40 backdrop-blur-lg border border-white/20 shadow-lg`}
     >
       {/* Left section */}
       <div>
@@ -32,10 +52,13 @@ export default function Header() {
           <li className="min-w-20 cursor-pointer flex items-center justify-center gap-2 transition-all divide-neutral-400 hover:text-white">
             Home
           </li>
-          <li className="min-w-20 cursor-pointer flex items-center justify-center gap-2 transition-all divide-neutral-400 hover:text-white">
+          <li className="min-w-20 cursor-pointer flex items-center justify-center gap-2 transition-all divide-neutral-400 hover:text-white" onClick={()=>navigate("/home")}>
             About
           </li>
-          <li className="min-w-20 cursor-pointer flex items-center justify-center gap-2 transition-all divide-neutral-400 hover:text-white">
+          <li
+            className="min-w-20 cursor-pointer flex items-center justify-center gap-2 transition-all divide-neutral-400 hover:text-white"
+            onClick={() => navigate("/")}
+          >
             Cards
           </li>
           <li className="min-w-20 cursor-pointer flex items-center justify-center gap-2 transition-all divide-neutral-400 hover:text-white">
@@ -57,6 +80,7 @@ export default function Header() {
         <button
           type="button"
           className="px-3 ps-4 py-2 rounded-full text-sm cursor-pointer font-semibold flex items-center justify-center gap-1 bg-white text-black"
+          onClick={() => navigate("/home")}
         >
           Get Started
           <MdKeyboardArrowRight />
@@ -68,16 +92,17 @@ export default function Header() {
               alt="user picture"
               onError={(e) => (e.target.src = UserImage)} // Handles broken image links
               className="rounded-full w-full h-full object-cover outline"
+              onClick={() => navigate("/profile")}
             />
           </div>
         )}
       </div>
       {/* mobile responsive menu bar */}
       <div className="md:hidden size-10 flex justify-center items-center">
-        <MenuButton setShow={setShow} />
+        <MenuButton setShow={setShow} show={show} />
       </div>
       <div
-        className={`md:hidden w-full h-[100vh] bg-red-500 absolute top-0 left-0  duration-300 p-5  transition-transform ${
+        className={`md:hidden w-full h-[100vh] bg-primary-color absolute top-0 left-0  duration-300 p-5  transition-transform ${
           show ? "translate-x-0" : "translate-x-[110%]"
         } `}
       >
@@ -88,12 +113,33 @@ export default function Header() {
             onClick={() => setShow(false)}
           />
         </div>
-        <div className="w-full h-[95%] bg-green-500">
+        <div className="w-full h-[95%] overflow-y-scroll ">
           <ul>
-            <li>Home</li>
-            <li>About</li>
-            <li>Games</li>
-            <li>Arts</li>
+            <NavLink
+              title="Home"
+              link="/home"
+              activeLink="home"
+              setShow={setShow}
+            />
+            <NavLink
+              title="About"
+              link="/about"
+              activeLink="about"
+              setShow={setShow}
+            />
+            <NavLink title="Cards" link="/" activeLink="/" setShow={setShow} />
+            <NavLink
+              title="Arts"
+              link="/arts"
+              activeLink="arts"
+              setShow={setShow}
+            />
+            <NavLink
+              title="Profile"
+              link="/profile"
+              activeLink="profile"
+              setShow={setShow}
+            />
           </ul>
         </div>
       </div>

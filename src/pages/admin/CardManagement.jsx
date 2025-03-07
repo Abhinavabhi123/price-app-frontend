@@ -58,6 +58,7 @@ export default function CardManagement() {
           title="Card Management"
           btnText="Create Card"
           link="/admin/createCard"
+          backBtnActive={false}
         />
       </div>
       <div className="w-full h-[90%] p-5">
@@ -66,7 +67,7 @@ export default function CardManagement() {
             <table className="table table-md">
               <thead className="border-y sticky top-0 bg-admin-primary-color z-10">
                 <tr className="text-center">
-                  <th className="border-r">SI No</th>
+                  <th className="border-x">SI No</th>
                   <th className="w-64 border-r">Card Name</th>
                   <th className="border-r">Card Id</th>
                   <th className="border-r">Price Money</th>

@@ -2,10 +2,11 @@ import Header from "../../container/client/Header";
 import LightRay from "../../assets/light-ray.jpg";
 import PrizeBox from "../../assets/prize-box.png";
 import { MdKeyboardArrowRight } from "react-icons/md";
+import { useNavigate } from "react-router-dom";
 
 
 export default function LandingPage() {
- 
+  const navigate = useNavigate() 
 
 
   return (
@@ -47,6 +48,7 @@ export default function LandingPage() {
               <button
                 data-aos="fade-up"
                 className="rounded-full px-10  py-3 bg-white text-black font-semibold flex justify-center items-center gap-1 cursor-pointer group"
+                onClick={()=>navigate()}
               >
                 <p className="group-hover:scale-110 transition-all duration-400">
                   Explore
@@ -68,7 +70,7 @@ export default function LandingPage() {
           </div>
         </div>
       </section>
-      <div className="w-full h-[200vh] bg-primary-color"></div>
+      {/* <div className="w-full h-[200vh] bg-primary-color"></div> */}
     </div>
   );
 }

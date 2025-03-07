@@ -73,13 +73,9 @@ export default function CreateCardForm() {
     },
     validationSchema,
     onSubmit: (values) => {
-      postCard(values, setSubmitting,navigate);
-      console.log(values, "values");
+      postCard(values, setSubmitting, navigate);
     },
   });
-
-  console.log(values);
-  console.log(errors, "error");
 
   useEffect(() => {
     if (cardImageData.length > 0) {

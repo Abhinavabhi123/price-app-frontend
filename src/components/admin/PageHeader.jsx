@@ -13,7 +13,7 @@ export default function PageHeader(Props) {
   const navigate = useNavigate();
 
   return (
-    <div className="w-full h-14 px-10 bg-admin-primary-color">
+    <div className="w-full h-14 px-5 md:px-10 bg-admin-primary-color">
       <div className="w-full h-full flex items-center justify-between border-b-2 border-admin-active-color">
         <div className="flex items-center gap-3">
           {backBtnActive && (
@@ -23,13 +23,13 @@ export default function PageHeader(Props) {
               onClick={() => navigate(-1)}
             />
           )}
-          <p className="text-xl text-white">{title}</p>
+          <p className="text-sm md:text-xl text-white">{title}</p>
         </div>
         {btnActive && (
           <button
             type="button"
             onClick={() => (link ? navigate(link) : handleClick())}
-            className="rounded-md outline-none text-white bg-admin-active-color px-3 py-1 cursor-pointer text-sm"
+            className="rounded-md outline-none text-white bg-admin-active-color px-3 py-1 cursor-pointer text-xs md:text-sm"
           >
             {btnText}
           </button>

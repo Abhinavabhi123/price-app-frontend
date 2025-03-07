@@ -1,10 +1,10 @@
 import "./menubutton.css";
 
 export default function MenuButton(Props) {
-  const { setShow } = Props;
+  const { setShow=(()=>{}),show } = Props;
   return (
     <label className="hamburger">
-      <input type="checkbox" onClick={() => setShow((prev) => !prev)} />
+      <input type="checkbox" checked={show} onChange={() => setShow((prev) => !prev)} />
       <svg viewBox="0 0 32 32">
         <path
           className="line line-top-bottom"
