@@ -14,7 +14,7 @@ import { useDispatch } from "react-redux";
 
 export default function UserProfile() {
   const navigate = useNavigate();
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const [loading, setLoading] = useState(true);
   const [userData, setUserData] = useState({});
   const [activate, setActivate] = useState(false);
@@ -46,7 +46,10 @@ export default function UserProfile() {
       <div className="flex flex-col md:flex-row min-h-48 px-20">
         <div className="w-full md:w-2/6 relative">
           <div className="size-36 md:size-56 rounded-3xl">
-            <div className="size-36 md:size-56 rounded-3xl  bg-gray-500 backdrop-blur-md  absolute -top-20 left-[50%] -translate-x-[50%] md:left-[50%] ">
+            <div
+              data-aos="zoom-in"
+              className="size-36 md:size-56 rounded-3xl  bg-gray-500 backdrop-blur-md  absolute -top-20 left-[50%] -translate-x-[50%] md:left-[50%] "
+            >
               <img
                 src={userData.image ? userData.image : UserProfileImage}
                 alt="user image"
@@ -59,11 +62,11 @@ export default function UserProfile() {
         <div className="w-full md:w-4/6 h-fit pb-10 md:p-10 flex justify-center items-center">
           <div className="w-full h-full text-center md:text-left space-y-2">
             <p className="font-semibold text-xl">{userData?.name}</p>
-            <div className="flex justify-center items-center">
+            <div className="flex justify-center items-center md:justify-start">
               <button
                 type="button"
                 className="flex justify-center items-center gap-1 cursor-pointer"
-                onClick={() => userLogout(navigate,dispatch)}
+                onClick={() => userLogout(navigate, dispatch)}
               >
                 <RiLogoutCircleLine size={20} className="text-red-400" />
                 <p className="text-sm text-red-400">Logout</p>
@@ -107,9 +110,11 @@ export default function UserProfile() {
               </ul>
             )}
           </div>
-          <div className="h-full md:min-h-40  w-full md:w-1/2 flex flex-col gap-3 justify-center items-center">
+          <div className="h-full md:min-h-52 w-full md:w-1/2 flex flex-col gap-3 justify-center items-center">
             <button
-              className="px-3 py-2 rounded-lg bg-white text-black cursor-pointer"
+              className={`px-3 py-2 rounded-lg bg-white text-black cursor-pointer ${
+                amountEntered && "mb-5"
+              }`}
               onClick={() => setShowRecharge((prev) => !prev)}
             >
               Recharge Wallet
@@ -125,7 +130,7 @@ export default function UserProfile() {
                   className="w-full py-1 px-3 bg-gray-400 text-sm text-white outline-none rounded-lg border border-admin-active-color"
                   onChange={(e) => setAmount(e.target.value)}
                 />
-                {amount && (
+                {amount > 0 && (
                   <div className="flex justify-center items-center gap-3">
                     <button
                       className="px-2 py-1 rounded-md text-sm cursor-pointer text-white bg-gray-400/50"

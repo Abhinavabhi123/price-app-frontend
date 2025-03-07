@@ -52,7 +52,10 @@ export default function Header() {
           <li className="min-w-20 cursor-pointer flex items-center justify-center gap-2 transition-all divide-neutral-400 hover:text-white">
             Home
           </li>
-          <li className="min-w-20 cursor-pointer flex items-center justify-center gap-2 transition-all divide-neutral-400 hover:text-white" onClick={()=>navigate("/home")}>
+          <li
+            className="min-w-20 cursor-pointer flex items-center justify-center gap-2 transition-all divide-neutral-400 hover:text-white"
+            onClick={() => navigate("/home")}
+          >
             About
           </li>
           <li
@@ -134,12 +137,21 @@ export default function Header() {
               activeLink="arts"
               setShow={setShow}
             />
-            <NavLink
-              title="Profile"
-              link="/profile"
-              activeLink="profile"
+            {token ? (
+              <NavLink
+                title="Profile"
+                link="/profile"
+                activeLink="profile"
+                setShow={setShow}
+              />
+            ):(
+              <NavLink
+              title="Login"
+              link="/login"
+              activeLink="login"
               setShow={setShow}
             />
+            )}
           </ul>
         </div>
       </div>

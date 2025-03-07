@@ -7,10 +7,11 @@ import { jwtDecode } from "jwt-decode";
 import { errorToast } from "../../components/Notification/Notification";
 import { useDispatch } from "react-redux";
 import { FaPhone } from "react-icons/fa6";
-import EmailLogin from "../../container/client/EmailLogin";
-import MobileLogin from "../../container/client/MobileLogin";
+import EmailSignUp from "../../container/client/EmailSignUp";
+import MobileSignUp from "../../container/client/MobileSignUp";
 
-export default function LoginPage() {
+
+export default function SignUpPage() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [isEmail, setIsEmail] = useState(false);
@@ -43,18 +44,18 @@ export default function LoginPage() {
       </div>
       <div className="w-full h-[90%] flex justify-center items-center">
         <div className="w-full md:w-1/3 h-[60%] bg-red-0 px-10 md:px-0 p-3">
-          <p className="text-xl font-semibold text-white">Log in</p>
+          <p className="text-xl font-semibold text-white">Sign Up</p>
           <div className="flex py-5">
-            <p className="text-white">{`Don't have an account? `}</p>
+            <p className="text-white">{`Already have an account? `}</p>
             <p
-              onClick={() => navigate("/signUp")}
+              onClick={() => navigate("/login")}
               className="text-blue-500 px-1 cursor-pointer"
             >
               {" "}
-              Sign up.
+              Login.
             </p>
           </div>
-          {isEmail ? <EmailLogin /> : <MobileLogin />}
+          {isEmail ? <EmailSignUp /> : <MobileSignUp />}
 
           <div className="flex justify-center items-center gap-2 my-2">
             <div className="w-full h-[1px] bg-gray-400"></div>

@@ -8,17 +8,26 @@ import {
   getGamesAndArtsUrl,
   getUserDetailsUrl,
   googleAuthUrl,
+  registerUserMobileUrl,
   userLoginUrl,
+  userLoginWithMobileUrl,
 } from "./urls";
 import { clearUser, setUser } from "../utils/store/userSlice";
 
 const token = localStorage.getItem("PrizeUserTkn");
 
-export async function userLogin(data, navigate, setSubmitting, dispatch) {
+// user login with email and password
+export async function userLoginWithEmail(
+  data,
+  navigate,
+  setSubmitting,
+  dispatch
+) {
   try {
     await axios
       .get(userLoginUrl, {
         headers: {
+          "Content-Type": "application/json",
           ...data,
         },
       })
@@ -29,6 +38,47 @@ export async function userLogin(data, navigate, setSubmitting, dispatch) {
           navigate(-1);
         }
       });
+  } catch (error) {
+    if (error.response) {
+      const { data } = error.response;
+      if (data.errors && Array.isArray(data.errors)) {
+        // Show each validation error
+        data.errors.forEach((err) => errorToast(err.msg));
+      } else {
+        errorToast(error.response.data.message || "Something went wrong!");
+      }
+      console.error("Server Error:", error.response.data);
+    } else if (error.request) {
+      errorToast("No response from server. Please try again later.");
+      console.error("Request Error:", error.request);
+    } else {
+      errorToast("An unexpected error occurred.");
+      console.error("Unexpected Error:", error.message);
+    }
+  } finally {
+    setSubmitting(false);
+  }
+}
+
+// user Login with mobile and password
+export async function userLoginWithMobile(
+  data,
+  navigate,
+  setSubmitting,
+  dispatch
+) {
+  try {
+    const response = await axios.get(userLoginWithMobileUrl, {
+      headers: {
+        "Content-Type": "application/json",
+        ...data,
+      },
+    });
+    if (response?.status === 200 && response?.data?.isSuccess) {
+      dispatch(setUser(response?.data));
+      successToast(response?.data?.message);
+      navigate(-1);
+    }
   } catch (error) {
     if (error.response) {
       const { data } = error.response;
@@ -65,11 +115,19 @@ export function userLogout(navigate, dispatch) {
 export async function GoogleAuthentication(data, navigate, dispatch) {
   try {
     await axios
-      .post(googleAuthUrl, {
-        name: data?.name,
-        email: data?.email,
-        picture: data?.picture,
-      })
+      .post(
+        googleAuthUrl,
+        {
+          name: data?.name,
+          email: data?.email,
+          picture: data?.picture,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      )
       .then((response) => {
         if (response?.status === 200 && response?.data?.isSuccess) {
           dispatch(setUser(response?.data));
@@ -174,6 +232,44 @@ export async function checkAnswer(answer, id, setArtData, setSubmitting) {
           item._id === id ? { ...item, isAnswered: true } : item
         )
       );
+    }
+  } catch (error) {
+    if (error.response) {
+      const { data } = error.response;
+      if (data.errors && Array.isArray(data.errors)) {
+        // Show each validation error
+        data.errors.forEach((err) => errorToast(err.msg));
+      } else {
+        errorToast(error.response.data.message || "Something went wrong!");
+      }
+      console.error("Server Error:", error.response.data);
+    } else if (error.request) {
+      errorToast("No response from server. Please try again later.");
+      console.error("Request Error:", error.request);
+    } else {
+      errorToast("An unexpected error occurred.");
+      console.error("Unexpected Error:", error.message);
+    }
+  } finally {
+    setSubmitting(false);
+  }
+}
+
+// function to register user with mobile number
+export async function userRegisterWithMobile(data, navigate, setSubmitting) {
+  try {
+    const response = await axios.post(
+      registerUserMobileUrl,
+      { ...data },
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    if (response.status === 200 && response?.data?.isSuccess) {
+      successToast(response?.data?.message);
+      navigate("/login");
     }
   } catch (error) {
     if (error.response) {
