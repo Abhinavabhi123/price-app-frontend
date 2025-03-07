@@ -18,7 +18,7 @@ export default function Game() {
     return <Loading type="User" />;
   }
 
-  console.log(artData, "data");
+  // console.log(artData, "data");
 
   return (
     <div className="w-screen h-dvh md:h-fit overflow-x-hidden bg-primary-color pb-20">
