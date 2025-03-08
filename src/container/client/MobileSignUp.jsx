@@ -42,7 +42,6 @@ export default function MobileSignUp() {
     },
     validationSchema,
     onSubmit: (values) => {
-      console.log(values);
       userRegisterWithMobile(values, navigate, setSubmitting);
     },
   });

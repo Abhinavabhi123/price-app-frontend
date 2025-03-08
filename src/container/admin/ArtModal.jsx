@@ -344,7 +344,7 @@ export default function ArtModal(Props) {
                 type="submit"
                 className="px-3 py-1 rounded-lg bg-admin-active-color cursor-pointer outline-none text-white"
               >
-                {!Object.keys(data).length === 0 ? "Submit" : "Edit"}
+                {Object.keys(data).length === 0 ? "Submit" : "Edit"}
               </button>
             ) : (
               <div className="w-20 h-8 rounded-md bg-admin-active-color flex justify-center items-center">

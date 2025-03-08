@@ -8,6 +8,7 @@ import {
   getGamesAndArtsUrl,
   getUserDetailsUrl,
   googleAuthUrl,
+  purchaseArtUrl,
   registerUserMobileUrl,
   userLoginUrl,
   userLoginWithMobileUrl,
@@ -290,5 +291,43 @@ export async function userRegisterWithMobile(data, navigate, setSubmitting) {
     }
   } finally {
     setSubmitting(false);
+  }
+}
+
+// Function to user can  purchase art
+
+export async function purchaseArt(artData, setChanged, setPurchasing) {
+  try {
+    const response = await axios.get(purchaseArtUrl, {
+      headers: {
+        "Content-Type": "application/json",
+        id: artData?._id,
+        quantity: artData?.quantity,
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    if (response.status === 200 && response?.data?.isSuccess) {
+      successToast(response?.data?.message);
+      setChanged((prev) => !prev);
+    }
+  } catch (error) {
+    if (error.response) {
+      const { data } = error.response;
+      if (data.errors && Array.isArray(data.errors)) {
+        // Show each validation error
+        data.errors.forEach((err) => errorToast(err.msg));
+      } else {
+        errorToast(error.response.data.message || "Something went wrong!");
+      }
+      console.error("Server Error:", error.response.data);
+    } else if (error.request) {
+      errorToast("No response from server. Please try again later.");
+      console.error("Request Error:", error.request);
+    } else {
+      errorToast("An unexpected error occurred.");
+      console.error("Unexpected Error:", error.message);
+    }
+  } finally {
+    setPurchasing(false);
   }
 }

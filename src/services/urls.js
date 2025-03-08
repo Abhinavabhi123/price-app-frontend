@@ -23,3 +23,4 @@ export const getUserDetailsUrl = serverUrl+'/getUserDetails';
 export const getGamesAndArtsUrl = serverUrl+"/getGamesAndArts";
 export const checkAnswerUrl = serverUrl+"/checkAnswer";
 export const registerUserMobileUrl =serverUrl+"/registerUserWithMobile";
+export const purchaseArtUrl = serverUrl+"/purchaseArt";

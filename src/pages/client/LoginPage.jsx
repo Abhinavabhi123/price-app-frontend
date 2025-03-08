@@ -36,8 +36,8 @@ export default function LoginPage() {
   return (
     <div className="w-full h-dvh bg-primary-color">
       <div className="p-5 w-full h-[10%]">
-        <button className="text-gray-300 flex justify-center items-center cursor-pointer">
-          <MdKeyboardArrowLeft size={20} onClick={() => navigate("/home")} />
+        <button className="text-gray-300 flex justify-center items-center cursor-pointer" onClick={() => navigate("/home")}>
+          <MdKeyboardArrowLeft size={20}  />
           <p className="text-sm font-semibold">Home</p>
         </button>
       </div>

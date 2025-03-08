@@ -1,12 +1,29 @@
-import { useState } from "react";
-import { checkAnswer } from "../../services/userApiServices";
+import { useEffect, useRef, useState } from "react";
+import { checkAnswer, purchaseArt } from "../../services/userApiServices";
 import { FaMinus, FaPlus } from "react-icons/fa6";
 import { TiTick } from "react-icons/ti";
+import { useNavigate } from "react-router-dom";
 
 export default function Arts(Props) {
   const { art, setArtData } = Props;
+  const navigate = useNavigate();
   const [answer, setAnswer] = useState("");
+  const inputRef = useRef(null);
   const [isSubmitting, setSubmitting] = useState(false);
+  const [changed, setChanged] = useState(false);
+  const [purchasing, setPurchasing] = useState(false);
+  useEffect(() => {
+    setArtData((prev) =>
+      prev.map((item) =>
+        item._id === art._id
+          ? { ...item, quantity: 0, isAnswered: false }
+          : item
+      )
+    );
+    if (inputRef.current.value) {
+      inputRef.current.value = "";
+    }
+  }, [changed, art._id, setArtData]);
 
   function handleAnswerCheck() {
     if (answer.length > 0) {
@@ -31,6 +48,17 @@ export default function Arts(Props) {
         item._id === id ? { ...item, quantity: (item.quantity || 0) - 1 } : item
       )
     );
+  }
+
+  // function to purchase the art
+  function purchaseHandler(art) {
+    const token = localStorage.getItem("PrizeUserTkn");
+    if (!token) {
+      navigate("/login");
+    } else {
+      setPurchasing(true);
+      purchaseArt(art, setChanged,setPurchasing);
+    }
   }
 
   return (
@@ -80,6 +108,7 @@ export default function Arts(Props) {
                   type="text"
                   name="answer"
                   id="answer"
+                  ref={inputRef}
                   placeholder="Enter answer"
                   onChange={(e) => setAnswer(e.target.value)}
                   className="w-full px-2 py-1 rounded-md border bg-white text-black border-black outline-none"
@@ -97,7 +126,7 @@ export default function Arts(Props) {
                 </button>
               </div>
             </div>
-            {answer.length === 0&&!art.isAnswered && (
+            {answer.length === 0 && !art.isAnswered && (
               <p className="text-[10px] text-red-400">
                 Please answer the question to get the coupon
               </p>
@@ -109,11 +138,13 @@ export default function Arts(Props) {
             </p>
             <div className="flex justify-center">
               <button
-                disabled={art.quantity <= 0 || !art.isAnswered}
+                disabled={art.quantity <= 0 || !art.isAnswered || purchasing}
                 className={`px-4 py-1 rounded-lg outline-none bg-white text-black  ${
-                  (art.quantity <= 0 || !art.isAnswered) ?
-                  "opacity-50 cursor-not-allowed":"cursor-pointer"
+                  art.quantity <= 0 || !art.isAnswered
+                    ? "opacity-50 cursor-not-allowed"
+                    : "cursor-pointer"
                 }`}
+                onClick={() => purchaseHandler(art)}
               >
                 Buy
               </button>
