@@ -22,6 +22,7 @@ export default function Card(Props) {
             enjoy special discounts and offers. Simply wait until to find the
             winner. Treat yourself or share the joy with someone special!
           </p>
+          <p className="text-sm mt-2">Date :- {new Date(cardData?.endDate).toLocaleString()}</p>
           <a href="#arts">
             <button className="rounded-full px-6 cursor-pointer mt-5 md:t-10 py-2 font-semibold bg-[#F4C72F] text-[#3B0738] text-sm">
               Get More coupon

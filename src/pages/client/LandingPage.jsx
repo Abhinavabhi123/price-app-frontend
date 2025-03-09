@@ -48,7 +48,7 @@ export default function LandingPage() {
               <button
                 data-aos="fade-up"
                 className="rounded-full px-10  py-3 bg-white text-black font-semibold flex justify-center items-center gap-1 cursor-pointer group"
-                onClick={()=>navigate()}
+                onClick={()=>navigate("/")}
               >
                 <p className="group-hover:scale-110 transition-all duration-400">
                   Explore

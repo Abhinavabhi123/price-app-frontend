@@ -4,12 +4,15 @@ import {
   successToast,
 } from "../components/Notification/Notification";
 import {
+  changeUserProfileImageUrl,
   checkAnswerUrl,
   getGamesAndArtsUrl,
+  getOtpUrl,
   getUserDetailsUrl,
   googleAuthUrl,
   purchaseArtUrl,
   registerUserMobileUrl,
+  updateMobileNumberUrl,
   userLoginUrl,
   userLoginWithMobileUrl,
 } from "./urls";
@@ -329,5 +332,137 @@ export async function purchaseArt(artData, setChanged, setPurchasing) {
     }
   } finally {
     setPurchasing(false);
+  }
+}
+
+// function to change changeUserProfileImage
+export async function changeUserProfileImage(
+  data,
+  resetForm,
+  handleCancel,
+  setSubmitting,
+  dispatch,
+  setChanged
+) {
+  try {
+    const response = await axios.post(
+      changeUserProfileImageUrl,
+      { ...data },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
+
+    if (response.status === 200 && response?.data?.isSuccess) {
+      dispatch(setUser(response?.data?.userData));
+      successToast(response?.data?.message);
+      resetForm();
+      handleCancel();
+      setChanged((prev) => !prev);
+    }
+  } catch (error) {
+    if (error.response) {
+      const { data } = error.response;
+      if (data.errors && Array.isArray(data.errors)) {
+        // Show each validation error
+        data.errors.forEach((err) => errorToast(err.msg));
+      } else {
+        errorToast(error.response.data.message || "Something went wrong!");
+      }
+      console.error("Server Error:", error.response.data);
+    } else if (error.request) {
+      errorToast("No response from server. Please try again later.");
+      console.error("Request Error:", error.request);
+    } else {
+      errorToast("An unexpected error occurred.");
+      console.error("Unexpected Error:", error.message);
+    }
+  } finally {
+    setSubmitting(false);
+  }
+}
+
+// function to get otp to verify user mobile number
+export async function getOtp(mobile, setSubmitting, setShowOtp) {
+  try {
+    const response = await axios.get(getOtpUrl, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "multipart/form-data",
+        mobile,
+      },
+    });
+    if (response.status === 200 && response?.data?.isSuccess) {
+      successToast(response?.data?.message);
+      setShowOtp(true);
+    }
+  } catch (error) {
+    if (error.response) {
+      const { data } = error.response;
+      if (data.errors && Array.isArray(data.errors)) {
+        // Show each validation error
+        data.errors.forEach((err) => errorToast(err.msg));
+      } else {
+        errorToast(error.response.data.message || "Something went wrong!");
+      }
+      console.error("Server Error:", error.response.data);
+    } else if (error.request) {
+      errorToast("No response from server. Please try again later.");
+      console.error("Request Error:", error.request);
+    } else {
+      errorToast("An unexpected error occurred.");
+      console.error("Unexpected Error:", error.message);
+    }
+  } finally {
+    setSubmitting(false);
+  }
+}
+
+// function to update user mobile number
+export async function updateMobileNumber(
+  data,
+  number,
+  setSubmitting,
+  setChanged,
+  setShowOtp
+) {
+  try {
+    const response = await axios.put(
+      updateMobileNumberUrl,
+      { ...data, mobile: number },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    if (response.status === 200 && response?.data?.isSuccess) {
+      successToast(response?.data?.message);
+      setChanged((prev) => !prev);
+      setShowOtp(false)
+    }
+  } catch (error) {
+    if (error.response) {
+      const { data } = error.response;
+      if (data.errors && Array.isArray(data.errors)) {
+        // Show each validation error
+        data.errors.forEach((err) => errorToast(err.msg));
+      } else {
+        errorToast(error.response.data.message || "Something went wrong!");
+      }
+      console.error("Server Error:", error.response.data);
+    } else if (error.request) {
+      errorToast("No response from server. Please try again later.");
+      console.error("Request Error:", error.request);
+    } else {
+      errorToast("An unexpected error occurred.");
+      console.error("Unexpected Error:", error.message);
+    }
+  } finally {
+    setSubmitting(false);
   }
 }

@@ -1,33 +1,40 @@
 import Header from "../../container/client/Header";
 import BackGroundImage from "../../assets/colorful-background.jpg";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import Loading from "../../components/Loading/Loading";
 import { getUserDetails, userLogout } from "../../services/userApiServices";
 import { jwtDecode } from "jwt-decode";
 import UserProfileImage from "../../assets/userImage.png";
-import UserWallet from "../../assets/user-wallet.png";
-import { IoIosArrowDown } from "react-icons/io";
-import GpayPayment from "../../container/client/GpayPayment";
+import { MdOutlineEdit } from "react-icons/md";
+
 import { RiLogoutCircleLine } from "react-icons/ri";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
+import {
+  IoWalletOutline,
+  IoSettingsOutline,
+  IoCloudUploadOutline,
+} from "react-icons/io5";
+import { BsCollection } from "react-icons/bs";
+import Wallet from "../../container/client/Wallet";
+import Settings from "../../container/client/Settings";
+import ImageEditModal from "../../container/client/ImageEditModal";
 
 export default function UserProfile() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(true);
   const [userData, setUserData] = useState({});
-  const [activate, setActivate] = useState(false);
-  const [showRecharge, setShowRecharge] = useState(false);
-  const [amount, setAmount] = useState(0);
-  const [amountEntered, setAmountEntered] = useState(false);
-  const inputRef = useRef(null);
+  const [showProfileEditModal, setShowProfileEditModal] = useState(false);
+  const [changed, setChanged] = useState(false);
+
+  const [selected, setSelected] = useState("");
   // const [onSuccess, setOnSuccess] = useState(null);
 
   useEffect(() => {
     const token = jwtDecode(localStorage.getItem("PrizeUserTkn"));
     getUserDetails(token.id, setUserData, setLoading);
-  }, []);
+  }, [changed]);
 
   if (loading) {
     return <Loading type="User" />;
@@ -35,6 +42,11 @@ export default function UserProfile() {
 
   return (
     <div className="w-screen h-dvh md:h-full overflow-x-hidden bg-primary-color pb-20">
+      <ImageEditModal
+        setShowModal={setShowProfileEditModal}
+        isModalOpen={showProfileEditModal}
+        setChanged={setChanged}
+      />
       <Header />
       <div className="w-full h-28 md:h-48">
         <img
@@ -45,23 +57,33 @@ export default function UserProfile() {
       </div>
       <div className="flex flex-col md:flex-row min-h-48 px-20">
         <div className="w-full md:w-2/6 relative">
-          <div className="size-36 md:size-56 rounded-3xl">
+          <div className="size-36 md:size-56 rounded-3xl ">
             <div
               data-aos="zoom-in"
-              className="size-36 md:size-56 rounded-3xl  bg-gray-500 backdrop-blur-md  absolute -top-20 left-[50%] -translate-x-[50%] md:left-[50%] "
+              className="size-36 md:size-56 rounded-3xl overflow-hidden bg-gray-500 backdrop-blur-md  absolute -top-20 left-[50%] -translate-x-[50%] md:left-[50%] group"
             >
               <img
-                src={userData.image ? userData.image : UserProfileImage}
+                src={`${import.meta.env.VITE_SERVER_URL}/uploads/userImage/${
+                  userData.picture
+                }`}
                 alt="user image"
                 onError={(e) => (e.target.src = UserProfileImage)}
                 className="w-full h-full object-cover rounded-3xl bg-white scale-90"
               />
+              <div
+                className="w-full h-full opacity-0 transition-opacity duration-150 rounded-3xl ease-in group-hover:opacity-100 bg-black/50 cursor-pointer  absolute top-0 left-0 flex justify-center items-center transform  group-hover:scale-100"
+                onClick={() => setShowProfileEditModal(true)}
+              >
+                <MdOutlineEdit size={20} />
+              </div>
             </div>
           </div>
         </div>
         <div className="w-full md:w-4/6 h-fit pb-10 md:p-10 flex justify-center items-center">
           <div className="w-full h-full text-center md:text-left space-y-2">
             <p className="font-semibold text-xl">{userData?.name}</p>
+            <p className=" text-lg">{userData?.email}</p>
+            <p className=" text-lg">{userData?.mobile || ""}</p>
             <div className="flex justify-center items-center md:justify-start">
               <button
                 type="button"
@@ -76,86 +98,43 @@ export default function UserProfile() {
         </div>
       </div>
       <hr className="text-gray-400/50" />
-      <div className="w-full p-10 space-y-5 md:px-28">
-        <p className="text-xl">Wallet Details :-</p>
-        <div className="flex flex-col md:flex-row gap-3 md:gap-0">
-          <div className="w-full md:w-1/2 relative select-none">
-            <div
-              onClick={() => setActivate((prev) => !prev)}
-              className="flex items-center justify-between bg-gray-400/50 rounded-lg px-5 cursor-pointer"
-            >
-              <img src={UserWallet} alt="user wallet" className="w-16" />
-              <p>wallet</p>
-              <div className="flex gap-2 items-center">
-                <p>2000/-</p>
-                <IoIosArrowDown size={20} className="text-white" />
-              </div>
-            </div>
-            {activate && (
-              <ul className="absolute select-none w-full max-h-40 border border-gray-300 rounded-md mt-1">
-                <div className="flex justify-between items-center px-10 bg-gray-500 py-3">
-                  <p>Total Amount</p>
-                  <p>{userData?.wallet} /-</p>
-                </div>
-                <hr className="text-gray-400/50" />
-                <div className="flex justify-between items-center px-10 bg-gray-500 py-3">
-                  <p>Withdraw Amount</p>
-                  <p>{userData?.withDrawAmount} /-</p>
-                </div>
-                <hr className="text-gray-400/50" />
-                <div className="flex justify-between items-center px-10 bg-gray-500 py-3">
-                  <p>Pending Amount</p>
-                  <p>{userData?.pendingWalletAmount} /-</p>
-                </div>
-              </ul>
-            )}
+      <div className="w-full h-10  md:px-28">
+        <div className="flex h-full items-center bg-gray-400/30 px-2">
+          <div
+            className={`hidden md:flex items-center justify-center gap-2 border-x border-white px-5 cursor-pointer hover:text-blue-500`}
+            onClick={() => setSelected("collections")}
+          >
+            <BsCollection />
+            <p>Collections</p>
           </div>
-          <div className="h-full md:min-h-52 w-full md:w-1/2 flex flex-col gap-3 justify-center items-center">
-            <button
-              className={`px-3 py-2 rounded-lg bg-white text-black cursor-pointer ${
-                amountEntered && "mb-5"
-              }`}
-              onClick={() => setShowRecharge((prev) => !prev)}
-            >
-              Recharge Wallet
-            </button>
-            {showRecharge && (
-              <div className="w-1/2 h-20  flex flex-col justify-center items-center gap-2 ">
-                <input
-                  type="number"
-                  id="amount"
-                  name="amount"
-                  ref={inputRef}
-                  placeholder="Enter wallet recharge amount"
-                  className="w-full py-1 px-3 bg-gray-400 text-sm text-white outline-none rounded-lg border border-admin-active-color"
-                  onChange={(e) => setAmount(e.target.value)}
-                />
-                {amount > 0 && (
-                  <div className="flex justify-center items-center gap-3">
-                    <button
-                      className="px-2 py-1 rounded-md text-sm cursor-pointer text-white bg-gray-400/50"
-                      onClick={() => {
-                        setAmountEntered(false);
-                        setAmount(0);
-                        inputRef.current.value = "";
-                      }}
-                    >
-                      Cancel
-                    </button>
-                    <button
-                      className="px-3 py-1 text-sm rounded-md cursor-pointer text-white bg-admin-active-color"
-                      onClick={() => setAmountEntered(true)}
-                    >
-                      Pay
-                    </button>
-                  </div>
-                )}
-                {amount > 0 && amountEntered && <GpayPayment />}
-              </div>
-            )}
+          <div
+            className={`hidden md:flex items-center justify-center gap-2 border-x md:border-r px-5 cursor-pointer border-white hover:text-blue-500`}
+            onClick={() => setSelected("wallet")}
+          >
+            <IoWalletOutline />
+            <p>Wallet</p>
+          </div>
+          <div
+            className={`hidden  items-center justify-center gap-2 border-r px-5 cursor-pointer border-white hover:text-blue-500`}
+            onClick={() => setSelected("sellArt")}
+          >
+            <IoCloudUploadOutline />
+            <p>Sell Your Art</p>
+          </div>
+          <div
+            className={`flex items-center justify-center gap-2 border-r px-5 cursor-pointer border-white hover:text-blue-500`}
+            onClick={() => setSelected("settings")}
+          >
+            <IoSettingsOutline />
+            <p>Settings</p>
           </div>
         </div>
       </div>
+      {selected === "collection" && <></>}
+      {selected === "wallet" && <Wallet userData={userData} />}
+      {selected === "settings" && (
+        <Settings setChanged={setChanged} userData={userData} />
+      )}
     </div>
   );
 }

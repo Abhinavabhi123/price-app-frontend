@@ -5,7 +5,11 @@ import { useSelector } from "react-redux";
 import UserImage from "../../assets/userImage.png";
 import MenuButton from "../../components/client/MenuButton";
 import { useState } from "react";
-import { IoMdClose } from "react-icons/io";
+import { IoMdClose, IoMdWallet } from "react-icons/io";
+import { IoHome } from "react-icons/io5";
+import { RiDashboardHorizontalFill } from "react-icons/ri";
+import { FaTicketAlt } from "react-icons/fa";
+import { FaRegCircleUser } from "react-icons/fa6";
 
 function NavLink(Props) {
   const { title, link, activeLink, setShow } = Props;
@@ -31,7 +35,9 @@ export default function Header() {
   const navigate = useNavigate();
   const [show, setShow] = useState(false);
   const user = useSelector((state) => state.user);
+  const location = useLocation().pathname;
   const token = localStorage.getItem("PrizeUserTkn");
+
 
   return (
     <header
@@ -42,24 +48,32 @@ export default function Header() {
         <img
           src={Logo}
           alt="Logo"
-          className="size-10 cursor-pointer"
+          className="size-10 hidden md:flex cursor-pointer"
           onClick={() => navigate("/")}
         />
       </div>
       {/* Middle section */}
       <nav className="hidden md:block">
         <ul className="flex text-gray-500 font-medium gap-4">
-          <li className="min-w-20 cursor-pointer flex items-center justify-center gap-2 transition-all divide-neutral-400 hover:text-white">
+          <li
+            className={`min-w-20 cursor-pointer flex items-center justify-center gap-2 transition-all divide-neutral-400 hover:text-white ${
+              location === "/home" && "text-white"
+            }`}
+            onClick={() => navigate("/home")}
+          >
             Home
           </li>
           <li
-            className="min-w-20 cursor-pointer flex items-center justify-center gap-2 transition-all divide-neutral-400 hover:text-white"
-            onClick={() => navigate("/home")}
+            className={`min-w-20 cursor-pointer flex items-center justify-center gap-2 transition-all divide-neutral-400 hover:text-white ${
+              location === "/about" && "text-white"
+            }`}
           >
             About
           </li>
           <li
-            className="min-w-20 cursor-pointer flex items-center justify-center gap-2 transition-all divide-neutral-400 hover:text-white"
+            className={`min-w-20 cursor-pointer flex items-center justify-center gap-2 transition-all divide-neutral-400 hover:text-white ${
+              location === "/" && "text-white"
+            }`}
             onClick={() => navigate("/")}
           >
             Cards
@@ -91,7 +105,9 @@ export default function Header() {
         {token && (
           <div className="size-10 ms-2 cursor-pointer">
             <img
-              src={user?.picture ? user.picture : UserImage}
+              src={`${import.meta.env.VITE_SERVER_URL}/uploads/userImage/${
+                user?.picture
+              }`}
               alt="user picture"
               onError={(e) => (e.target.src = UserImage)} // Handles broken image links
               className="rounded-full w-full h-full object-cover outline"
@@ -101,11 +117,12 @@ export default function Header() {
         )}
       </div>
       {/* mobile responsive menu bar */}
-      <div className="md:hidden size-10 flex justify-center items-center">
+      {/* flex */}
+      <div className="hidden md:hidden size-10  justify-center items-center">
         <MenuButton setShow={setShow} show={show} />
       </div>
       <div
-        className={`md:hidden w-full h-[100vh] bg-primary-color absolute top-0 left-0  duration-300 p-5  transition-transform ${
+        className={`hidden md:hidden w-full h-[100vh] bg-primary-color absolute top-0 left-0  duration-300 p-5  transition-transform ${
           show ? "translate-x-0" : "translate-x-[110%]"
         } `}
       >
@@ -144,15 +161,49 @@ export default function Header() {
                 activeLink="profile"
                 setShow={setShow}
               />
-            ):(
+            ) : (
               <NavLink
-              title="Login"
-              link="/login"
-              activeLink="login"
-              setShow={setShow}
-            />
+                title="Login"
+                link="/login"
+                activeLink="login"
+                setShow={setShow}
+              />
             )}
           </ul>
+        </div>
+      </div>
+      {/* mobile responsive design modified */}
+      <div className="w-full h-fit flex md:hidden justify-between items-center">
+        <div>
+          <IoHome
+            size={20}
+            onClick={() => navigate("/home")}
+            className={`${
+              location === "/home" ? "text-blue-500" : "text-white"
+            }`}
+          />
+        </div>
+        <div>
+          <RiDashboardHorizontalFill
+            size={20}
+            onClick={() => navigate("/")}
+            className={`${location === "/" ? "text-blue-500" : "text-white"}`}
+          />
+        </div>
+        <div>
+          <IoMdWallet size={20} />
+        </div>
+        <div>
+          <FaTicketAlt size={20} />
+        </div>
+        <div>
+          <FaRegCircleUser
+            size={20}
+            onClick={() => navigate("/profile")}
+            className={`${
+              location === "/profile" ? "text-blue-500" : "text-white"
+            }`}
+          />
         </div>
       </div>
     </header>

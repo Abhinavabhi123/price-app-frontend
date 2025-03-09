@@ -24,3 +24,6 @@ export const getGamesAndArtsUrl = serverUrl+"/getGamesAndArts";
 export const checkAnswerUrl = serverUrl+"/checkAnswer";
 export const registerUserMobileUrl =serverUrl+"/registerUserWithMobile";
 export const purchaseArtUrl = serverUrl+"/purchaseArt";
+export const changeUserProfileImageUrl = serverUrl+"/changeUserProfileImage";
+export const getOtpUrl = serverUrl+"/getOtp";
+export const updateMobileNumberUrl = serverUrl+"/updateMobileNumber";

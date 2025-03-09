@@ -13,6 +13,7 @@ export default function Game() {
   useEffect(() => {
     getGamesAndArts(setLoading, setCardData, setArtData);
   }, []);
+  
 
   if (loading) {
     return <Loading type="User" />;
@@ -29,7 +30,7 @@ export default function Game() {
             <p className="w-fit text-nowrap">Popular Art</p>
             <div className="w-full h-[1px] bg-gray-400" />
           </div>
-          <section className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 md:gap-4 mt-10">
+          <section className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-2 md:gap-4 mt-10">
             {artData.map((art, index) => (
               <Arts key={index} art={art} setArtData={setArtData} />
             ))}
