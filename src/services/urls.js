@@ -14,7 +14,7 @@ export const getArtsUrl = serverUrl+"/admin/getArts";
 export const editArtDetailsUrl = serverUrl+"/admin/editArtDetails";
 export const editArtWithImageUrl = serverUrl+"/admin/editArtWithImage";
 export const deleteArtDetailsUrl = serverUrl+"/admin/deleteArtDetails";
-
+export const changeArtStatusUrl = serverUrl+"/admin/changeArtStatus";
 // user Urls
 export const googleAuthUrl = serverUrl + "/googleAuth";
 export const userLoginUrl = serverUrl + "/userLogin";

@@ -5,6 +5,7 @@ export default function Card(Props) {
   const { cardData } = Props;
   return (
     <section className="w-full p-5 md:px-[15%] md:py-10">
+      <p className="py-3">Next Lucky draw</p>
       <div className="w-full h-fit md:h-[23rem] rounded-3xl overflow-hidden relative flex flex-col md:flex-row">
         <img
           src={BlobImage}
@@ -23,8 +24,9 @@ export default function Card(Props) {
             winner. Treat yourself or share the joy with someone special!
           </p>
           <p className="text-sm mt-2">Date :- {new Date(cardData?.endDate).toLocaleString()}</p>
+          <p className="text-sm">Prize :- {cardData?.priceMoney}/- Rs</p>
           <a href="#arts">
-            <button className="rounded-full px-6 cursor-pointer mt-5 md:t-10 py-2 font-semibold bg-[#F4C72F] text-[#3B0738] text-sm">
+            <button className="rounded-full px-6 cursor-pointer mt-5 md:mt-1 py-2 font-semibold bg-[#F4C72F] text-[#3B0738] text-sm">
               Get More coupon
             </button>
           </a>

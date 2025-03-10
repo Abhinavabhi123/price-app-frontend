@@ -14,6 +14,7 @@ import {
   editArtDetailsUrl,
   editArtWithImageUrl,
   deleteArtDetailsUrl,
+  changeArtStatusUrl,
 } from "./urls";
 import {
   errorToast,
@@ -522,6 +523,44 @@ export async function deleteArtDetails(id, setChange) {
     if (response.status === 200 && response?.data?.isSuccess) {
       successToast(response?.data?.message);
       setChange((prev) => !prev);
+    }
+  } catch (error) {
+    if (error.response) {
+      const { data } = error.response;
+      if (data.errors && Array.isArray(data.errors)) {
+        // Show each validation error
+        data.errors.forEach((err) => errorToast(err.msg));
+      } else {
+        errorToast(error.response.data.message || "Something went wrong!");
+      }
+      console.error("Server Error:", error.response.data);
+    } else if (error.request) {
+      errorToast("No response from server. Please try again later.");
+      console.error("Request Error:", error.request);
+    } else {
+      errorToast("An unexpected error occurred.");
+      console.error("Unexpected Error:", error.message);
+    }
+  }
+}
+
+export async function changeArtStatus(id, setChange) {
+  try {
+    const response = await axios.put(
+      changeArtStatusUrl,
+      {
+        id,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    if (response.status === 200 && response?.data?.isSuccess) {
+      successToast(response?.data?.message);
+      setChange((prev) => !prev );
     }
   } catch (error) {
     if (error.response) {

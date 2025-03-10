@@ -5,15 +5,19 @@ import {
   deleteCardDetails,
   getCards,
 } from "../../services/adminApiServices";
-import { IoTrashOutline } from "react-icons/io5";
 import { Empty } from "antd";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
+import { IoEyeOutline, IoTrashOutline } from "react-icons/io5";
+import { MdOutlineModeEdit } from "react-icons/md";
+import CardPreviewModal from "../../container/admin/CardPreviewModal";
 
 export default function CardManagement() {
   const [cardData, setCardData] = useState([]);
   const [changed, setChanged] = useState(false);
   const MySwal = withReactContent(Swal);
+  const [showModal, setShowModal] = useState(false);
+  const [preview, setPreview] = useState(null);
 
   useEffect(() => {
     getCards(setCardData);
@@ -50,9 +54,18 @@ export default function CardManagement() {
       }
     });
   }
+  const handleCancel = () => {
+    setShowModal(false);
+    setPreview(null);
+  };
 
   return (
     <section className="w-full h-full">
+      <CardPreviewModal
+        handleCancel={handleCancel}
+        isModalOpen={showModal}
+        data={preview}
+      />
       <div className="w-full h-[10%]">
         <PageHeader
           title="Card Management"
@@ -135,7 +148,16 @@ export default function CardManagement() {
                         </button>
                       )}
                     </td>
-                    <td>
+                    <td className="flex items-center justify-center gap-1">
+                      <IoEyeOutline
+                        size={20}
+                        className="cursor-pointer"
+                        onClick={() => {
+                          setShowModal(true);
+                          setPreview(item);
+                        }}
+                      />
+                      <MdOutlineModeEdit size={18} className="cursor-pointer" />
                       {!item?.completed && (
                         <IoTrashOutline
                           onClick={() => deleteCard(item?._id)}
