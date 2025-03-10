@@ -15,6 +15,11 @@ export const editArtDetailsUrl = serverUrl+"/admin/editArtDetails";
 export const editArtWithImageUrl = serverUrl+"/admin/editArtWithImage";
 export const deleteArtDetailsUrl = serverUrl+"/admin/deleteArtDetails";
 export const changeArtStatusUrl = serverUrl+"/admin/changeArtStatus";
+export const editCardDetailsUrl = serverUrl+"/admin/editCardDetails";
+export const getUsersUrl = serverUrl+"/admin/getUsers";
+
+
+
 // user Urls
 export const googleAuthUrl = serverUrl + "/googleAuth";
 export const userLoginUrl = serverUrl + "/userLogin";
@@ -27,3 +32,5 @@ export const purchaseArtUrl = serverUrl+"/purchaseArt";
 export const changeUserProfileImageUrl = serverUrl+"/changeUserProfileImage";
 export const getOtpUrl = serverUrl+"/getOtp";
 export const updateMobileNumberUrl = serverUrl+"/updateMobileNumber";
+export const getEmailOtpUrl = serverUrl+"/getEmailOtp";
+export const registerUserWithEmailUrl = serverUrl+"/registerUserWithEmail";

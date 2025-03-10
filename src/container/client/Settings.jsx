@@ -30,12 +30,19 @@ export default function Settings(Props) {
     },
     validationSchema,
     onSubmit: (values) => {
-      getOtp(values.mobileNumber, setSubmitting,setShowOtp);
+      getOtp(values.mobileNumber, setSubmitting, setShowOtp);
     },
   });
 
   if (showOtp) {
-    return <OtpModal number={values?.mobileNumber} setChanged={setChanged} setShowOtp={setShowOtp} />;
+    return (
+      <OtpModal
+        number={values?.mobileNumber}
+        setChanged={setChanged}
+        setShowOtp={setShowOtp}
+        otpType="mobileChange"
+      />
+    );
   }
 
   return (

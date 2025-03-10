@@ -13,7 +13,6 @@ export default function Game() {
   useEffect(() => {
     getGamesAndArts(setLoading, setCardData, setArtData);
   }, []);
-  
 
   if (loading) {
     return <Loading type="User" />;
@@ -23,7 +22,7 @@ export default function Game() {
     <div className="w-screen h-dvh md:h-fit overflow-x-hidden bg-primary-color pb-20">
       <Header />
       {/* card showing section */}
-      <Card cardData={cardData} />
+      {Object.keys(cardData).length > 0 && <Card cardData={cardData} />}
       <div className="w-full h-fit px-5 md:px-[15%] " id="arts">
         <div className="w-full h-full bg-red-">
           <div className="flex items-center space-x-2">

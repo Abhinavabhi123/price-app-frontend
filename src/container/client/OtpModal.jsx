@@ -2,10 +2,21 @@ import { Modal } from "antd";
 import { useFormik } from "formik";
 import OtpInput from "react-otp-input";
 import * as yup from "yup";
-import  {updateMobileNumber} from "../../services/userApiServices.js";
+import {
+  registerUserWithEmail,
+  updateMobileNumber,
+} from "../../services/userApiServices.js";
+import { useNavigate } from "react-router-dom";
 
 export default function OtpModal(Props) {
-  const { number,setChanged,setShowOtp } = Props;
+  const {
+    number,
+    setChanged,
+    setShowOtp,
+    otpType = "mobileChange",
+    data,
+  } = Props;
+  const navigate = useNavigate();
 
   const otpValidationSchema = yup.object().shape({
     otp: yup
@@ -30,10 +41,19 @@ export default function OtpModal(Props) {
     },
     validationSchema: otpValidationSchema,
     onSubmit: (values) => {
-      updateMobileNumber(values,number,setSubmitting,setChanged,setShowOtp);
+      if (otpType === "mobileChange") {
+        updateMobileNumber(
+          values,
+          number,
+          setSubmitting,
+          setChanged,
+          setShowOtp
+        );
+      } else if (otpType === "emailOtp") {
+        registerUserWithEmail(data, values.otp, setShowOtp,navigate,setSubmitting);
+      }
     },
   });
-
 
   return (
     <Modal
@@ -73,7 +93,9 @@ export default function OtpModal(Props) {
           <button
             disabled={isSubmitting}
             type="button"
-            className={`px-3 py-1 rounded-lg text-white bg-admin-active-color outline-none cursor-pointer ${isSubmitting&&"opacity-50"} `}
+            className={`px-3 py-1 rounded-lg text-white bg-admin-active-color outline-none cursor-pointer ${
+              isSubmitting && "opacity-50"
+            } `}
             onClick={handleSubmit}
           >
             Verify

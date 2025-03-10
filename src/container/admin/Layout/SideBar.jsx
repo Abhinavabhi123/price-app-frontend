@@ -42,8 +42,8 @@ export default function SideBar() {
         <hr className="text-gray-400" />
         <Navlink
           title="Users Management"
-          // link="/admin/users"
-          // activeLink="users"
+          link="/admin/users"
+          activeLink="users"
           icon={<FaUsers size={20} className="text-white" />}
         />
         <Navlink

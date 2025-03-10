@@ -3,8 +3,6 @@ import { Modal } from "antd";
 export default function CardPreviewModal(Props) {
   const { isModalOpen, handleCancel, data } = Props;
 
-  console.log(data, "data");
-
   return (
     <div className="flex justify-center items-center">
       <Modal

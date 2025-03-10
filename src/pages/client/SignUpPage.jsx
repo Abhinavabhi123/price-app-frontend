@@ -43,7 +43,7 @@ export default function SignUpPage() {
         </button>
       </div>
       <div className="w-full h-[90%] flex justify-center items-center">
-        <div className="w-full md:w-1/3 h-[60%] bg-red-0 px-10 md:px-0 p-3">
+        <div className="w-full md:w-1/3 min-h-[60%] h-fit  px-10 md:px-0 p-3 -mt-20">
           <p className="text-xl font-semibold text-white">Sign Up</p>
           <div className="flex py-5">
             <p className="text-white">{`Already have an account? `}</p>

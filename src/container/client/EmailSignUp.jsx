@@ -4,14 +4,20 @@ import * as yup from "yup";
 import LoginInput from "../../components/admin/LoginInput";
 import { IoArrowForwardOutline } from "react-icons/io5";
 import SubmissionLoading from "../../components/Loading/SubmissionLoading";
+import OtpModal from "./OtpModal";
+import { getEmailOtp } from "../../services/userApiServices";
 
 export default function EmailSignUp() {
   const [showPassword, setShowPassword] = useState(false);
-
+  const [showOtpModal, setShowOtpModal] = useState(false);
   const handleMouseDown = () => setShowPassword(true);
   const handleMouseUp = () => setShowPassword(false);
 
   const validationSchema = yup.object().shape({
+    name: yup
+      .string()
+      .required("Name is required")
+      .matches(/^[A-Za-z\s]+$/, "Name must contain only alphabets and spaces"),
     email: yup
       .string()
       .matches(
@@ -33,21 +39,41 @@ export default function EmailSignUp() {
     errors,
     handleSubmit,
     isSubmitting,
-    // setSubmitting,
+    setSubmitting,
   } = useFormik({
     initialValues: {
       email: "",
+      name: "",
       password: "",
     },
     validationSchema,
     onSubmit: (values) => {
-      console.log(values);
-      // userLoginWithEmail(values, navigate, setSubmitting, dispatch);
+      getEmailOtp(values.email, setShowOtpModal, setSubmitting);
     },
   });
 
+  if (showOtpModal) {
+    return (
+      <OtpModal data={values} setShowOtp={setShowOtpModal} otpType="emailOtp" />
+    );
+  }
+
   return (
     <form className="space-y-3  w-full h-fit" onSubmit={handleSubmit}>
+      <div className="space-y-2">
+        <p className="text-gray-400 text-sm">Full name</p>
+        <LoginInput
+          type="text"
+          name="name"
+          id="name"
+          handleBlur={handleBlur}
+          handleChange={handleChange}
+          value={values.name}
+        />
+        {errors.name && touched.name && (
+          <p className="text-xs text-red-500">{errors.name}</p>
+        )}
+      </div>
       <div className="space-y-2">
         <p className="text-gray-400 text-sm">Email</p>
         <LoginInput

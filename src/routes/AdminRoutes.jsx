@@ -13,6 +13,7 @@ const CardManagement = lazy(() => import("../pages/admin/CardManagement"));
 const CreateCard = lazy(() => import("../pages/admin/CreateCard"));
 const ImageManagement = lazy(() => import("../pages/admin/ImageManagement"));
 const ArtManagement = lazy(() => import("../pages/admin/ArtManagement"));
+const UserManagement = lazy(() => import("../pages/admin/UserManagement"));
 
 export default function AdminRoutes() {
   return (
@@ -27,6 +28,7 @@ export default function AdminRoutes() {
             <Route path="/createCard" element={<CreateCard />} />
             <Route path="/uploadImage" element={<ImageManagement />} />
             <Route path="/arts" element={<ArtManagement />} />
+            <Route path="/users" element={<UserManagement />} />
           </Route>
           {/* </Routes> */}
         </Routes>

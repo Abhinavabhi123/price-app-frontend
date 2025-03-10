@@ -6,12 +6,14 @@ import {
 import {
   changeUserProfileImageUrl,
   checkAnswerUrl,
+  getEmailOtpUrl,
   getGamesAndArtsUrl,
   getOtpUrl,
   getUserDetailsUrl,
   googleAuthUrl,
   purchaseArtUrl,
   registerUserMobileUrl,
+  registerUserWithEmailUrl,
   updateMobileNumberUrl,
   userLoginUrl,
   userLoginWithMobileUrl,
@@ -457,7 +459,87 @@ export async function updateMobileNumber(
     if (response.status === 200 && response?.data?.isSuccess) {
       successToast(response?.data?.message);
       setChanged((prev) => !prev);
-      setShowOtp(false)
+      setShowOtp(false);
+    }
+  } catch (error) {
+    if (error.response) {
+      const { data } = error.response;
+      if (data.errors && Array.isArray(data.errors)) {
+        // Show each validation error
+        data.errors.forEach((err) => errorToast(err.msg));
+      } else {
+        errorToast(error.response.data.message || "Something went wrong!");
+      }
+      console.error("Server Error:", error.response.data);
+    } else if (error.request) {
+      errorToast("No response from server. Please try again later.");
+      console.error("Request Error:", error.request);
+    } else {
+      errorToast("An unexpected error occurred.");
+      console.error("Unexpected Error:", error.message);
+    }
+  } finally {
+    setSubmitting(false);
+  }
+}
+
+// function to get otp in email
+export async function getEmailOtp(email, setShowOtpModal, setSubmitting) {
+  try {
+    const response = await axios.get(getEmailOtpUrl, {
+      headers: {
+        "Content-Type": "application/json",
+        email,
+      },
+    });
+    if (response.status === 200 && response?.data?.isSuccess) {
+      successToast(response?.data?.message);
+      setShowOtpModal(true);
+    }
+  } catch (error) {
+    if (error.response) {
+      const { data } = error.response;
+      if (data.errors && Array.isArray(data.errors)) {
+        // Show each validation error
+        data.errors.forEach((err) => errorToast(err.msg));
+      } else {
+        errorToast(error.response.data.message || "Something went wrong!");
+      }
+      console.error("Server Error:", error.response.data);
+    } else if (error.request) {
+      errorToast("No response from server. Please try again later.");
+      console.error("Request Error:", error.request);
+    } else {
+      errorToast("An unexpected error occurred.");
+      console.error("Unexpected Error:", error.message);
+    }
+  } finally {
+    setSubmitting(false);
+  }
+}
+
+// function to register user with email after checking otp
+export async function registerUserWithEmail(
+  data,
+  otp,
+  setShowOtp,
+  navigate,
+  setSubmitting
+) {
+  try {
+    const response = await axios.post(
+      registerUserWithEmailUrl,
+      { ...data, otp },
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    if (response.status === 200 && response?.data?.isSuccess) {
+      successToast(response?.data?.message);
+      setShowOtp(false);
+      navigate("/login");
     }
   } catch (error) {
     if (error.response) {
