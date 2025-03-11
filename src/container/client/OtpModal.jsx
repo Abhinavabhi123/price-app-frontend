@@ -5,6 +5,7 @@ import * as yup from "yup";
 import {
   registerUserWithEmail,
   updateMobileNumber,
+  userRegisterWithMobile,
 } from "../../services/userApiServices.js";
 import { useNavigate } from "react-router-dom";
 
@@ -51,6 +52,8 @@ export default function OtpModal(Props) {
         );
       } else if (otpType === "emailOtp") {
         registerUserWithEmail(data, values.otp, setShowOtp,navigate,setSubmitting);
+      }else{
+        userRegisterWithMobile(data,values.otp,navigate,setSubmitting,setShowOtp)
       }
     },
   });

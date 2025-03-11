@@ -4,17 +4,21 @@ import * as yup from "yup";
 import LoginInput from "../../components/admin/LoginInput";
 import { IoArrowForwardOutline } from "react-icons/io5";
 import SubmissionLoading from "../../components/Loading/SubmissionLoading";
-import { userRegisterWithMobile } from "../../services/userApiServices";
-import { useNavigate } from "react-router-dom";
+import { getOtp } from "../../services/userApiServices";
+import OtpModal from "./OtpModal";
 
 export default function MobileSignUp() {
-  const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
+  const [showOtpModal, setShowOtpModal] = useState(false);
 
   const handleMouseDown = () => setShowPassword(true);
   const handleMouseUp = () => setShowPassword(false);
 
   const validationSchema = yup.object().shape({
+    name: yup
+      .string()
+      .required("Name is required")
+      .matches(/^[A-Za-z\s]+$/, "Name must contain only alphabets and spaces"),
     mobile: yup
       .string()
       .matches(/^[0-9]{10}$/, "Mobile number must be exactly 10 digits")
@@ -37,17 +41,43 @@ export default function MobileSignUp() {
     setSubmitting,
   } = useFormik({
     initialValues: {
+      name: "",
       mobile: "",
       password: "",
     },
     validationSchema,
     onSubmit: (values) => {
-      userRegisterWithMobile(values, navigate, setSubmitting);
+      console.log(values, "values");
+      getOtp(values.mobile, setSubmitting, setShowOtpModal);
     },
   });
 
+  if (showOtpModal) {
+    return (
+      <OtpModal
+        data={values}
+        setShowOtp={setShowOtpModal}
+        otpType="mobileRegisterOtp"
+      />
+    );
+  }
+
   return (
     <form className="space-y-3  w-full h-fit" onSubmit={handleSubmit}>
+      <div className="space-y-2">
+        <p className="text-gray-400 text-sm"> Name</p>
+        <LoginInput
+          type="text"
+          name="name"
+          id="name"
+          handleBlur={handleBlur}
+          handleChange={handleChange}
+          value={values.name}
+        />
+        {errors.name && touched.name && (
+          <p className="text-xs text-red-500">{errors.name}</p>
+        )}
+      </div>
       <div className="space-y-2">
         <p className="text-gray-400 text-sm"> Mobile number</p>
         <LoginInput

@@ -276,11 +276,11 @@ export async function checkAnswer(answer, id, setArtData, setSubmitting) {
 }
 
 // function to register user with mobile number
-export async function userRegisterWithMobile(data, navigate, setSubmitting) {
+export async function userRegisterWithMobile(data,otp, navigate, setSubmitting,setShowOtp) {
   try {
     const response = await axios.post(
       registerUserMobileUrl,
-      { ...data },
+      { ...data,otp },
       {
         headers: {
           "Content-Type": "application/json",
@@ -290,6 +290,7 @@ export async function userRegisterWithMobile(data, navigate, setSubmitting) {
     if (response.status === 200 && response?.data?.isSuccess) {
       successToast(response?.data?.message);
       navigate("/login");
+      setShowOtp(false)
     }
   } catch (error) {
     if (error.response) {
