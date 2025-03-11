@@ -39,9 +39,10 @@ export async function userLoginWithEmail(
       })
       .then((response) => {
         if (response?.status === 200 && response?.data?.isSuccess) {
+          localStorage.setItem("PrizeUserTkn", response?.data?.token);
           dispatch(setUser(response?.data));
           successToast(response?.data?.message);
-          navigate(-1);
+          navigate("/");
         }
       });
   } catch (error) {
@@ -81,6 +82,7 @@ export async function userLoginWithMobile(
       },
     });
     if (response?.status === 200 && response?.data?.isSuccess) {
+      localStorage.setItem("PrizeUserTkn", response?.data?.token);
       dispatch(setUser(response?.data));
       successToast(response?.data?.message);
       navigate(-1);
@@ -138,7 +140,7 @@ export async function GoogleAuthentication(data, navigate, dispatch) {
         if (response?.status === 200 && response?.data?.isSuccess) {
           dispatch(setUser(response?.data));
           localStorage.setItem("PrizeUserTkn", response?.data?.token);
-          navigate(-1);
+          navigate('/');
         }
       });
   } catch (error) {

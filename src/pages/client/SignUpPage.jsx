@@ -83,7 +83,7 @@ export default function SignUpPage() {
                   onClick={() => setIsEmail(true)}
                 >
                   <MdOutlineEmail size={20} />
-                  Login with Email
+                  Sign up with Email
                 </button>
               ) : (
                 <button
@@ -91,7 +91,7 @@ export default function SignUpPage() {
                   onClick={() => setIsEmail(false)}
                 >
                   <FaPhone size={15} />
-                  Login with Mobile
+                  Sign up with Mobile
                 </button>
               )}
             </div>

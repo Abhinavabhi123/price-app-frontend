@@ -44,7 +44,6 @@ export default function MobileLogin() {
     },
     validationSchema,
     onSubmit: (values) => {
-      console.log(values);
       userLoginWithMobile(values, navigate, setSubmitting, dispatch);
     },
   });

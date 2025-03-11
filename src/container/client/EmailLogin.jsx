@@ -46,7 +46,6 @@ export default function EmailLogin() {
     },
     validationSchema,
     onSubmit: (values) => {
-      console.log(values);
       userLoginWithEmail(values, navigate, setSubmitting, dispatch);
     },
   });

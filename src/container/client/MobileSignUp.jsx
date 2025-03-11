@@ -47,7 +47,6 @@ export default function MobileSignUp() {
     },
     validationSchema,
     onSubmit: (values) => {
-      console.log(values, "values");
       getOtp(values.mobile, setSubmitting, setShowOtpModal);
     },
   });
