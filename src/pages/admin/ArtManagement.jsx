@@ -6,7 +6,7 @@ import {
   deleteArtDetails,
   getArts,
 } from "../../services/adminApiServices";
-import { Empty, Pagination,Input  } from "antd";
+import { Empty, Pagination, Input } from "antd";
 import { IoTrashOutline, IoEyeOutline } from "react-icons/io5";
 import { MdOutlineModeEdit } from "react-icons/md";
 import ArtPreviewModal from "../../container/admin/ArtPreviewModal";
@@ -93,7 +93,10 @@ export default function ArtManagement() {
   );
 
   // Pagination Logic
-  const paginatedData = filteredData.slice((currentPage - 1) * pageSize, currentPage * pageSize);
+  const paginatedData = filteredData.slice(
+    (currentPage - 1) * pageSize,
+    currentPage * pageSize
+  );
 
   return (
     <section className="w-full h-full">
@@ -128,7 +131,7 @@ export default function ArtManagement() {
 
       <div className="w-full h-[90%] p-5">
         {artData.length > 0 ? (
-          <div className="max-h-[500px] overflow-auto">
+          <div className="w-full h-full">
             <div className="p-5 flex justify-end">
               <Input
                 placeholder="Search by Name"
@@ -138,119 +141,134 @@ export default function ArtManagement() {
                 className="w-full max-w-sm mb-3"
               />
             </div>
-            <table className="table table-md">
-              <thead className="border-y sticky top-0 bg-admin-primary-color z-10">
-                <tr className="text-center">
-                  <th className="border-x">SI No.</th>
-                  <th
-                    className="border-r w-48 cursor-pointer flex items-center justify-center gap-1"
-                    onClick={() => {
-                      setSortField("name");
-                      setSortOrder(sortOrder === "asc" ? "desc" : "asc");
-                    }}
-                  >
-                    Name{" "}
-                    {sortField === "name" ? (
-                      sortOrder === "asc" ? (
-                        <FiChevronUp />
+            <div className="max-h-[500px] overflow-auto">
+              <table className="table table-md">
+                <thead className="border-y sticky top-0 bg-admin-primary-color z-10">
+                  <tr className="text-center">
+                    <th className="border-x">SI No.</th>
+                    <th
+                      className="border-r w-48 cursor-pointer flex items-center justify-center gap-1"
+                      onClick={() => {
+                        setSortField("name");
+                        setSortOrder(sortOrder === "asc" ? "desc" : "asc");
+                      }}
+                    >
+                      Name{" "}
+                      {sortField === "name" ? (
+                        sortOrder === "asc" ? (
+                          <FiChevronUp />
+                        ) : (
+                          <IoIosArrowDown />
+                        )
                       ) : (
-                        <IoIosArrowDown />
-                      )
-                    ) : (
-                      ""
-                    )}
-                  </th>
-                  <th className="border-r w-56">Description</th>
-                  <th
-                    className="border-r cursor-pointer flex items-center justify-center gap-1"
-                    onClick={() => {
-                      setSortField("price");
-                      setSortOrder(sortOrder === "asc" ? "desc" : "asc");
-                    }}
-                  >
-                    Price{" "}
-                    {sortField === "price" ? (
-                      sortOrder === "asc" ? (
-                        <FiChevronUp />
+                        ""
+                      )}
+                    </th>
+                    <th className="border-r w-56">Description</th>
+                    <th
+                      className="border-r cursor-pointer flex items-center justify-center gap-1"
+                      onClick={() => {
+                        setSortField("price");
+                        setSortOrder(sortOrder === "asc" ? "desc" : "asc");
+                      }}
+                    >
+                      Price{" "}
+                      {sortField === "price" ? (
+                        sortOrder === "asc" ? (
+                          <FiChevronUp />
+                        ) : (
+                          <IoIosArrowDown />
+                        )
                       ) : (
-                        <IoIosArrowDown />
-                      )
-                    ) : (
-                      ""
-                    )}
-                  </th>
-                  <th className="border-r">Image</th>
-                  <th className="border-r">Status</th>
-                  <th className="border-r">Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {paginatedData.map((art, index) => (
-                  <tr
-                    key={index}
-                    className={
-                      index % 2 === 0 ? "bg-gray-500/50" : "bg-gray-600"
-                    }
-                  >
-                    <td className="text-center">
-                      {(currentPage - 1) * pageSize + index + 1}
-                    </td>
-                    <td className="text-center">
-                      <p className="max-w-48 truncate">{art?.name || ""}</p>
-                    </td>
-                    <td className="text-center">
-                      <p className="max-w-48 truncate">
-                        {art.description || ""}
-                      </p>
-                    </td>
-                    <td className="text-center">{art?.price || ""}</td>
-                    <td className="text-center flex justify-center items-center">
-                      <img
-                        src={`${import.meta.env.VITE_SERVER_URL}/uploads/arts/${
-                          art?.image
-                        }`}
-                        className="size-10 border border-admin-active-color"
-                        alt="art Image"
-                      />
-                    </td>
-                    <td className="text-center">
-                      <button
-                        className={`text-xs rounded-lg px-3 py-1 outline-none text-white cursor-pointer ${
-                          art.status ? "bg-green-500" : "bg-red-500"
-                        }`}
-                        onClick={() => changeArtStatus(art?._id, setChange)}
-                      >
-                        {art.status ? "Active" : "Inactive"}
-                      </button>
-                    </td>
-                    <td className="text-center">
-                      <div className="flex justify-center items-center gap-3">
-                        <IoEyeOutline
-                          size={20}
-                          className="text-white cursor-pointer"
-                          onClick={() => {
-                            setPreview(true);
-                            setPreviewData(art);
-                          }}
-                        />
-                        <MdOutlineModeEdit
-                          size={20}
-                          className="text-white cursor-pointer"
-                          onClick={() =>
-                            art.ownerModel === "Admin" ? editHandler(art) : ""
-                          }
-                        />
-                        <IoTrashOutline
-                          size={20}
-                          className="text-red-500 cursor-pointer"
-                          onClick={() => deleteArt(art?._id)}
-                        />
-                      </div>
-                    </td>
+                        ""
+                      )}
+                    </th>
+                    <th className="border-r">Image</th>
+                    <th className="border-r">Status</th>
+                    <th className="border-r">Actions</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {paginatedData.map((art, index) => (
+                    <tr
+                      key={index}
+                      className={
+                        index % 2 === 0 ? "bg-gray-500/50" : "bg-gray-600"
+                      }
+                    >
+                      <td className="text-center">
+                        {(currentPage - 1) * pageSize + index + 1}
+                      </td>
+                      <td className="text-center">
+                        <p className="max-w-48 truncate">{art?.name || ""}</p>
+                      </td>
+                      <td className="text-center">
+                        <p className="max-w-48 truncate">
+                          {art.description || ""}
+                        </p>
+                      </td>
+                      <td className="text-center">{art?.price || ""}</td>
+                      <td className="text-center flex justify-center items-center">
+                        <img
+                          src={`${
+                            import.meta.env.VITE_SERVER_URL
+                          }/uploads/arts/${art?.image}`}
+                          className="size-10 border border-admin-active-color"
+                          alt="art Image"
+                        />
+                      </td>
+                      <td className="text-center">
+                        <button
+                          className={`text-xs rounded-lg px-3 py-1 outline-none text-white cursor-pointer ${
+                            art.status ? "bg-green-500" : "bg-red-500"
+                          }`}
+                          onClick={() => changeArtStatus(art?._id, setChange)}
+                        >
+                          {art.status ? "Active" : "Inactive"}
+                        </button>
+                      </td>
+                      <td className="text-center">
+                        <div className="flex justify-center items-center gap-3">
+                          <IoEyeOutline
+                            size={20}
+                            className="text-white cursor-pointer"
+                            onClick={() => {
+                              setPreview(true);
+                              setPreviewData(art);
+                            }}
+                          />
+                          <MdOutlineModeEdit
+                            size={20}
+                            className="text-white cursor-pointer"
+                            onClick={() =>
+                              art.ownerModel === "Admin" ? editHandler(art) : ""
+                            }
+                          />
+                          <IoTrashOutline
+                            size={20}
+                            className="text-red-500 cursor-pointer"
+                            onClick={() => deleteArt(art?._id)}
+                          />
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            {/* Pagination */}
+            <div className="flex justify-end mt-5">
+              <Pagination
+                showSizeChanger
+                onChange={(page, size) => {
+                  setCurrentPage(page);
+                  setPageSize(size);
+                }}
+                current={currentPage}
+                pageSize={pageSize}
+                total={artData.length}
+              />
+            </div>
           </div>
         ) : (
           <div className="w-full h-[100%] flex justify-center items-center">
@@ -261,19 +279,6 @@ export default function ArtManagement() {
             />
           </div>
         )}
-        {/* Pagination */}
-        <div className="flex justify-end mt-5">
-          <Pagination
-            showSizeChanger
-            onChange={(page, size) => {
-              setCurrentPage(page);
-              setPageSize(size);
-            }}
-            current={currentPage}
-            pageSize={pageSize}
-            total={artData.length}
-          />
-        </div>
       </div>
     </section>
   );

@@ -17,6 +17,8 @@ import {
   changeArtStatusUrl,
   editCardDetailsUrl,
   getUsersUrl,
+  getDashboardDataUrl,
+  inactivateCardUrl,
 } from "./urls";
 import {
   errorToast,
@@ -345,6 +347,38 @@ export async function activateCard(id, setChanged) {
   }
 }
 
+// function to inactive card
+export async function inActiveCard(id, setChanged) {
+  try {
+    const response = await axios.put(
+      inactivateCardUrl,
+      {},
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+          cardId: id,
+        },
+      }
+    );
+    if (response?.status === 200 && response?.data?.isSuccess) {
+      successToast(response?.data?.message);
+      setChanged((prev) => !prev);
+    }
+  } catch (error) {
+    if (error.response) {
+      errorToast(error.response.data.message || "Something went wrong!");
+      console.error("Server Error:", error.response.data);
+    } else if (error.request) {
+      errorToast("No response from server. Please try again later.");
+      console.error("Request Error:", error.request);
+    } else {
+      errorToast("An unexpected error occurred.");
+      console.error("Unexpected Error:", error.message);
+    }
+  }
+}
+
 // function for set art details
 export async function postArtDetails(
   data,
@@ -642,6 +676,44 @@ export async function getUsers(updateState) {
     });
     if (response?.status === 200 && response?.data?.isSuccess) {
       updateState(response?.data?.userData);
+    }
+  } catch (error) {
+    if (error.response) {
+      const { data } = error.response;
+      if (data.errors && Array.isArray(data.errors)) {
+        // Show each validation error
+        data.errors.forEach((err) => errorToast(err.msg));
+      } else {
+        errorToast(error.response.data.message || "Something went wrong!");
+      }
+      console.error("Server Error:", error.response.data);
+    } else if (error.request) {
+      errorToast("No response from server. Please try again later.");
+      console.error("Request Error:", error.request);
+    } else {
+      errorToast("An unexpected error occurred.");
+      console.error("Unexpected Error:", error.message);
+    }
+  }
+}
+
+// function to get dashboard data
+export async function getDashboardData(
+  setUserData,
+  setUserArtData,
+  setDashData
+) {
+  try {
+    const response = await axios.get(getDashboardDataUrl, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    if (response.status === 200 && response?.data?.isSuccess) {
+      console.log(response, "res");
+      setUserData(response?.data?.userData);
+      setUserArtData(response?.data?.userArtData);
+      setDashData(response?.data?.dashData);
     }
   } catch (error) {
     if (error.response) {

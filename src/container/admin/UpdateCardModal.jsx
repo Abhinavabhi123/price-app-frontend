@@ -150,6 +150,7 @@ export default function UpdateCardModal(Props) {
           <div className="w-full">
             <label htmlFor="cardName" className="text-xs font-semibold">
               Name
+              <span className="text-xs text-red-500"> *</span>
             </label>
             <CardInputField
               type="text"
@@ -166,6 +167,7 @@ export default function UpdateCardModal(Props) {
           <div className="w-full">
             <label htmlFor="cardId" className="text-xs font-semibold">
               Card Id
+              <span className="text-xs text-red-500"> *</span>
             </label>
             <CardInputField
               type="text"
@@ -185,6 +187,7 @@ export default function UpdateCardModal(Props) {
           <div className="w-full">
             <label htmlFor="priceMoney" className="text-xs font-semibold">
               Price Money
+              <span className="text-xs text-red-500"> *</span>
             </label>
             <CardInputField
               type="number"
@@ -201,6 +204,7 @@ export default function UpdateCardModal(Props) {
           <div className="w-full">
             <label htmlFor="premium" className="text-xs font-semibold">
               Premium Amount
+              <span className="text-xs text-red-500"> *</span>
             </label>
             <CardInputField
               type="number"
@@ -220,6 +224,7 @@ export default function UpdateCardModal(Props) {
           <div className="w-full">
             <label htmlFor="startDate" className="text-xs font-semibold">
               Start Date
+              <span className="text-xs text-red-500"> *</span>
             </label>
             <CardInputField
               type="datetime-local"
@@ -237,6 +242,7 @@ export default function UpdateCardModal(Props) {
           <div className="w-full">
             <label htmlFor="endDate" className="text-xs font-semibold">
               End Date
+              <span className="text-xs text-red-500"> *</span>
             </label>
             <CardInputField
               type="datetime-local"
@@ -254,7 +260,10 @@ export default function UpdateCardModal(Props) {
         {/* form row 4 */}
         <div className="flex flex-col md:flex-row gap-3 ">
           <div className="w-full">
-            <p className="text-xs font-semibold mb-2">Select Image</p>
+            <p className="text-xs font-semibold mb-2">
+              Select Image
+              <span className="text-xs text-red-500"> *</span>
+            </p>
             <div className="relative w-full h-10 flex gap-3">
               <div className="w-full md:w-[80%]">
                 <button
@@ -322,7 +331,7 @@ export default function UpdateCardModal(Props) {
           {!isSubmitting ? (
             <button
               type="submit"
-              className="rounded-lg bg-admin-active-color outline-none px-3 py-1 text-sm cursor-pointer"
+              className="rounded-lg bg-admin-active-color outline-none text-white px-3 py-1 text-sm cursor-pointer"
             >
               Save
             </button>

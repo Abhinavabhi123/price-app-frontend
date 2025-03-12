@@ -102,6 +102,10 @@ export default function CardImageModal(Props) {
           }}
         >
           <div>
+            <label htmlFor="name" className="font-semibold text">
+              Image name
+              <span className="text-xs text-red-500"> *</span>
+            </label>
             <input
               type="text"
               name="imageName"
@@ -118,6 +122,10 @@ export default function CardImageModal(Props) {
           </div>
 
           <div className="w-full space-y-2">
+          <label htmlFor="name" className="font-semibold text">
+            Image 
+              <span className="text-xs text-red-500"> *</span>
+            </label>
             <div>
               <label
                 htmlFor="image"

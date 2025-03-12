@@ -183,6 +183,7 @@ export default function ArtModal(Props) {
           <div className="space-y-5">
             <label htmlFor="name" className="font-semibold text">
               Art Name
+              <span className="text-xs text-red-500"> *</span>
             </label>
             <div>
               <InputField
@@ -203,6 +204,7 @@ export default function ArtModal(Props) {
           <div className="space-y-5">
             <label htmlFor="description" className="font-semibold text">
               Description
+              <span className="text-xs text-red-500"> *</span>
             </label>
             <div>
               <textarea
@@ -225,6 +227,7 @@ export default function ArtModal(Props) {
           <div className="space-y-5">
             <label htmlFor="price" className="font-semibold text">
               Price
+              <span className="text-xs text-red-500"> *</span>
             </label>
             <div>
               <InputField
@@ -245,6 +248,7 @@ export default function ArtModal(Props) {
           <div className="space-y-5">
             <label htmlFor="question" className="font-semibold text">
               Question
+              <span className="text-xs text-red-500"> *</span>
             </label>
             <div>
               <InputField
@@ -265,6 +269,7 @@ export default function ArtModal(Props) {
           <div className="space-y-5">
             <label htmlFor="answer" className="font-semibold text">
               Answer
+              <span className="text-xs text-red-500"> *</span>
             </label>
             <div>
               <InputField
@@ -286,6 +291,7 @@ export default function ArtModal(Props) {
             <div className="space-y-5">
               <label htmlFor="image" className="font-semibold text">
                 Image
+                <span className="text-xs text-red-500"> *</span>
               </label>
               <div>
                 <label

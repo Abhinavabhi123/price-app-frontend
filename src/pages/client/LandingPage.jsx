@@ -3,6 +3,7 @@ import LightRay from "../../assets/light-ray.jpg";
 import PrizeBox from "../../assets/prize-box.png";
 import { MdKeyboardArrowRight } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
+import Footer from "../../container/client/Footer";
 
 
 export default function LandingPage() {
@@ -10,7 +11,7 @@ export default function LandingPage() {
 
 
   return (
-    <div className="w-screen h-dvh  bg-primary-color">
+    <div className="w-screen bg-primary-color">
       <img src={LightRay} alt="ray" className="absolute top-0 right-0 z-0" />
       {/* <Headroom> */}
       <Header />
@@ -71,6 +72,7 @@ export default function LandingPage() {
         </div>
       </section>
       {/* <div className="w-full h-[200vh] bg-primary-color"></div> */}
+      <Footer />
     </div>
   );
 }

@@ -38,7 +38,6 @@ export default function Header() {
   const location = useLocation().pathname;
   const token = localStorage.getItem("PrizeUserTkn");
 
-
   return (
     <header
       className={`w-full  h-16 flex items-center justify-between px-10 md:px-20 lg:px-32 text-white sticky top-0 left-0 transition-all duration-300 z-40 backdrop-blur-lg border border-white/20 shadow-lg`}
@@ -67,6 +66,7 @@ export default function Header() {
             className={`min-w-20 cursor-pointer flex items-center justify-center gap-2 transition-all divide-neutral-400 hover:text-white ${
               location === "/about" && "text-white"
             }`}
+            onClick={() => navigate("/about")}
           >
             About
           </li>
@@ -77,9 +77,6 @@ export default function Header() {
             onClick={() => navigate("/")}
           >
             Cards
-          </li>
-          <li className="min-w-20 cursor-pointer flex items-center justify-center gap-2 transition-all divide-neutral-400 hover:text-white">
-            Arts
           </li>
         </ul>
       </nav>
@@ -148,12 +145,6 @@ export default function Header() {
               setShow={setShow}
             />
             <NavLink title="Cards" link="/" activeLink="/" setShow={setShow} />
-            <NavLink
-              title="Arts"
-              link="/arts"
-              activeLink="arts"
-              setShow={setShow}
-            />
             {token ? (
               <NavLink
                 title="Profile"

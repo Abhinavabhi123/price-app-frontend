@@ -52,10 +52,10 @@ export default function TopBar() {
           <img src={Icon} alt="icon" className="size-8 md:size-10" />
         </div>
         <div className="flex gap-4">
-          <div className="size-8 md:size-10 bg-admin-secondary-color rounded-md cursor-pointer drop-shadow-xl flex justify-center items-center">
+          <div className="size-8 hidden md:size-10 bg-admin-secondary-color rounded-md cursor-pointer drop-shadow-xl  justify-center items-center">
             <MdOutlineMessage size={18} className="text-gray-400" />
           </div>
-          <div className="size-8 md:size-10 bg-admin-secondary-color rounded-md cursor-pointer drop-shadow-xl flex justify-center items-center">
+          <div className="size-8 hidden md:size-10 bg-admin-secondary-color rounded-md cursor-pointer drop-shadow-xl  justify-center items-center">
             <VscBellDot className="text-gray-400" size={20} />
           </div>
           <div className=" bg-admin-secondary-color rounded-md ms-4 cursor-pointer overflow-hidden drop-shadow-xl">
@@ -98,8 +98,8 @@ export default function TopBar() {
                 <hr className="text-gray-400" />
                 <Navlink
                   title="Users Management"
-                  // link="/admin/users"
-                  // activeLink="users"
+                  link="/admin/users"
+                  activeLink="users"
                   icon={<FaUsers size={20} className="text-white" />}
                   closeMenu={closeMenu}
                 />

@@ -4,6 +4,7 @@ import {
   activateCard,
   deleteCardDetails,
   getCards,
+  inActiveCard,
 } from "../../services/adminApiServices";
 import { Empty, Pagination, Input } from "antd";
 import Swal from "sweetalert2";
@@ -70,6 +71,21 @@ export default function CardManagement() {
       }
     });
   }
+  function inactiveCardStatus(id) {
+    MySwal.fire({
+      title: "Are you sure?",
+      text: "You want to in active this card!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, Inactivate!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        inActiveCard(id, setChanged);
+      }
+    });
+  }
   const handleCancel = () => {
     setShowModal(false);
     setPreview(null);
@@ -78,8 +94,6 @@ export default function CardManagement() {
   const closeEditModal = () => {
     setEditModal(false);
   };
-
-  console.log(cardData, "cardData");
 
   // Sorting Function
   const sortedData = [...cardData].sort((a, b) => {
@@ -96,9 +110,13 @@ export default function CardManagement() {
 
   // Search Filter
   const filteredData = sortedData.filter(
-    (art) =>
-      art.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      art.cardId.toLowerCase().includes(searchQuery.toLowerCase())
+    (card) =>
+      card.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      card.cardId.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      card.startDate.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      card.endDate.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      card.priceMoney.includes(Number(searchQuery))||
+      card.premium.includes(Number(searchQuery))
   );
 
   // Pagination Logic
@@ -131,22 +149,22 @@ export default function CardManagement() {
       <div className="w-full h-[90%] p-5">
         {cardData.length > 0 ? (
           <div className="w-full">
+            <div className="p-5 flex justify-end">
+              <Input
+                placeholder="Search by Name"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                allowClear
+                className="w-full max-w-sm mb-3"
+              />
+            </div>
             <div className="max-h-[500px] overflow-auto">
-              <div className="p-5 flex justify-end">
-                <Input
-                  placeholder="Search by Name"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  allowClear
-                  className="w-full max-w-sm mb-3"
-                />
-              </div>
               <table className="table table-md">
                 <thead className="border-y sticky top-0 bg-admin-primary-color z-10">
                   <tr className="text-center select-none">
                     <th className="border-x">SI No</th>
                     <th
-                      className="w-64 border-r  cursor-pointer flex items-center justify-center gap-1"
+                      className="w-58 border-r  cursor-pointer flex items-center justify-center gap-1"
                       onClick={() => {
                         setSortField("name");
                         setSortOrder(sortOrder === "asc" ? "desc" : "asc");
@@ -164,14 +182,14 @@ export default function CardManagement() {
                       )}
                     </th>
                     <th
-                      className="border-r cursor-pointer"
+                      className="border-r cursor-pointer relative"
                       onClick={() => {
                         setSortField("cardId");
                         setSortOrder(sortOrder === "asc" ? "desc" : "asc");
                       }}
                     >
                       Card Id
-                      <span>
+                      <span className="absolute right-0 top-[50%] -translate-y-[50%]">
                         {sortField === "cardId" ? (
                           sortOrder === "asc" ? (
                             <FiChevronUp />
@@ -183,11 +201,87 @@ export default function CardManagement() {
                         )}
                       </span>
                     </th>
-                    <th className="border-r">Price Money</th>
-                    <th className="border-r">Premium</th>
+                    <th
+                      className="border-r flex cursor-pointer justify-center items-center gap-1"
+                      onClick={() => {
+                        setSortField("priceMoney");
+                        setSortOrder(sortOrder === "asc" ? "desc" : "asc");
+                      }}
+                    >
+                      Price Money
+                      <span>
+                        {sortField === "priceMoney" ? (
+                          sortOrder === "asc" ? (
+                            <FiChevronUp />
+                          ) : (
+                            <IoIosArrowDown />
+                          )
+                        ) : (
+                          ""
+                        )}
+                      </span>
+                    </th>
+                    <th
+                      className="border-r cursor-pointer relative"
+                      onClick={() => {
+                        setSortField("premium");
+                        setSortOrder(sortOrder === "asc" ? "desc" : "asc");
+                      }}
+                    >
+                      Premium
+                      <span className="absolute right-0 top-[50%] -translate-y-[50%]">
+                        {sortField === "premium" ? (
+                          sortOrder === "asc" ? (
+                            <FiChevronUp />
+                          ) : (
+                            <IoIosArrowDown />
+                          )
+                        ) : (
+                          ""
+                        )}
+                      </span>
+                    </th>
                     <th className="border-r">Image</th>
-                    <th className="border-r">Start Date</th>
-                    <th className="border-r">End Date</th>
+                    <th
+                      className="border-r cursor-pointer relative"
+                      onClick={() => {
+                        setSortField("startDate");
+                        setSortOrder(sortOrder === "asc" ? "desc" : "asc");
+                      }}
+                    >
+                      Start Date
+                      <span className="absolute right-0 top-[50%] -translate-y-[50%]">
+                        {sortField === "startDate" ? (
+                          sortOrder === "asc" ? (
+                            <FiChevronUp />
+                          ) : (
+                            <IoIosArrowDown />
+                          )
+                        ) : (
+                          ""
+                        )}
+                      </span>
+                    </th>
+                    <th
+                      className="border-r cursor-pointer flex items-center justify-center gap-1"
+                      onClick={() => {
+                        setSortField("endDate");
+                        setSortOrder(sortOrder === "asc" ? "desc" : "asc");
+                      }}
+                    >
+                      End Date
+                      <span>
+                        {sortField === "endDate" ? (
+                          sortOrder === "asc" ? (
+                            <FiChevronUp />
+                          ) : (
+                            <IoIosArrowDown />
+                          )
+                        ) : (
+                          ""
+                        )}
+                      </span>
+                    </th>
                     <th className="border-r">Completed</th>
                     <th className="border-r w-28">Status</th>
                     <th className="border-r">Action</th>
@@ -226,7 +320,7 @@ export default function CardManagement() {
                           item?.completed ? "text-green-500" : ""
                         }`}
                       >
-                        {item?.completed ? "Completed" : "Not Completed"}
+                        {item?.completed ? "Yes" : "No"}
                       </td>
                       <td className="text-center ">
                         {item?.status ? (
@@ -235,7 +329,10 @@ export default function CardManagement() {
                               Activated
                             </div>
                           ) : (
-                            <button className="px-2 bg-green-500 text-xs py-1 rounded-lg cursor-pointer outline-none">
+                            <button
+                              className="px-2 bg-green-500 text-xs py-1 rounded-lg cursor-pointer outline-none"
+                              onClick={() => inactiveCardStatus(item._id)}
+                            >
                               Active
                             </button>
                           )

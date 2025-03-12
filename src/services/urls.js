@@ -9,6 +9,7 @@ export const postCardDetailsUrl = serverUrl+"/admin/postCardDetails";
 export const getCardsUrl = serverUrl+"/admin/getCards";
 export const deleteCardDetailsUrl = serverUrl+'/admin/deleteCardDetails';
 export const activateCardUrl = serverUrl+"/admin/activateCard";
+export const inactivateCardUrl = serverUrl+"/admin/inactivateCard";
 export const postArtDetailsUrl = serverUrl+"/admin/postArtDetails";
 export const getArtsUrl = serverUrl+"/admin/getArts";
 export const editArtDetailsUrl = serverUrl+"/admin/editArtDetails";
@@ -17,6 +18,7 @@ export const deleteArtDetailsUrl = serverUrl+"/admin/deleteArtDetails";
 export const changeArtStatusUrl = serverUrl+"/admin/changeArtStatus";
 export const editCardDetailsUrl = serverUrl+"/admin/editCardDetails";
 export const getUsersUrl = serverUrl+"/admin/getUsers";
+export const getDashboardDataUrl = serverUrl+"/admin/getDashboardData";
 
 
 

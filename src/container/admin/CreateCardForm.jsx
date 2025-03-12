@@ -11,6 +11,12 @@ export default function CreateCardForm() {
   const [selected, setSelected] = useState("");
   const [active, setActive] = useState(false);
   const [cardImageData, setCardImageData] = useState([]);
+  // const [eliminationStages, setEliminationStages] = useState([
+  //   {
+  //     stageDate: "",
+  //     status: false,
+  //   },
+  // ]);
 
   useEffect(() => {
     getCardImages(setCardImageData);
@@ -48,6 +54,30 @@ export default function CreateCardForm() {
       .min(Yup.ref("startDate"), "End date must be after the start date")
       .typeError("End date must be a valid date"),
     cardImageId: Yup.string().required("Image is required"),
+
+    eliminationStages: Yup.array().of(
+      Yup.object().shape({
+        stageDate: Yup.date()
+          .required("Stage date is required")
+          .typeError("Stage date must be a valid date")
+          .test(
+            "is-after-start",
+            "Stage date must be after the start date",
+            function (value) {
+              return (
+                new Date(value) >= new Date(this.options.context.startDate)
+              );
+            }
+          )
+          .test(
+            "is-before-end",
+            "Stage date must be before the end date",
+            function (value) {
+              return new Date(value) <= new Date(this.options.context.endDate);
+            }
+          ),
+      })
+    ),
   });
 
   const {
@@ -70,9 +100,12 @@ export default function CreateCardForm() {
       startDate: "",
       endDate: "",
       cardImageId: "",
+      eliminationStages: [{ stageDate: "", status: false }],
     },
     validationSchema,
     onSubmit: (values) => {
+      console.log(values, "valuessss");
+
       postCard(values, setSubmitting, navigate);
     },
   });
@@ -84,12 +117,16 @@ export default function CreateCardForm() {
     }
   }, [cardImageData, setFieldValue]);
 
+
   return (
     <form className="w-full h-fit space-y-3" onSubmit={handleSubmit}>
       {/* form row 1 */}
       <div className="flex flex-col md:flex-row gap-3">
         <div className="w-full space-y-2">
-          <p className="text-sm">Card Name</p>
+          <p className="text-xs">
+            Card Name
+            <span className="text-xs text-red-500"> *</span>
+          </p>
           <div>
             <InputField
               type="text"
@@ -100,12 +137,15 @@ export default function CreateCardForm() {
               handleBlur={handleBlur}
             />
             {errors?.cardName && touched?.cardName && (
-              <p className="text-sm text-red-500">{errors.cardName}</p>
+              <p className="text-xs text-red-500">{errors.cardName}</p>
             )}
           </div>
         </div>
         <div className="w-full space-y-2">
-          <p className="text-sm">Card Id</p>
+          <p className="text-xs">
+            Card Id
+            <span className="text-xs text-red-500"> *</span>
+          </p>
           <div>
             <InputField
               type="text"
@@ -116,7 +156,7 @@ export default function CreateCardForm() {
               handleBlur={handleBlur}
             />
             {errors?.cardId && touched?.cardId && (
-              <p className="text-sm text-red-500">{errors.cardId}</p>
+              <p className="text-xs text-red-500">{errors.cardId}</p>
             )}
           </div>
         </div>
@@ -124,7 +164,10 @@ export default function CreateCardForm() {
       {/* form row 2 */}
       <div className="flex flex-col md:flex-row gap-3">
         <div className="w-full space-y-2">
-          <p className="text-sm">Price Money</p>
+          <p className="text-xs">
+            Price Money
+            <span className="text-xs text-red-500"> *</span>
+          </p>
           <div>
             <InputField
               type="number"
@@ -135,12 +178,15 @@ export default function CreateCardForm() {
               handleBlur={handleBlur}
             />
             {errors?.priceMoney && touched?.priceMoney && (
-              <p className="text-sm text-red-500">{errors.priceMoney}</p>
+              <p className="text-xs text-red-500">{errors.priceMoney}</p>
             )}
           </div>
         </div>
         <div className="w-full space-y-2">
-          <p className="text-sm">Premium Amount</p>
+          <p className="text-xs">
+            Premium Amount
+            <span className="text-xs text-red-500"> *</span>
+          </p>
           <div>
             <InputField
               type="text"
@@ -151,7 +197,7 @@ export default function CreateCardForm() {
               handleBlur={handleBlur}
             />
             {errors?.premium && touched?.premium && (
-              <p className="text-sm text-red-500">{errors.premium}</p>
+              <p className="text-xs text-red-500">{errors.premium}</p>
             )}
           </div>
         </div>
@@ -159,7 +205,10 @@ export default function CreateCardForm() {
       {/* form row 3 */}
       <div className="flex flex-col md:flex-row gap-3">
         <div className="w-full space-y-2">
-          <p className="text-sm">Start Date</p>
+          <p className="text-xs">
+            Start Date
+            <span className="text-xs text-red-500"> *</span>
+          </p>
           <div>
             <InputField
               type="datetime-local"
@@ -171,12 +220,15 @@ export default function CreateCardForm() {
               className="color-scheme-light [&::-webkit-calendar-picker-indicator]:invert"
             />
             {errors?.startDate && touched?.startDate && (
-              <p className="text-sm text-red-500">{errors.startDate}</p>
+              <p className="text-xs text-red-500">{errors.startDate}</p>
             )}
           </div>
         </div>
         <div className="w-full space-y-2">
-          <p className="text-sm">End Date</p>
+          <p className="text-xs">
+            End Date
+            <span className="text-xs text-red-500"> *</span>
+          </p>
           <div>
             <InputField
               type="datetime-local"
@@ -188,15 +240,78 @@ export default function CreateCardForm() {
               className="color-scheme-light [&::-webkit-calendar-picker-indicator]:invert"
             />
             {errors?.endDate && touched?.endDate && (
-              <p className="text-sm text-red-500">{errors.endDate}</p>
+              <p className="text-xs text-red-500">{errors.endDate}</p>
             )}
           </div>
+        </div>
+      </div>
+      <div>
+        {/* Dynamic Fields for Elimination Stages */}
+        <div className="w-full flex flex-col md:flex-row">
+          <div className="w-full space-y-2">
+            <p className="text-xs">
+              Elimination Stages
+              <span className="text-xs text-red-500"> *</span>
+            </p>
+            <div className="space-y-4">
+              {values.eliminationStages.map((_, index) => (
+                <div key={index} className="flex flex-col gap-1">
+                  <div className="flex gap-3">
+                    <InputField
+                      id={`stageDate-${index}`}
+                      name={`eliminationStages.${index}.stageDate`}
+                      type="datetime-local"
+                      value={values.eliminationStages[index]?.stageDate || ""}
+                      handleChange={handleChange}
+                      handleBlur={handleBlur}
+                      className="color-scheme-light [&::-webkit-calendar-picker-indicator]:invert"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const newStages = values.eliminationStages.filter(
+                          (_, i) => i !== index
+                        );
+                        setFieldValue("eliminationStages", newStages);
+                      }}
+                      className="bg-red-500 text-xs text-white px-3 rounded-lg cursor-pointer"
+                    >
+                      Remove
+                    </button>
+                  </div>
+                  {errors.eliminationStages?.[index]?.stageDate &&
+                    touched.eliminationStages?.[index]?.stageDate && (
+                      <p className="text-xs text-red-500">
+                        {errors.eliminationStages[index].stageDate}
+                      </p>
+                    )}
+                </div>
+              ))}
+              <button
+                type="button"
+                onClick={() =>
+                  setFieldValue("eliminationStages", [
+                    ...values.eliminationStages,
+                    { stageDate: "", status: false },
+                  ])
+                }
+                className="bg-blue-500 text-xs text-white px-3 py-2 cursor-pointer rounded-lg"
+              >
+                Add Stage
+              </button>
+            </div>
+          </div>
+
+          <div className="w-full"></div>
         </div>
       </div>
       {/* form row 5 */}
       <div className="flex flex-col md:flex-row gap-3 ">
         <div className="w-full">
-          <p className="text-sm mb-2">Select Image</p>
+          <p className="text-xs mb-2">
+            Select Image
+            <span className="text-xs text-red-500"> *</span>
+          </p>
           <div className="relative w-full h-10 flex gap-3">
             <div className="w-full md:w-[80%]">
               <button

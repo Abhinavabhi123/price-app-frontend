@@ -31,6 +31,14 @@ export default function CardPreviewModal(Props) {
           <p className="font-semibold">
             Completed :- {data?.completed ? "Yes" : "No"}
           </p>
+          <p className="font-semibold">Elimination Stages</p>
+          {data &&
+            data?.eliminationStages.length > 0 &&
+            data?.eliminationStages.map((stage, index) => (
+              <p key={index} className="ps-5">
+                {new Date(stage?.stageDate).toLocaleString()} -&gt; {!stage?.status?"Not completed":"Completed"}
+              </p>
+            ))}
           <img
             className="size-28 border rounded-lg mt-3"
             src={`${import.meta.env.VITE_SERVER_URL}/uploads/${

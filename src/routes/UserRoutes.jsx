@@ -3,11 +3,13 @@ import { lazy, Suspense } from "react";
 import Loading from "../components/Loading/Loading";
 import UserAuth from "../utils/Authentication/UserAuth";
 
+
 const LandingPage = lazy(() => import("../pages/client/LandingPage"));
 const UserProfile = lazy(() => import("../pages/client/UserProfile"));
 const LoginPage = lazy(() => import("../pages/client/LoginPage"));
 const Game = lazy(() => import("../pages/client/Game"));
 const SignUpPage = lazy(() => import("../pages/client/SignUpPage"));
+const AboutPage = lazy(() => import("../pages/client/AboutPage"));
 
 export default function UserRoutes() {
   return (
@@ -19,6 +21,7 @@ export default function UserRoutes() {
           <Route path="/home" element={<LandingPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/profile" element={<UserProfile />} />
+          <Route path="/about" element={<AboutPage/>}/>
         </Routes>
       </UserAuth>
     </Suspense>
