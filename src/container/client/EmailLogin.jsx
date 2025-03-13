@@ -82,6 +82,18 @@ export default function EmailLogin() {
           <p className="text-xs text-red-500">{errors.password}</p>
         )}
       </div>
+      <div className="flex">
+        <p
+          className="text-xs text-blue-500 cursor-pointer"
+          onClick={() =>
+            navigate("/forgot", {
+              state: { type: "email" }, 
+            })
+          }
+        >
+          Forgot password?
+        </p>
+      </div>
       {!isSubmitting ? (
         <button
           disabled={isSubmitting}

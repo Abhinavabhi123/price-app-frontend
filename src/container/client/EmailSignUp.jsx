@@ -54,7 +54,12 @@ export default function EmailSignUp() {
 
   if (showOtpModal) {
     return (
-      <OtpModal data={values} setShowOtp={setShowOtpModal} otpType="emailOtp" />
+      <OtpModal
+        data={values}
+        setShowOtp={setShowOtpModal}
+        otpType="emailOtp"
+        type="email"
+      />
     );
   }
 

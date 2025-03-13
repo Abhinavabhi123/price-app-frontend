@@ -4,8 +4,12 @@ import {
   successToast,
 } from "../components/Notification/Notification";
 import {
+  changePasswordWithEmailUrl,
+  changePasswordWithMobileUrl,
   changeUserProfileImageUrl,
   checkAnswerUrl,
+  checkEmailAndGetOtpUrl,
+  checkMobileAndGetOtpUrl,
   getEmailOtpUrl,
   getGamesAndArtsUrl,
   getOtpUrl,
@@ -17,6 +21,8 @@ import {
   updateMobileNumberUrl,
   userLoginUrl,
   userLoginWithMobileUrl,
+  verifyEmailOtpUrl,
+  verifyMobileOtpUrl,
 } from "./urls";
 import { clearUser, setUser } from "../utils/store/userSlice";
 
@@ -85,7 +91,7 @@ export async function userLoginWithMobile(
       localStorage.setItem("PrizeUserTkn", response?.data?.token);
       dispatch(setUser(response?.data));
       successToast(response?.data?.message);
-      navigate(-1);
+      navigate("/");
     }
   } catch (error) {
     if (error.response) {
@@ -140,7 +146,7 @@ export async function GoogleAuthentication(data, navigate, dispatch) {
         if (response?.status === 200 && response?.data?.isSuccess) {
           dispatch(setUser(response?.data));
           localStorage.setItem("PrizeUserTkn", response?.data?.token);
-          navigate('/');
+          navigate("/");
         }
       });
   } catch (error) {
@@ -278,11 +284,17 @@ export async function checkAnswer(answer, id, setArtData, setSubmitting) {
 }
 
 // function to register user with mobile number
-export async function userRegisterWithMobile(data,otp, navigate, setSubmitting,setShowOtp) {
+export async function userRegisterWithMobile(
+  data,
+  otp,
+  navigate,
+  setSubmitting,
+  setShowOtp
+) {
   try {
     const response = await axios.post(
       registerUserMobileUrl,
-      { ...data,otp },
+      { ...data, otp },
       {
         headers: {
           "Content-Type": "application/json",
@@ -292,7 +304,7 @@ export async function userRegisterWithMobile(data,otp, navigate, setSubmitting,s
     if (response.status === 200 && response?.data?.isSuccess) {
       successToast(response?.data?.message);
       navigate("/login");
-      setShowOtp(false)
+      setShowOtp(false);
     }
   } catch (error) {
     if (error.response) {
@@ -542,6 +554,239 @@ export async function registerUserWithEmail(
     if (response.status === 200 && response?.data?.isSuccess) {
       successToast(response?.data?.message);
       setShowOtp(false);
+      navigate("/login");
+    }
+  } catch (error) {
+    if (error.response) {
+      const { data } = error.response;
+      if (data.errors && Array.isArray(data.errors)) {
+        // Show each validation error
+        data.errors.forEach((err) => errorToast(err.msg));
+      } else {
+        errorToast(error.response.data.message || "Something went wrong!");
+      }
+      console.error("Server Error:", error.response.data);
+    } else if (error.request) {
+      errorToast("No response from server. Please try again later.");
+      console.error("Request Error:", error.request);
+    } else {
+      errorToast("An unexpected error occurred.");
+      console.error("Unexpected Error:", error.message);
+    }
+  } finally {
+    setSubmitting(false);
+  }
+}
+
+// function to check and get otp for email to forget password
+export async function checkEmailAndGetOtp(data, updateState, setSubmitting) {
+  try {
+    const response = await axios.get(checkEmailAndGetOtpUrl, {
+      headers: {
+        "Content-Type": "application/json",
+        ...data,
+      },
+    });
+    if (response.status === 200 && response.data.isSuccess) {
+      successToast(response?.data?.message);
+      updateState(true);
+    }
+  } catch (error) {
+    if (error.response) {
+      const { data } = error.response;
+      if (data.errors && Array.isArray(data.errors)) {
+        // Show each validation error
+        data.errors.forEach((err) => errorToast(err.msg));
+      } else {
+        errorToast(error.response.data.message || "Something went wrong!");
+      }
+      console.error("Server Error:", error.response.data);
+    } else if (error.request) {
+      errorToast("No response from server. Please try again later.");
+      console.error("Request Error:", error.request);
+    } else {
+      errorToast("An unexpected error occurred.");
+      console.error("Unexpected Error:", error.message);
+    }
+  } finally {
+    setSubmitting(false);
+  }
+}
+
+// function to verify otp in mail for forget password
+export async function verifyEmailOtp(otp, email, navigate, setSubmitting) {
+  try {
+    const response = await axios.get(verifyEmailOtpUrl, {
+      headers: {
+        "Content-Type": "application/json",
+        otp,
+        email,
+      },
+    });
+    if (response.status === 200 && response.data.isSuccess) {
+      successToast(response?.data?.message);
+      navigate("/changePassword", { state: { email: email } });
+    }
+  } catch (error) {
+    if (error.response) {
+      const { data } = error.response;
+      if (data.errors && Array.isArray(data.errors)) {
+        // Show each validation error
+        data.errors.forEach((err) => errorToast(err.msg));
+      } else {
+        errorToast(error.response.data.message || "Something went wrong!");
+      }
+      console.error("Server Error:", error.response.data);
+    } else if (error.request) {
+      errorToast("No response from server. Please try again later.");
+      console.error("Request Error:", error.request);
+    } else {
+      errorToast("An unexpected error occurred.");
+      console.error("Unexpected Error:", error.message);
+    }
+  } finally {
+    setSubmitting(false);
+  }
+}
+
+// function to change password with email
+export async function changePasswordWithEmail(
+  data,
+  email,
+  navigate,
+  setSubmitting
+) {
+  try {
+    const response = await axios.post(
+      changePasswordWithEmailUrl,
+      { password: data?.newPass, email },
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    if (response.status === 200 && response.data?.isSuccess) {
+      successToast(response?.data?.message);
+      navigate("/login");
+    }
+  } catch (error) {
+    if (error.response) {
+      const { data } = error.response;
+      if (data.errors && Array.isArray(data.errors)) {
+        // Show each validation error
+        data.errors.forEach((err) => errorToast(err.msg));
+      } else {
+        errorToast(error.response.data.message || "Something went wrong!");
+      }
+      console.error("Server Error:", error.response.data);
+    } else if (error.request) {
+      errorToast("No response from server. Please try again later.");
+      console.error("Request Error:", error.request);
+    } else {
+      errorToast("An unexpected error occurred.");
+      console.error("Unexpected Error:", error.message);
+    }
+  } finally {
+    setSubmitting(false);
+  }
+}
+
+// function to get otp for change password with mobile number
+export async function checkMobileAndGetOtp(data, updateState, setSubmitting) {
+  try {
+    const response = await axios.get(checkMobileAndGetOtpUrl, {
+      headers: {
+        "Content-Type": "application/json",
+        ...data,
+      },
+    });
+    if (response.status === 200 && response.data.isSuccess) {
+      successToast(response?.data?.message);
+      updateState(true);
+    }
+  } catch (error) {
+    if (error.response) {
+      const { data } = error.response;
+      if (data.errors && Array.isArray(data.errors)) {
+        // Show each validation error
+        data.errors.forEach((err) => errorToast(err.msg));
+      } else {
+        errorToast(error.response.data.message || "Something went wrong!");
+      }
+      console.error("Server Error:", error.response.data);
+    } else if (error.request) {
+      errorToast("No response from server. Please try again later.");
+      console.error("Request Error:", error.request);
+    } else {
+      errorToast("An unexpected error occurred.");
+      console.error("Unexpected Error:", error.message);
+    }
+  } finally {
+    setSubmitting(false);
+  }
+}
+
+// function to verify mobile otp to change password
+export async function verifyMobileOtp(otp, mobile, navigate, setSubmitting) {
+  try {
+    const response = await axios.get(verifyMobileOtpUrl, {
+      headers: {
+        "Content-Type": "application/json",
+        otp,
+        mobile,
+      },
+    });
+    if (response.status === 200 && response.data.isSuccess) {
+      successToast(response?.data?.message);
+      navigate("/changePassword", { state: { mobile: mobile } });
+    }
+  } catch (error) {
+    if (error.response) {
+      const { data } = error.response;
+      if (data.errors && Array.isArray(data.errors)) {
+        // Show each validation error
+        data.errors.forEach((err) => errorToast(err.msg));
+      } else {
+        errorToast(error.response.data.message || "Something went wrong!");
+      }
+      console.error("Server Error:", error.response.data);
+    } else if (error.request) {
+      errorToast("No response from server. Please try again later.");
+      console.error("Request Error:", error.request);
+    } else {
+      errorToast("An unexpected error occurred.");
+      console.error("Unexpected Error:", error.message);
+    }
+  } finally {
+    setSubmitting(false);
+  }
+}
+
+// function to change password with mobile number
+export async function changePasswordWithMobile(
+  data,
+  mobile,
+  navigate,
+  setSubmitting
+) {
+  try {
+    
+    const response = await axios.post(
+      changePasswordWithMobileUrl,
+      {
+        password: data?.newPass,
+        mobile,
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    if (response.status === 200 && response.data?.isSuccess) {
+      successToast(response?.data?.message);
       navigate("/login");
     }
   } catch (error) {

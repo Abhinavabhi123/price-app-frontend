@@ -6,6 +6,8 @@ import {
   registerUserWithEmail,
   updateMobileNumber,
   userRegisterWithMobile,
+  verifyEmailOtp,
+  verifyMobileOtp,
 } from "../../services/userApiServices.js";
 import { useNavigate } from "react-router-dom";
 
@@ -16,6 +18,7 @@ export default function OtpModal(Props) {
     setShowOtp,
     otpType = "mobileChange",
     data,
+    type = "mobile",
   } = Props;
   const navigate = useNavigate();
 
@@ -51,9 +54,25 @@ export default function OtpModal(Props) {
           setShowOtp
         );
       } else if (otpType === "emailOtp") {
-        registerUserWithEmail(data, values.otp, setShowOtp,navigate,setSubmitting);
-      }else{
-        userRegisterWithMobile(data,values.otp,navigate,setSubmitting,setShowOtp)
+        registerUserWithEmail(
+          data,
+          values.otp,
+          setShowOtp,
+          navigate,
+          setSubmitting
+        );
+      } else if (otpType === "mobileRegisterOtp") {
+        userRegisterWithMobile(
+          data,
+          values.otp,
+          navigate,
+          setSubmitting,
+          setShowOtp
+        );
+      } else if (otpType === "forgetEmail") {
+        verifyEmailOtp(values.otp, data?.email, navigate, setSubmitting);
+      } else if (otpType === "forgetMobile") {
+        verifyMobileOtp(values.otp, data.mobile, navigate, setSubmitting);
       }
     },
   });
@@ -68,7 +87,8 @@ export default function OtpModal(Props) {
     >
       <div className="w-full h-full flex flex-col gap-5">
         <p className="text-black text-sm">
-          Please enter the otp send to your mobile {number}
+          Please enter the otp send to your {type} {data?.number || data?.email}
+          {number}
         </p>
         <div className="flex flex-col justify-center items-center gap-3">
           <OtpInput

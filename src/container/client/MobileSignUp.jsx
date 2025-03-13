@@ -56,7 +56,7 @@ export default function MobileSignUp() {
       <OtpModal
         data={values}
         setShowOtp={setShowOtpModal}
-        otpType="mobileRegisterOtp"
+        type="mobile"
       />
     );
   }

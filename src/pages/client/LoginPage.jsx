@@ -44,7 +44,7 @@ export default function LoginPage() {
           <p className="text-sm font-semibold">Home</p>
         </button>
       </div>
-      <div className="w-full h-[90%] flex justify-center items-center">
+      <div className="w-full h-[90%] flex justify-center items-center -mt-20">
         <div className="w-full md:w-1/3 h-[60%] bg-red-0 px-10 md:px-0 p-3">
           <p className="text-xl font-semibold text-white">Log in</p>
           <div className="flex py-5">

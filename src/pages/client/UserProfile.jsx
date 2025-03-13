@@ -33,7 +33,9 @@ export default function UserProfile() {
 
   useEffect(() => {
     const token = jwtDecode(localStorage.getItem("PrizeUserTkn"));
-    getUserDetails(token.id, setUserData, setLoading);
+    if (token) {
+      getUserDetails(token.id, setUserData, setLoading);
+    }
   }, [changed]);
 
   if (loading) {

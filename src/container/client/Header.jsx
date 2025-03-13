@@ -188,13 +188,17 @@ export default function Header() {
           <FaTicketAlt size={20} />
         </div>
         <div>
-          <FaRegCircleUser
-            size={20}
-            onClick={() => navigate("/profile")}
-            className={`${
-              location === "/profile" ? "text-blue-500" : "text-white"
-            }`}
-          />
+          {token ? (
+            <FaRegCircleUser
+              size={20}
+              onClick={() => navigate("/profile")}
+              className={`${
+                location === "/profile" ? "text-blue-500" : "text-white"
+              }`}
+            />
+          ) : (
+            <FaRegCircleUser size={20} onClick={()=>navigate("/login")} />
+          )}
         </div>
       </div>
     </header>

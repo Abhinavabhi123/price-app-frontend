@@ -41,6 +41,7 @@ export default function Settings(Props) {
         setChanged={setChanged}
         setShowOtp={setShowOtp}
         otpType="mobileChange"
+        type="mobile"
       />
     );
   }
