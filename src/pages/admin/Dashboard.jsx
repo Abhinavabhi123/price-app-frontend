@@ -13,10 +13,13 @@ export default function Dashboard() {
   const [userData, setUserData] = useState([]);
   const [userArtData, setUserArtData] = useState([]);
   const [dashData, setDashData] = useState({});
+  const token = localStorage.getItem("prizeAdminTkn");
 
   useEffect(() => {
-    getDashboardData(setUserData, setUserArtData, setDashData);
-  }, []);
+    if (token) {
+      getDashboardData(setUserData, setUserArtData, setDashData);
+    }
+  }, [token]);
 
   return (
     <div className="w-screen h-full flex flex-col overflow-y-scroll ">

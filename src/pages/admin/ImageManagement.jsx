@@ -5,6 +5,7 @@ import {
   deleteCardImage,
   getCardImages,
 } from "../../services/adminApiServices";
+import { Empty } from "antd";
 import CardImageModal from "../../container/admin/CardImageModal";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
@@ -74,6 +75,10 @@ export default function ImageManagement() {
         imageRef={imageRef}
       />
       <div className="w-full h-[90%] p-5">
+        {
+          data.length>0?(
+
+          
         <div className="max-h-[500px] overflow-auto">
           <table className="table table-md">
             <thead className="border-y sticky top-0 bg-admin-primary-color z-10">
@@ -118,6 +123,16 @@ export default function ImageManagement() {
             </tbody>
           </table>
         </div>
+        ):(
+          <div className="w-full h-[100%] flex justify-center items-center ">
+          <Empty
+            description={
+              <span style={{ color: "white" }}>No Data Available</span>
+            }
+          />
+        </div>
+        )
+      }
       </div>
     </div>
   );

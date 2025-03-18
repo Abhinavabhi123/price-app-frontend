@@ -41,4 +41,4 @@ export const verifyEmailOtpUrl = serverUrl+"/verifyEmailOtp";
 export const changePasswordWithEmailUrl = serverUrl+"/changePasswordWithEmail";
 export const checkMobileAndGetOtpUrl = serverUrl+"/checkMobileAndGetOtp";
 export const verifyMobileOtpUrl = serverUrl+'/verifyMobileOtp';
-export const changePasswordWithMobileUrl = serverUrl+"/changePasswordWithMobile"
+export const changePasswordWithMobileUrl = serverUrl+"/changePasswordWithMobile";

@@ -11,12 +11,6 @@ export default function CreateCardForm() {
   const [selected, setSelected] = useState("");
   const [active, setActive] = useState(false);
   const [cardImageData, setCardImageData] = useState([]);
-  // const [eliminationStages, setEliminationStages] = useState([
-  //   {
-  //     stageDate: "",
-  //     status: false,
-  //   },
-  // ]);
 
   useEffect(() => {
     getCardImages(setCardImageData);

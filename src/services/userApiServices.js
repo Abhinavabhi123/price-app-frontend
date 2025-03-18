@@ -170,7 +170,11 @@ export async function GoogleAuthentication(data, navigate, dispatch) {
 }
 
 // function to get user data
-export async function getUserDetails(id, updateState, setLoading) {
+export async function getUserDetails(
+  id,
+  updateState,
+  setCollectionData
+) {
   try {
     const response = await axios.get(getUserDetailsUrl, {
       headers: {
@@ -182,7 +186,7 @@ export async function getUserDetails(id, updateState, setLoading) {
 
     if (response.status === 200 && response?.data?.isSuccess) {
       updateState(response?.data?.data);
-      setLoading(false);
+      setCollectionData(response?.data?.data?.purchasedArts);
     }
   } catch (error) {
     if (error.response) {
@@ -205,7 +209,12 @@ export async function getUserDetails(id, updateState, setLoading) {
 }
 
 // function to get game and art data for games page
-export async function getGamesAndArts(setLoading, setCards, setArts) {
+export async function getGamesAndArts(
+  setLoading,
+  setCards,
+  setArts,
+  setNextCard
+) {
   try {
     const response = await axios.get(getGamesAndArtsUrl, {
       headers: {
@@ -222,6 +231,7 @@ export async function getGamesAndArts(setLoading, setCards, setArts) {
           quantity: 0,
         }))
       );
+      setNextCard(response?.data?.nextCard);
     }
   } catch (error) {
     if (error.response) {
@@ -330,7 +340,7 @@ export async function userRegisterWithMobile(
 
 // Function to user can  purchase art
 
-export async function purchaseArt(artData, setChanged, setPurchasing) {
+export async function purchaseArt(artData, cardId,userId, setChanged, setPurchasing) {
   try {
     const response = await axios.get(purchaseArtUrl, {
       headers: {
@@ -338,6 +348,8 @@ export async function purchaseArt(artData, setChanged, setPurchasing) {
         id: artData?._id,
         quantity: artData?.quantity,
         Authorization: `Bearer ${token}`,
+        cardId,
+        userId
       },
     });
     if (response.status === 200 && response?.data?.isSuccess) {
@@ -772,7 +784,6 @@ export async function changePasswordWithMobile(
   setSubmitting
 ) {
   try {
-    
     const response = await axios.post(
       changePasswordWithMobileUrl,
       {

@@ -1,12 +1,35 @@
 import BlobImage from "../../assets/blob.jpg";
 import CardImage from "../../assets/cardImage.png";
+import Countdown from "react-countdown";
 
 export default function Card(Props) {
   const { cardData } = Props;
+
+  // Custom renderer for the countdown timer
+  const renderer = ({ days, hours, minutes, seconds, completed }) => {
+    if (completed) {
+      return (
+        <h2 className="text-green-600 font-bold py-2">
+          🎉 Lucky Draw Started! 🎉
+        </h2>
+      );
+    } else {
+      return (
+        <div className="text-xl font-semibold">
+          Time Left:
+          {days > 0 && ` ${days}d`}
+          {hours > 0 && ` ${hours}h`}
+          {minutes > 0 && ` ${minutes}m`}
+          {seconds > 0 && ` ${seconds}s`}
+        </div>
+      );
+    }
+  };
+
   return (
     <section className="w-full p-5 md:px-[15%] md:py-10">
       <p className="py-3">Next Lucky draw</p>
-      <div className="w-full h-fit md:h-[23rem] rounded-3xl overflow-hidden relative flex flex-col md:flex-row">
+      <div className="w-full h-fit md:min-h-[25rem] rounded-3xl overflow-hidden relative flex flex-col md:flex-row">
         <img
           src={BlobImage}
           alt="banner"
@@ -28,10 +51,20 @@ export default function Card(Props) {
             enjoy special discounts and offers. Simply wait until to find the
             winner. Treat yourself or share the joy with someone special!
           </p>
-          <p className="text-sm mt-2">
-            Date :- {new Date(cardData?.endDate).toLocaleString()}
+          <p className="text-sm mt-2" data-aos="fade-up">
+            Lucky draw date :- {new Date(cardData?.endDate).toLocaleString()}
           </p>
-          <p className="text-sm">Prize :- {cardData?.priceMoney}/- Rs</p>
+          <p className="text-sm" data-aos="fade-up">
+            Prize :- {cardData?.priceMoney}/- Rs
+          </p>
+          <p className="text-sm" data-aos="fade-up">
+            Premium :- {cardData?.premium}/- Rs
+          </p>
+          {cardData && (
+            <div data-aos="fade-up">
+              <Countdown date={cardData?.startDate} renderer={renderer} />
+            </div>
+          )}
           <a href="#arts">
             <button
               data-aos="zoom-in-up"

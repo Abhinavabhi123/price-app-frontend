@@ -3,15 +3,17 @@ import { checkAnswer, purchaseArt } from "../../services/userApiServices";
 import { FaMinus, FaPlus } from "react-icons/fa6";
 import { TiTick } from "react-icons/ti";
 import { useNavigate } from "react-router-dom";
+import { jwtDecode } from "jwt-decode";
 
 export default function Arts(Props) {
-  const { art, setArtData } = Props;
+  const { art, setArtData, cardData, nextCard, index } = Props;
   const navigate = useNavigate();
   const [answer, setAnswer] = useState("");
   const inputRef = useRef(null);
   const [isSubmitting, setSubmitting] = useState(false);
   const [changed, setChanged] = useState(false);
   const [purchasing, setPurchasing] = useState(false);
+
   useEffect(() => {
     setArtData((prev) =>
       prev.map((item) =>
@@ -56,13 +58,37 @@ export default function Arts(Props) {
     if (!token) {
       navigate("/login");
     } else {
+      const userId = jwtDecode(token);
       setPurchasing(true);
-      purchaseArt(art, setChanged,setPurchasing);
+      purchaseArt(art, cardData._id, userId.id, setChanged, setPurchasing);
     }
   }
 
   return (
-    <div className="w-full h-[22rem] bg-[#6932CF] bg-gradient-to-br from-[#641beb] to-[#9618CF] rounded-xl overflow-hidden p-2 ">
+    <div
+      className={`w-full h-[27rem] relative bg-[#6932CF] bg-gradient-to-br from-[#641beb] to-[#9618CF] rounded-xl p-2 ${
+        nextCard &&
+        nextCard._id === cardData._id &&
+        "outline-4 outline-teal-500/80"
+      } ${index === 0 && "outline-4 outline-[#D7334E]"} `}
+    >
+      {nextCard && nextCard._id === cardData._id && (
+        <div
+          className="absolute bottom-[100.9%] translate-x-[-50%] left-[50%] w-[80%] h-5 bg-teal-500/80  rounded-t-md
+          text-center"
+        >
+          <p className="text-white text-xs mt-1">Next lucky draw art </p>
+        </div>
+      )}
+      {index === 0 && (
+        <div
+          className="absolute bottom-[100.9%] translate-x-[-50%] left-[50%] w-[80%] h-5 bg-[#D7334E] rounded-t-md
+          text-center"
+        >
+          <p className="text-white text-xs mt-1">Current lucky draw art</p>
+        </div>
+      )}
+
       <div className="w-full h-full ">
         <div className="w-full h-[40%] cursor-pointer bg-white overflow-hidden rounded-t-xl ">
           <img
@@ -129,6 +155,17 @@ export default function Arts(Props) {
             {answer.length === 0 && !art.isAnswered && (
               <p className="text-[10px] text-red-400">
                 Please answer the question to get the coupon
+              </p>
+            )}
+          </div>
+          {/* show card details */}
+          <div className="">
+            <p>Lucky draw details:-</p>
+            <p>Prize : {cardData.priceMoney}/-</p>
+            <p>Premium : {cardData.premium}/-</p>
+            {art.quantity > 0 && art.isAnswered && (
+              <p className="text-[10px] font-semibold text-green-500">
+                You will get {art.quantity} coupons after purchasing this art.
               </p>
             )}
           </div>

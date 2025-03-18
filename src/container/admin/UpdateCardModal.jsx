@@ -20,6 +20,8 @@ export default function UpdateCardModal(Props) {
     getCardImages(setCardImageData);
   }, []);
 
+  console.log(editDetails, "editDetails");
+
   function CardInputField(Props) {
     const {
       type,
@@ -116,14 +118,13 @@ export default function UpdateCardModal(Props) {
     setFieldValue("premium", editDetails.premium);
     setFieldValue(
       "startDate",
-      editDetails.startDate
-        ? new Date(editDetails.startDate).toISOString().slice(0, 16)
-        : ""
+      editDetails.startDate ? editDetails.startDate : ""
     );
+    // ? new Date(editDetails.startDate).toISOString().slice(0, 16)
     setFieldValue(
       "endDate",
       editDetails.endDate
-        ? new Date(editDetails.endDate).toISOString().slice(0, 16)
+        ? editDetails.endDate
         : ""
     );
   }, [setFieldValue, editDetails]);
@@ -233,6 +234,7 @@ export default function UpdateCardModal(Props) {
               value={values.startDate}
               handleChange={handleChange}
               handleBlur={handleBlur}
+              className="color-scheme-light [&::-webkit-calendar-picker-indicator]:invert"
             />
             {errors?.startDate && touched?.startDate && (
               <p className="text-xs text-red-500">{errors.startDate}</p>
@@ -251,6 +253,7 @@ export default function UpdateCardModal(Props) {
               value={values.endDate}
               handleChange={handleChange}
               handleBlur={handleBlur}
+              className="color-scheme-light [&::-webkit-calendar-picker-indicator]:invert"
             />
             {errors?.endDate && touched?.endDate && (
               <p className="text-xs text-red-500">{errors.endDate}</p>

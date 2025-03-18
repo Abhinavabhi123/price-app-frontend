@@ -22,7 +22,7 @@ export default function Wallet(Props) {
             <img src={UserWallet} alt="user wallet" className="w-16" />
             <p>wallet</p>
             <div className="flex gap-2 items-center">
-              <p>2000/-</p>
+              <p>{userData?.wallet}/-</p>
               <IoIosArrowDown size={20} className="text-white" />
             </div>
           </div>
@@ -30,7 +30,7 @@ export default function Wallet(Props) {
             <ul className="absolute select-none w-full max-h-40 border border-gray-300 rounded-md mt-1">
               <div className="flex justify-between items-center px-10 bg-gray-500 py-3">
                 <p>Total Amount</p>
-                <p>{userData?.wallet} /-</p>
+                <p>{userData?.total_amount} /-</p>
               </div>
               <hr className="text-gray-400/50" />
               <div className="flex justify-between items-center px-10 bg-gray-500 py-3">

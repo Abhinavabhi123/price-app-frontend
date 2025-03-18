@@ -41,3 +41,13 @@ input[type="number"] {
 .admin-scrollbar::-webkit-scrollbar-track {
   background: #e2e8f0;
 }
+
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+.scrollbar-hide {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}

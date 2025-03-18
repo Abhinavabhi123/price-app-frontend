@@ -22,6 +22,9 @@ export default function UserAuth(Props) {
     if (location === "/forgot") {
       return navigate("/forgot");
     }
+    if (location === "/about") {
+      return navigate("/about");
+    }
     if (location === "/changePassword") {
       return navigate("/changePassword");
     }
