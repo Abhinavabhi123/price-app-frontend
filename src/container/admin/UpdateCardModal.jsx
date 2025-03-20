@@ -19,7 +19,6 @@ export default function UpdateCardModal(Props) {
   useEffect(() => {
     getCardImages(setCardImageData);
   }, []);
-
   console.log(editDetails, "editDetails");
 
   function CardInputField(Props) {
@@ -31,6 +30,7 @@ export default function UpdateCardModal(Props) {
       handleBlur = () => {},
       className = "",
       value,
+      disabled,
     } = Props;
     return (
       <input
@@ -40,6 +40,7 @@ export default function UpdateCardModal(Props) {
         onChange={handleChange}
         onBlur={handleBlur}
         value={value}
+        disabled={disabled}
         className={`w-full px-3 py-2 text-black rounded-lg border border-admin-active-color outline-none ${className}`}
       />
     );
@@ -69,14 +70,40 @@ export default function UpdateCardModal(Props) {
 
     startDate: Yup.date()
       .required("Start date is required")
-      .min(new Date(), "Start date cannot be in the past")
-      .typeError("Start date must be a valid date"),
-
+      .typeError("Start date must be a valid date")
+      .when("isStarted", {
+        is: false,
+        then: (schema) =>
+          schema.min(new Date(), "Start date cannot be in the past"),
+      }),
     endDate: Yup.date()
       .required("End date is required")
       .min(Yup.ref("startDate"), "End date must be after the start date")
       .typeError("End date must be a valid date"),
     cardImageId: Yup.string().required("Image is required"),
+    eliminationStages: Yup.array().of(
+      Yup.object().shape({
+        stageDate: Yup.date()
+          .required("Stage date is required")
+          .typeError("Stage date must be a valid date")
+          .test(
+            "is-after-start",
+            "Stage date must be after the start date",
+            function (value) {
+              return (
+                new Date(value) >= new Date(this.options.context.startDate)
+              );
+            }
+          )
+          .test(
+            "is-before-end",
+            "Stage date must be before the end date",
+            function (value) {
+              return new Date(value) <= new Date(this.options.context.endDate);
+            }
+          ),
+      })
+    ),
   });
 
   const {
@@ -100,6 +127,7 @@ export default function UpdateCardModal(Props) {
       cardImageId: "",
     },
     validationSchema,
+    context: { isStarted: editDetails?.isStarted || false },
     onSubmit: (values) => {
       editCardDetails(
         values,
@@ -120,13 +148,20 @@ export default function UpdateCardModal(Props) {
       "startDate",
       editDetails.startDate ? editDetails.startDate : ""
     );
-    // ? new Date(editDetails.startDate).toISOString().slice(0, 16)
-    setFieldValue(
-      "endDate",
-      editDetails.endDate
-        ? editDetails.endDate
-        : ""
-    );
+    setFieldValue("endDate", editDetails.endDate ? editDetails.endDate : "");
+    if (
+      editDetails.eliminationStages &&
+      editDetails.eliminationStages.length > 0
+    ) {
+      setFieldValue(
+        "eliminationStages",
+        editDetails.eliminationStages.map((stage) => ({
+          stageDate: stage.stageDate,
+          status: stage.status,
+          _id: stage._id,
+        }))
+      );
+    }
   }, [setFieldValue, editDetails]);
 
   useEffect(() => {
@@ -146,6 +181,13 @@ export default function UpdateCardModal(Props) {
       width={800}
     >
       <form onSubmit={handleSubmit} className="space-y-3">
+        {editDetails.isStarted && (
+          <p className="text-xs text-yellow-500">
+            The Lucky draw is already started,you can not change the name,card
+            id, price money,premium and start date.And if the elimination stages
+            is completed you can not change the particular elimination state.*
+          </p>
+        )}
         {/* row 1 */}
         <div className="w-full flex flex-col md:flex-row gap-3">
           <div className="w-full">
@@ -160,6 +202,7 @@ export default function UpdateCardModal(Props) {
               value={values.cardName}
               handleChange={handleChange}
               handleBlur={handleBlur}
+              disabled={editDetails?.isStarted}
             />
             {errors?.cardName && touched?.cardName && (
               <p className="text-xs text-red-500">{errors.cardName}</p>
@@ -177,6 +220,7 @@ export default function UpdateCardModal(Props) {
               value={values.cardId}
               handleChange={handleChange}
               handleBlur={handleBlur}
+              disabled={editDetails?.isStarted}
             />
             {errors?.cardId && touched?.cardId && (
               <p className="text-xs text-red-500">{errors.cardId}</p>
@@ -197,6 +241,7 @@ export default function UpdateCardModal(Props) {
               value={values.priceMoney}
               handleChange={handleChange}
               handleBlur={handleBlur}
+              disabled={editDetails?.isStarted}
             />
             {errors?.priceMoney && touched?.priceMoney && (
               <p className="text-xs text-red-500">{errors.priceMoney}</p>
@@ -214,6 +259,7 @@ export default function UpdateCardModal(Props) {
               value={values.premium}
               handleChange={handleChange}
               handleBlur={handleBlur}
+              disabled={editDetails?.isStarted}
             />
             {errors?.premium && touched?.premium && (
               <p className="text-xs text-red-500">{errors.premium}</p>
@@ -234,7 +280,8 @@ export default function UpdateCardModal(Props) {
               value={values.startDate}
               handleChange={handleChange}
               handleBlur={handleBlur}
-              className="color-scheme-light [&::-webkit-calendar-picker-indicator]:invert"
+              className={`color-scheme-light [&::-webkit-calendar-picker-indicator]:invert`}
+              disabled={editDetails?.isStarted}
             />
             {errors?.startDate && touched?.startDate && (
               <p className="text-xs text-red-500">{errors.startDate}</p>
@@ -258,6 +305,65 @@ export default function UpdateCardModal(Props) {
             {errors?.endDate && touched?.endDate && (
               <p className="text-xs text-red-500">{errors.endDate}</p>
             )}
+          </div>
+        </div>
+        <div className="w-full space-y-2">
+          <p className="text-xs font-semibold">
+            Elimination Stages
+            <span className="text-xs text-red-500"> *</span>
+          </p>
+          <div className="space-y-4">
+            {values.eliminationStages &&
+              values.eliminationStages.map((_, index) => (
+                <div key={index} className="flex flex-col gap-1">
+                  <div className="flex gap-3">
+                    <CardInputField
+                      id={`stageDate-${index}`}
+                      name={`eliminationStages.${index}.stageDate`}
+                      type="datetime-local"
+                      value={values.eliminationStages[index]?.stageDate || ""}
+                      handleChange={handleChange}
+                      handleBlur={handleBlur}
+                      disabled={values.eliminationStages[index]?.status}
+                      className="color-scheme-light [&::-webkit-calendar-picker-indicator]:invert"
+                    />
+
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const newStages = values.eliminationStages.filter(
+                          (_, i) => i !== index
+                        );
+                        setFieldValue("eliminationStages", newStages);
+                      }}
+                      disabled={values.eliminationStages[index]?.status}
+                      className={`bg-red-500 text-xs text-white px-3 rounded-lg cursor-pointer ${
+                        values.eliminationStages[index]?.status && "opacity-15"
+                      } `}
+                    >
+                      Remove
+                    </button>
+                  </div>
+                  {errors.eliminationStages?.[index]?.stageDate &&
+                    touched.eliminationStages?.[index]?.stageDate && (
+                      <p className="text-xs text-red-500">
+                        {errors.eliminationStages[index].stageDate}
+                      </p>
+                    )}
+                </div>
+              ))}
+            <button
+              type="button"
+              onClick={() =>
+                setFieldValue("eliminationStages", [
+                  ...values.eliminationStages,
+                  { stageDate: "", status: false },
+                ])
+              }
+              className="bg-blue-500 text-xs text-white px-3 py-2 cursor-pointer rounded-lg"
+            >
+              Add Stage
+            </button>
           </div>
         </div>
         {/* form row 4 */}

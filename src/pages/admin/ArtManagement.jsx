@@ -141,13 +141,13 @@ export default function ArtManagement() {
                 className="w-full max-w-sm mb-3"
               />
             </div>
-            <div className="max-h-[500px] overflow-auto">
+            <div className="max-h-[400px] overflow-auto">
               <table className="table table-md">
                 <thead className="border-y sticky top-0 bg-admin-primary-color z-10">
                   <tr className="text-center">
                     <th className="border-x">SI No.</th>
                     <th
-                      className="border-r w-48 cursor-pointer flex items-center justify-center gap-1"
+                      className="border-r cursor-pointer flex items-center justify-center gap-1"
                       onClick={() => {
                         setSortField("name");
                         setSortOrder(sortOrder === "asc" ? "desc" : "asc");
@@ -164,7 +164,7 @@ export default function ArtManagement() {
                         ""
                       )}
                     </th>
-                    <th className="border-r w-56">Description</th>
+                    <th className="border-r min-w-56">Description</th>
                     <th
                       className="border-r cursor-pointer flex items-center justify-center gap-1"
                       onClick={() => {

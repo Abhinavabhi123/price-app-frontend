@@ -74,7 +74,7 @@ export default function UserManagement() {
                 className="w-1/2 md:w-full max-w-sm mb-3"
               />
             </div>
-            <div className="max-h-[500px] overflow-auto">
+            <div className="max-h-[400px] overflow-auto">
               <table className="table table-md">
                 <thead className="border-y sticky top-0 bg-admin-primary-color z-10">
                   <tr className="text-center">

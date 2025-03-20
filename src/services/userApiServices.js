@@ -13,11 +13,15 @@ import {
   getEmailOtpUrl,
   getGamesAndArtsUrl,
   getOtpUrl,
+  getUserAuctionCouponsUrl,
+  getUserCouponsUrl,
   getUserDetailsUrl,
   googleAuthUrl,
+  makeCouponForAuctionUrl,
   purchaseArtUrl,
   registerUserMobileUrl,
   registerUserWithEmailUrl,
+  startAuctionUrl,
   updateMobileNumberUrl,
   userLoginUrl,
   userLoginWithMobileUrl,
@@ -173,7 +177,7 @@ export async function GoogleAuthentication(data, navigate, dispatch) {
 export async function getUserDetails(
   id,
   updateState,
-  setCollectionData
+  setCollectionData = () => {}
 ) {
   try {
     const response = await axios.get(getUserDetailsUrl, {
@@ -340,7 +344,13 @@ export async function userRegisterWithMobile(
 
 // Function to user can  purchase art
 
-export async function purchaseArt(artData, cardId,userId, setChanged, setPurchasing) {
+export async function purchaseArt(
+  artData,
+  cardId,
+  userId,
+  setChanged,
+  setPurchasing
+) {
   try {
     const response = await axios.get(purchaseArtUrl, {
       headers: {
@@ -349,7 +359,7 @@ export async function purchaseArt(artData, cardId,userId, setChanged, setPurchas
         quantity: artData?.quantity,
         Authorization: `Bearer ${token}`,
         cardId,
-        userId
+        userId,
       },
     });
     if (response.status === 200 && response?.data?.isSuccess) {
@@ -819,5 +829,147 @@ export async function changePasswordWithMobile(
     }
   } finally {
     setSubmitting(false);
+  }
+}
+
+// function to get all coupons of user
+export async function getUserCoupons(id, setCouponData) {
+  try {
+    const response = await axios.get(getUserCouponsUrl, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+        id,
+      },
+    });
+    if (response.status === 200 && response.data?.isSuccess) {
+      setCouponData(response?.data?.data?.coupons);
+    }
+  } catch (error) {
+    if (error.response) {
+      const { data } = error.response;
+      if (data.errors && Array.isArray(data.errors)) {
+        // Show each validation error
+        data.errors.forEach((err) => errorToast(err.msg));
+      } else {
+        errorToast(error.response.data.message || "Something went wrong!");
+      }
+      console.error("Server Error:", error.response.data);
+    } else if (error.request) {
+      errorToast("No response from server. Please try again later.");
+      console.error("Request Error:", error.request);
+    } else {
+      errorToast("An unexpected error occurred.");
+      console.error("Unexpected Error:", error.message);
+    }
+  }
+}
+
+// function to make the coupon for auction
+export async function makeCouponForAuction(id, setSelected) {
+  try {
+    const response = await axios.get(makeCouponForAuctionUrl, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+        id,
+      },
+    });
+    if (response.status === 200 && response.data?.isSuccess) {
+      successToast(response?.data?.message);
+      setSelected("auction");
+    }
+  } catch (error) {
+    if (error.response) {
+      const { data } = error.response;
+      if (data.errors && Array.isArray(data.errors)) {
+        // Show each validation error
+        data.errors.forEach((err) => errorToast(err.msg));
+      } else {
+        errorToast(error.response.data.message || "Something went wrong!");
+      }
+      console.error("Server Error:", error.response.data);
+    } else if (error.request) {
+      errorToast("No response from server. Please try again later.");
+      console.error("Request Error:", error.request);
+    } else {
+      errorToast("An unexpected error occurred.");
+      console.error("Unexpected Error:", error.message);
+    }
+  }
+}
+
+// Function to get the coupons by the user
+export async function getUserAuctionCoupons(userId, setAuctionData) {
+  try {
+    const response = await axios.get(getUserAuctionCouponsUrl, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+        id: userId,
+      },
+    });
+    if (response.status === 200 && response.data?.isSuccess) {
+      setAuctionData(response.data?.auctionData);
+    }
+  } catch (error) {
+    if (error.response) {
+      const { data } = error.response;
+      if (data.errors && Array.isArray(data.errors)) {
+        // Show each validation error
+        data.errors.forEach((err) => errorToast(err.msg));
+      } else {
+        errorToast(error.response.data.message || "Something went wrong!");
+      }
+      console.error("Server Error:", error.response.data);
+    } else if (error.request) {
+      errorToast("No response from server. Please try again later.");
+      console.error("Request Error:", error.request);
+    } else {
+      errorToast("An unexpected error occurred.");
+      console.error("Unexpected Error:", error.message);
+    }
+  }
+}
+
+// function to start the auction by user with price and other details
+export async function startAuction(userId, couponId, price, setChanged,resetForm) {
+  try {    
+    const response = await axios.patch(
+      startAuctionUrl,
+      {
+        userId,
+        couponId,
+        price,
+        date: new Date().toLocaleString(),
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    if (response.status === 200 && response.data?.isSuccess) {
+      setChanged((prev) => !prev);
+      resetForm()
+    }
+  } catch (error) {
+    if (error.response) {
+      const { data } = error.response;
+      if (data.errors && Array.isArray(data.errors)) {
+        // Show each validation error
+        data.errors.forEach((err) => errorToast(err.msg));
+      } else {
+        errorToast(error.response.data.message || "Something went wrong!");
+      }
+      console.error("Server Error:", error.response.data);
+    } else if (error.request) {
+      errorToast("No response from server. Please try again later.");
+      console.error("Request Error:", error.request);
+    } else {
+      errorToast("An unexpected error occurred.");
+      console.error("Unexpected Error:", error.message);
+    }
   }
 }

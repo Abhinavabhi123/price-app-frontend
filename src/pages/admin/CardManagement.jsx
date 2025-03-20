@@ -115,7 +115,7 @@ export default function CardManagement() {
       card.cardId.toLowerCase().includes(searchQuery.toLowerCase()) ||
       card.startDate.toLowerCase().includes(searchQuery.toLowerCase()) ||
       card.endDate.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      card.priceMoney.includes(Number(searchQuery))||
+      card.priceMoney.includes(Number(searchQuery)) ||
       card.premium.includes(Number(searchQuery))
   );
 
@@ -158,7 +158,7 @@ export default function CardManagement() {
                 className="w-full max-w-sm mb-3"
               />
             </div>
-            <div className="max-h-[500px] overflow-auto">
+            <div className="max-h-[400px] overflow-auto">
               <table className="table table-md">
                 <thead className="border-y sticky top-0 bg-admin-primary-color z-10">
                   <tr className="text-center select-none">
@@ -295,7 +295,7 @@ export default function CardManagement() {
                         index % 2 == 0 ? "bg-gray-500/50" : "bg-gray-600"
                       }`}
                     >
-                      <td className="text-center">{index + 1}</td>
+                      <td className="text-center">{item.id || index + 1}</td>
                       <td className="text-center">{item?.name || ""}</td>
                       <td className="text-center">{item?.cardId || ""}</td>
                       <td className="text-center">{item?.priceMoney || ""}</td>
@@ -384,6 +384,11 @@ export default function CardManagement() {
                   setCurrentPage(page);
                   setPageSize(size);
                 }}
+                showTotal={(total, range) => (
+                  <span
+                    style={{ color: "white" }}
+                  >{`${range[0]}-${range[1]} of ${total} items`}</span>
+                )}
                 current={currentPage}
                 pageSize={pageSize}
                 total={cardData.length}

@@ -62,7 +62,7 @@ export default function Wallet(Props) {
                 name="amount"
                 ref={inputRef}
                 placeholder="Enter wallet recharge amount"
-                className="w-full py-1 px-3 bg-gray-400 text-sm text-white outline-none rounded-lg border border-admin-active-color"
+                className="w-full py-1 px-3 bg-gray-800 text-sm text-white outline-none rounded-lg border border-admin-active-color"
                 onChange={(e) => setAmount(e.target.value)}
               />
               {amount > 0 && (

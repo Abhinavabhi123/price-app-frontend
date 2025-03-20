@@ -5,17 +5,13 @@ import { MdKeyboardArrowRight } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 import Footer from "../../container/client/Footer";
 
-
 export default function LandingPage() {
-  const navigate = useNavigate() 
-
+  const navigate = useNavigate();
 
   return (
     <div className="w-screen bg-primary-color">
       <img src={LightRay} alt="ray" className="absolute top-0 right-0 z-0" />
-      {/* <Headroom> */}
       <Header />
-      {/* </Headroom> */}
       <section className="flex h-fit justify-center px-10 lg:px-44 py-10 relative z-10">
         <div className="w-full  h-fit flex flex-col md:flex-row text-white">
           {/*left section */}
@@ -29,8 +25,8 @@ export default function LandingPage() {
               data-aos="fade-right"
               className="text-3xl md:text-5xl py-10 md:space-y-5 drop-shadow-[4px_4px_20px_rgba(248,248,248,0.4)]"
             >
-              <p >Where Art Becomes Treasure </p>
-              <p >{`Buy, Sell & Win.`}</p>
+              <p>Where Art Becomes Treasure </p>
+              <p>{`Buy, Sell & Win.`}</p>
             </div>
             <div>
               <p
@@ -49,7 +45,7 @@ export default function LandingPage() {
               <button
                 data-aos="fade-up"
                 className="rounded-full px-10  py-3 bg-white text-black font-semibold flex justify-center items-center gap-1 cursor-pointer group"
-                onClick={()=>navigate("/")}
+                onClick={() => navigate("/")}
               >
                 <p className="group-hover:scale-110 transition-all duration-400">
                   Explore

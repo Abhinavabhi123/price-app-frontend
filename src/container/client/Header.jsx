@@ -182,7 +182,11 @@ export default function Header() {
           />
         </div>
         <div>
-          <IoMdWallet size={20} />
+          <IoMdWallet
+            size={20}
+            onClick={() => navigate("/wallet")}
+            className={`${location === "/wallet" ? "text-blue-500" : "text-white"}`}
+          />
         </div>
         <div>
           <FaTicketAlt size={20} />
@@ -197,7 +201,7 @@ export default function Header() {
               }`}
             />
           ) : (
-            <FaRegCircleUser size={20} onClick={()=>navigate("/login")} />
+            <FaRegCircleUser size={20} onClick={() => navigate("/login")} />
           )}
         </div>
       </div>

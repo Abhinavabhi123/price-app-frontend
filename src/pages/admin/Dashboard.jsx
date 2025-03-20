@@ -14,12 +14,27 @@ export default function Dashboard() {
   const [userArtData, setUserArtData] = useState([]);
   const [dashData, setDashData] = useState({});
   const token = localStorage.getItem("prizeAdminTkn");
+  const [dashBarData, setDashBarData] = useState([]);
 
   useEffect(() => {
     if (token) {
       getDashboardData(setUserData, setUserArtData, setDashData);
     }
   }, [token]);
+
+  useEffect(() => {
+    if (dashData) {
+      setDashBarData([
+        { title: "Cards", value: dashData?.cards },
+        { title: "Completed Cards", value: dashData?.completedCards },
+        { title: "Arts", value: dashData?.arts },
+        { title: "Coupons", value: dashData?.coupons },
+        { title: "Users", value: dashData?.users },
+      ]);
+    }
+  }, [dashData]);
+
+  console.log(userArtData, "userArtData");
 
   return (
     <div className="w-screen h-full flex flex-col overflow-y-scroll ">
@@ -118,7 +133,15 @@ export default function Dashboard() {
         <div className="w-full  ps-10 pt-5 pe-20">
           <p>Totals</p>
           <div className="grid grid-cols-4 md:grid-cols-8 gap-4 md:gap-0 h-[40rem] md:h-full py-3">
-            <div className="w-14 rounded-full bg-purple-500 py-5 shadow-2xl shadow-purple-500 flex flex-col justify-between items-center">
+            {dashBarData &&
+              dashBarData.length > 0 &&
+              dashBarData.map((data, index) => (
+                <div key={index} className="w-14 rounded-full bg-purple-500 py-5 shadow-2xl shadow-purple-500 flex flex-col justify-between items-center">
+                  <p className={`-rotate-90 text-xs mt-2 ${index===1&&"mt-10"} ${index===3&&"mt-5"} text-left  text-nowrap`}>{data?.title}</p>
+                  <p>{data?.value}</p>
+                </div>
+              ))}
+            {/* <div className="w-14 rounded-full bg-purple-500 py-5 shadow-2xl shadow-purple-500 flex flex-col justify-between items-center">
               <p className="-rotate-90 text-xs mt-3">Cards</p>
               <p>{dashData?.cards}</p>
             </div>
@@ -139,22 +162,13 @@ export default function Dashboard() {
             <div className="w-14 rounded-full bg-purple-500 py-5 shadow-2xl shadow-purple-500  flex flex-col justify-between items-center">
               <p className="-rotate-90 text-xs mt-3">Users</p>
               <p>{dashData?.users}</p>
-            </div>
-
-            <div className="w-14 rounded-full bg-purple-500 py-5 shadow-2xl shadow-purple-500 flex flex-col justify-between items-center">
-              <p className="-rotate-90 text-xs mt-3">Cards</p>
-              <p>5</p>
-            </div>
-
-            <div className="w-14 rounded-full bg-purple-500 py-5 shadow-2xl shadow-purple-500  flex flex-col justify-between items-center">
-              <p className="-rotate-90 text-xs mt-3">Cards</p>
-              <p>5</p>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>
-      <div className="w-full flex flex-col md:flex-row mb-10 mt-10">
+      <div className="w-full flex flex-col md:flex-row mb-10 mt-5">
         <div className="w-full md:w-[75%] h-full  py-10 md:px-5">
+          <p className="text-sm py-2 font-semibold">Users with most cards:-</p>
           <div className="overflow-x-auto rounded-box border bg-transparent border-base-content/5 ">
             <table className="table">
               {/* head */}
@@ -199,6 +213,9 @@ export default function Dashboard() {
         </div>
         <div className="w-full h-full px-2">
           <div className="w-full md:w-[75%] h-full  py-10 md:px">
+            <p className="text-sm py-2 font-semibold">
+              Users with most cards:-
+            </p>
             <div className="overflow-x-auto rounded-box border border-base-content/5 bg-transparent">
               <table className="table ">
                 {/* head */}
@@ -232,7 +249,7 @@ export default function Dashboard() {
                             className="size-10 rounded-full"
                           />
                         </td>
-                        <td>{user?.purchasedArts.length}</td>
+                        <td>{user?.totalArtsOwned}</td>
                       </tr>
                     ))}
                 </tbody>

@@ -7,7 +7,7 @@ import { jwtDecode } from "jwt-decode";
 import UserProfileImage from "../../assets/userImage.png";
 import { MdOutlineEdit } from "react-icons/md";
 
-import { RiLogoutCircleLine } from "react-icons/ri";
+import { RiLogoutCircleLine,RiAuctionLine } from "react-icons/ri";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import {
@@ -22,6 +22,7 @@ import ImageEditModal from "../../container/client/ImageEditModal";
 import CardCollection from "../../container/client/CardCollection";
 import Coupons from "../../container/client/Coupons";
 import { IoTicketSharp } from "react-icons/io5";
+import Auction from "../../container/client/Auction";
 
 export default function UserProfile() {
   const navigate = useNavigate();
@@ -131,6 +132,13 @@ export default function UserProfile() {
           </div>
           <div
             className={`flex items-center justify-center gap-2 border-r px-5 cursor-pointer border-white hover:text-blue-500`}
+            onClick={() => setSelected("auction")}
+          >
+            <RiAuctionLine size={20} />
+            <p>Auction</p>
+          </div>
+          <div
+            className={`flex items-center justify-center gap-2 border-r px-5 cursor-pointer border-white hover:text-blue-500`}
             onClick={() => setSelected("settings")}
           >
             <IoSettingsOutline />
@@ -141,8 +149,9 @@ export default function UserProfile() {
       {selected === "collections" && (
         <CardCollection collectionData={collectionData} />
       )}
-      {selected === "coupons" && <Coupons />}
+      {selected === "coupons" && <Coupons userData={userData} setSelected={setSelected}/>}
       {selected === "wallet" && <Wallet userData={userData} />}
+      {selected === "auction" && <Auction userId={userData?._id}/>}
       {selected === "settings" && (
         <Settings setChanged={setChanged} userData={userData} />
       )}

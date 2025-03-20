@@ -229,7 +229,9 @@ export async function postCard(cardData, setSubmitting, navigate) {
       }
     );
     if (response?.status === 200 && response?.data?.isSuccess) {
-      successToast(response?.data?.message);
+      successToast(
+        `${response?.data?.message}, don't forget to activate card!!`
+      );
       navigate("/admin/cards");
     }
   } catch (error) {
@@ -734,5 +736,3 @@ export async function getDashboardData(
     }
   }
 }
-
-
