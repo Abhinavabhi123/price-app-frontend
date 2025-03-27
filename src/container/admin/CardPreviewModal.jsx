@@ -43,7 +43,7 @@ export default function CardPreviewModal(Props) {
             data?.eliminationStages.length > 0 &&
             data?.eliminationStages.map((stage, index) => (
               <p key={index} className="ps-5">
-                {stage?.stageDate} -&gt;{" "}
+                {new Date(stage?.stageDate).toLocaleString()} -&gt;{" "}
                 <span className={`${stage?.status && "text-green-500"}`}>
                   {!stage?.status ? "Not completed" : "Completed"}
                 </span>
@@ -100,7 +100,7 @@ export default function CardPreviewModal(Props) {
             </div>
             <div>
               <p className="text-xs font-semibold">
-                Crated At {data?.createdAt}
+                Crated At {new Date(data?.createdAt).toLocaleString()}
               </p>
             </div>
           </div>

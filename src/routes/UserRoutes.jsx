@@ -12,6 +12,7 @@ const Game = lazy(() => import("../pages/client/Game"));
 const SignUpPage = lazy(() => import("../pages/client/SignUpPage"));
 const AboutPage = lazy(() => import("../pages/client/AboutPage"));
 const WalletPage = lazy(() => import("../pages/client/WalletPage"));
+const AuctionsPage = lazy(() => import("../pages/client/AuctionsPage"));
 
 export default function UserRoutes() {
   return (
@@ -27,6 +28,7 @@ export default function UserRoutes() {
           <Route path="/forgot" element={<ForgetPassword />} />
           <Route path="/changePassword" element={<ChangePassword />} />
           <Route path="/wallet" element={<WalletPage/>} />
+          <Route path="/auctions" element={<AuctionsPage/>} />
         </Routes>
       </UserAuth>
     </Suspense>

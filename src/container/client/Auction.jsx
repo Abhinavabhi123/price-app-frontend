@@ -8,6 +8,7 @@ import { SiTicktick } from "react-icons/si";
 import { RiCloseFill } from "react-icons/ri";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import { errorToast } from "../../components/Notification/Notification";
 
 const socket = io(import.meta.env.VITE_SERVER_URL);
 
@@ -16,22 +17,32 @@ export default function Auction(Props) {
   const [auctionData, setAuctionData] = useState([]);
   const [changed, setChanged] = useState(false);
 
-  useEffect(() => {
-    socket.on("connect", () => {
-      console.log("Connected to WebSocket server", socket.id);
-    });
-    // Handle handshake from server
-    socket.on("handshake", (data) => {
-      console.log("Server handshake:", data.message);
-    });
-    socket.emit("joinAuction", 10);
-  }, []);
 
   useEffect(() => {
     if (userId) {
       getUserAuctionCoupons(userId, setAuctionData);
     }
   }, [userId, changed]);
+
+  
+  useEffect(() => {
+    socket.on("bidUpdate", () => {
+      setChanged((prev) => !prev);
+    });
+  
+    socket.on("bidError", (err) => {
+      errorToast(err.message);
+    });
+    socket.on("auctionEnded", () => {
+      setChanged((prev) => !prev);
+    });
+  
+    return () => {
+      socket.off("bidUpdate");
+      socket.off("bidError");
+      socket.off("auctionEnded")
+    };
+  }, []);
 
   function AuctionCoupon(Props) {
     const { coupon } = Props;

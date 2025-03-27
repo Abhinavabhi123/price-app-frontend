@@ -55,13 +55,13 @@ export default function Wallet(Props) {
             Recharge Wallet
           </button>
           {showRecharge && (
-            <div className="w-1/2 h-20  flex flex-col justify-center items-center gap-2 ">
+            <div className="w-full md:w-1/2 h-20  flex flex-col justify-center items-center gap-2 ">
               <input
                 type="number"
                 id="amount"
                 name="amount"
                 ref={inputRef}
-                placeholder="Enter wallet recharge amount"
+                placeholder="Enter recharge amount"
                 className="w-full py-1 px-3 bg-gray-800 text-sm text-white outline-none rounded-lg border border-admin-active-color"
                 onChange={(e) => setAmount(e.target.value)}
               />

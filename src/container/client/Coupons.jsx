@@ -99,7 +99,7 @@ export default function Coupons(Props) {
                   </p>
                   {coupon?.couponId?.couponCard?.isEliminationStarted &&
                     coupon?.couponId?.couponCard?.completed && (
-                      <div>
+                      <div className="hidden md:block">
                         <p className="text-sm">Elimination Dates</p>
                         {coupon?.couponId?.couponCard?.eliminationStages?.map(
                           (elimination, index) => (
@@ -190,7 +190,7 @@ export default function Coupons(Props) {
                   </p>
                   {coupon?.couponId?.couponCard?.isEliminationStarted &&
                     coupon?.couponId?.couponCard?.completed && (
-                      <div>
+                      <div className="hidden md:block">
                         <p className="text-sm">Elimination Dates</p>
                         {coupon?.couponId?.couponCard?.eliminationStages?.map(
                           (elimination, index) => (
@@ -268,9 +268,9 @@ export default function Coupons(Props) {
                       coupon?.couponId?.couponCard?.endDate
                     ).toLocaleString()}
                   </p>
-                  {coupon?.couponId?.couponCard?.isEliminationStarted &&
+                  {/* {coupon?.couponId?.couponCard?.isEliminationStarted &&
                     coupon?.couponId?.couponCard?.completed && (
-                      <div>
+                      <div className="hidden md:block">
                         <p className="text-sm">Elimination Dates</p>
                         {coupon?.couponId?.couponCard?.eliminationStages?.map(
                           (elimination, index) => (
@@ -292,7 +292,7 @@ export default function Coupons(Props) {
                           )
                         )}
                       </div>
-                    )}
+                    )} */}
                   {coupon?.couponId?.couponCard?.completed && (
                     <p className="text-sm text-center mt-2">
                       🎉Lucky Draw Completed🎉

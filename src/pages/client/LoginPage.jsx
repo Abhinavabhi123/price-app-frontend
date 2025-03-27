@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { MdKeyboardArrowLeft, MdOutlineEmail } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 import { GoogleAuthentication } from "../../services/userApiServices";
@@ -14,6 +14,13 @@ export default function LoginPage() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [isEmail, setIsEmail] = useState(false);
+  const token = localStorage.getItem("PrizeUserTkn");
+
+  useEffect(() => {
+    if (token) {
+      navigate("/");
+    }
+  }, [navigate, token]);
 
   const clientId = import.meta.env.VITE_AUTH_CLIENT_ID;
 
@@ -81,7 +88,7 @@ export default function LoginPage() {
             <div className="w-full h-10">
               {!isEmail ? (
                 <button
-                  className="flex w-full h-full  justify-center items-center cursor-pointer gap-2 bg-[#555658]/40 rounded-sm text-sm "
+                  className="flex w-full h-full  justify-center items-center cursor-pointer gap-2 bg-[#555658]/60 rounded-sm text-sm text-black"
                   onClick={() => setIsEmail(true)}
                 >
                   <MdOutlineEmail size={20} />
@@ -89,7 +96,7 @@ export default function LoginPage() {
                 </button>
               ) : (
                 <button
-                  className="flex w-full h-full  justify-center items-center cursor-pointer gap-2 bg-[#555658]/40 rounded-sm text-sm "
+                  className="flex w-full h-full  justify-center items-center cursor-pointer gap-2 bg-[#555658]/60 rounded-sm text-sm text-black"
                   onClick={() => setIsEmail(false)}
                 >
                   <FaPhone size={15} />
@@ -100,7 +107,6 @@ export default function LoginPage() {
           </div>
         </div>
       </div>
-
     </div>
   );
 }

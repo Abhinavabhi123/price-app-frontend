@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { MdKeyboardArrowLeft, MdOutlineEmail } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 import { GoogleAuthentication } from "../../services/userApiServices";
@@ -15,6 +15,14 @@ export default function SignUpPage() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [isEmail, setIsEmail] = useState(false);
+
+    const token = localStorage.getItem("PrizeUserTkn");
+  
+    useEffect(() => {
+      if (token) {
+        navigate("/");
+      }
+    }, [navigate, token]);
 
   const clientId = import.meta.env.VITE_AUTH_CLIENT_ID;
 

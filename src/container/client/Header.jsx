@@ -78,6 +78,14 @@ export default function Header() {
           >
             Cards
           </li>
+          <li
+            className={`min-w-20 cursor-pointer flex items-center justify-center gap-2 transition-all divide-neutral-400 hover:text-white ${
+              location === "/auctions" && "text-white"
+            }`}
+            onClick={() => navigate("/auctions")}
+          >
+            Auctions
+          </li>
         </ul>
       </nav>
       {/* right section */}
@@ -185,11 +193,19 @@ export default function Header() {
           <IoMdWallet
             size={20}
             onClick={() => navigate("/wallet")}
-            className={`${location === "/wallet" ? "text-blue-500" : "text-white"}`}
+            className={`${
+              location === "/wallet" ? "text-blue-500" : "text-white"
+            }`}
           />
         </div>
         <div>
-          <FaTicketAlt size={20} />
+          <FaTicketAlt
+            size={20}
+            onClick={() => navigate("/auctions")}
+            className={`${
+              location === "/auctions" ? "text-blue-500" : "text-white"
+            }`}
+          />
         </div>
         <div>
           {token ? (

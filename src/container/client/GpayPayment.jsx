@@ -22,6 +22,7 @@ export default function GpayPayment() {
                 type: "PAYMENT_GATEWAY",
                 parameters: {
                   gateway: "stripe",
+                  // gatewayMerchantId: "exampleGatewayMerchantId",
                   stripe: {
                     publishableKey: import.meta.env.VITE_STRIPE_KEY,
                     version: "2023-10-16",
@@ -31,7 +32,7 @@ export default function GpayPayment() {
             },
           ],
           merchantInfo: {
-            merchantId: "12345678901234567890",
+            // merchantId: "12345678901234567890",
             merchantName: "Demo Merchant",
           },
           transactionInfo: {
@@ -45,6 +46,11 @@ export default function GpayPayment() {
         onLoadPaymentData={(paymentRequest) => {
           console.log("load payment data", paymentRequest);
         }}
+        onPaymentAuthorized={(paymentData) => {
+          console.log(paymentData);
+          return { transactionState: "SUCCESS" };
+        }}
+        existingPaymentMethodRequired="false"
       />
     </div>
   );

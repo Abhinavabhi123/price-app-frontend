@@ -10,6 +10,7 @@ import {
   checkAnswerUrl,
   checkEmailAndGetOtpUrl,
   checkMobileAndGetOtpUrl,
+  getAllAuctionUrls,
   getEmailOtpUrl,
   getGamesAndArtsUrl,
   getOtpUrl,
@@ -933,9 +934,15 @@ export async function getUserAuctionCoupons(userId, setAuctionData) {
 }
 
 // function to start the auction by user with price and other details
-export async function startAuction(userId, couponId, price, setChanged,resetForm) {
-  try {    
-    const response = await axios.patch(
+export async function startAuction(
+  userId,
+  couponId,
+  price,
+  setChanged,
+  resetForm
+) {
+  try {
+    const response = await axios.put(
       startAuctionUrl,
       {
         userId,
@@ -952,7 +959,40 @@ export async function startAuction(userId, couponId, price, setChanged,resetForm
     );
     if (response.status === 200 && response.data?.isSuccess) {
       setChanged((prev) => !prev);
-      resetForm()
+      resetForm();
+    }
+  } catch (error) {
+    if (error.response) {
+      const { data } = error.response;
+      if (data.errors && Array.isArray(data.errors)) {
+        // Show each validation error
+        data.errors.forEach((err) => errorToast(err.msg));
+      } else {
+        errorToast(error.response.data.message || "Something went wrong!");
+      }
+      console.error("Server Error:", error.response.data);
+    } else if (error.request) {
+      errorToast("No response from server. Please try again later.");
+      console.error("Request Error:", error.request);
+    } else {
+      errorToast("An unexpected error occurred.");
+      console.error("Unexpected Error:", error.message);
+    }
+  }
+}
+
+// functions to fetch all Auctions available
+export async function getAllAuctions(userId,setAuctionData) {
+  try {
+    const response = await axios.get(getAllAuctionUrls, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+        userId
+      },
+    });
+    if (response.status === 200 && response.data?.isSuccess) {
+      setAuctionData(response?.data?.auctionData)
     }
   } catch (error) {
     if (error.response) {
