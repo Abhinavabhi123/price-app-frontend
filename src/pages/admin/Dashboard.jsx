@@ -168,7 +168,7 @@ export default function Dashboard() {
       </div>
       <div className="w-full flex flex-col md:flex-row mb-10 mt-5">
         <div className="w-full md:w-[75%] h-full  py-10 md:px-5">
-          <p className="text-sm py-2 font-semibold">Users with most cards:-</p>
+          <p className="text-sm py-2 font-semibold">Users with most coupons:-</p>
           <div className="overflow-x-auto rounded-box border bg-transparent border-base-content/5 ">
             <table className="table">
               {/* head */}

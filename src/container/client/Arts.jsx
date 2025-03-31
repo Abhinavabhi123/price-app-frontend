@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 
 export default function Arts(Props) {
-  const { art, setArtData, cardData, nextCard, index } = Props;
+  const { art, setArtData, cardData, nextCard } = Props;
   const navigate = useNavigate();
   const [answer, setAnswer] = useState("");
   const inputRef = useRef(null);
@@ -66,12 +66,16 @@ export default function Arts(Props) {
 
   return (
     <div
-      className={`w-full h-[27rem] relative bg-[#6932CF] bg-gradient-to-br from-[#641beb] to-[#9618CF] rounded-xl p-2 ${
+      className={`w-full h-[38rem] md:h-[28rem] relative bg-[#6932CF] bg-gradient-to-br from-[#641beb] to-[#9618CF] rounded-xl p-2 ${
         nextCard &&
         nextCard._id === cardData._id &&
         "outline-4 outline-teal-500/80"
-      } ${index === 0 && "outline-4 outline-[#D7334E]"} `}
+      } ${cardData.isStarted===true && "outline-4 outline-[#D7334E]"} `}
     >
+      {
+        console.log( nextCard," nextCard")
+        
+      }
       {nextCard && nextCard._id === cardData._id && (
         <div
           className="absolute bottom-[100.9%] translate-x-[-50%] left-[50%] w-[80%] h-5 bg-teal-500/80  rounded-t-md
@@ -80,7 +84,7 @@ export default function Arts(Props) {
           <p className="text-white text-xs mt-1">Next lucky draw art </p>
         </div>
       )}
-      {index === 0 && (
+      {cardData.isStarted===true  && (
         <div
           className="absolute bottom-[100.9%] translate-x-[-50%] left-[50%] w-[80%] h-5 bg-[#D7334E] rounded-t-md
           text-center"
@@ -100,7 +104,7 @@ export default function Arts(Props) {
           />
         </div>
         <hr />
-        <div className="w-full h-[60%] text-xs py-2 flex flex-col justify-between">
+        <div className="w-full h-[60%] md:text-xs py-2 flex flex-col justify-between">
           <div>
             <p className="w-full truncate">Name :{art?.name}</p>
             <p className="w-full truncate">{art?.description}</p>
@@ -128,7 +132,7 @@ export default function Arts(Props) {
               </div>
             </div>
             <div className="flex flex-col gap-1">
-              <p className="">{art?.question}</p>
+              <p className="">Question : {art?.question}</p>
               <div className="flex gap-1">
                 <input
                   type="text"
@@ -161,8 +165,9 @@ export default function Arts(Props) {
           {/* show card details */}
           <div className="">
             <p>Lucky draw details:-</p>
-            <p>Prize : {cardData.priceMoney}/-</p>
-            <p>Premium : {cardData.premium}/-</p>
+            <p className=" md:text-[10px]">Name : {cardData.name}</p>
+            <p className=" md:text-[10px]">Prize : {cardData.priceMoney}/-</p>
+            <p className=" md:text-[10px]">Premium : {cardData.premium}/-</p>
             {art.quantity > 0 && art.isAnswered && (
               <p className="text-[10px] font-semibold text-green-500">
                 You will get {art.quantity} coupons after purchasing this art.

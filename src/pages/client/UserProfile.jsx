@@ -7,7 +7,7 @@ import { jwtDecode } from "jwt-decode";
 import UserProfileImage from "../../assets/userImage.png";
 import { MdOutlineEdit } from "react-icons/md";
 
-import { RiLogoutCircleLine,RiAuctionLine } from "react-icons/ri";
+import { RiLogoutCircleLine, RiAuctionLine } from "react-icons/ri";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import {
@@ -37,10 +37,10 @@ export default function UserProfile() {
 
   const token = jwtDecode(localStorage.getItem("PrizeUserTkn"));
   useEffect(() => {
-    if (token && token.id) {
+    if (token.id) {
       getUserDetails(token.id, setUserData, setCollectionData);
     }
-  }, [changed]);
+  }, [changed, token.id]);
 
   return (
     <div className="w-screen h-dvh md:h-full overflow-x-hidden bg-primary-color pb-20">
@@ -103,7 +103,7 @@ export default function UserProfile() {
       <div className="w-full h-10  md:px-28 px-10">
         <div className="flex h-full items-center bg-gray-400/30 px-2 overflow-x-scroll scrollbar-hide">
           <div
-            className={`hidden md:flex items-center justify-center gap-2 border-x border-white px-5 cursor-pointer hover:text-blue-500`}
+            className={`flex items-center justify-center gap-2 border-x border-white px-5 cursor-pointer hover:text-blue-500`}
             onClick={() => setSelected("collections")}
           >
             <BsCollection />
@@ -149,9 +149,11 @@ export default function UserProfile() {
       {selected === "collections" && (
         <CardCollection collectionData={collectionData} />
       )}
-      {selected === "coupons" && <Coupons userData={userData} setSelected={setSelected}/>}
+      {selected === "coupons" && (
+        <Coupons userData={userData} setSelected={setSelected} />
+      )}
       {selected === "wallet" && <Wallet userData={userData} />}
-      {selected === "auction" && <Auction userId={userData?._id}/>}
+      {selected === "auction" && <Auction userId={userData?._id} />}
       {selected === "settings" && (
         <Settings setChanged={setChanged} userData={userData} />
       )}

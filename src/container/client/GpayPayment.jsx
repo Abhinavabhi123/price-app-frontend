@@ -18,15 +18,24 @@ export default function GpayPayment() {
                 allowedAuthMethods: ["PAN_ONLY", "CRYPTOGRAM_3DS"],
                 allowedCardNetworks: ["MASTERCARD", "VISA"],
               },
+              // tokenizationSpecification: {
+              //   type: "PAYMENT_GATEWAY",
+              //   parameters: {
+              //     gateway: "stripe",
+              //     // "stripe:publishableKey": import.meta.env.VITE_STRIPE_KEY,
+              //     // "stripe:version": "2023-10-16",
+              //     // gatewayMerchantId: "exampleGatewayMerchantId",
+              //     // stripe: {
+              //     //   publishableKey: import.meta.env.VITE_STRIPE_KEY,
+              //     //   version: "2023-10-16",
+              //     // },
+              //   },
+              // },
               tokenizationSpecification: {
                 type: "PAYMENT_GATEWAY",
                 parameters: {
-                  gateway: "stripe",
-                  // gatewayMerchantId: "exampleGatewayMerchantId",
-                  stripe: {
-                    publishableKey: import.meta.env.VITE_STRIPE_KEY,
-                    version: "2023-10-16",
-                  },
+                  gateway: "example",
+                  gatewayMerchantId: "exampleGatewayMerchantId",
                 },
               },
             },

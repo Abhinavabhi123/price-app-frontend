@@ -17,10 +17,10 @@ export default function Coupons(Props) {
 
   useEffect(() => {
     if (userData?._id) {
-      console.log("hello");
       getUserCoupons(userData?._id, setCouponData);
     }
   }, [userData?._id]);
+
 
   useEffect(() => {
     if (couponData.length > 0) {
@@ -28,8 +28,8 @@ export default function Coupons(Props) {
       serPendingCoupons(
         couponData.filter(
           (coupon) =>
-            coupon?.couponId.status &&
-            !coupon?.couponId.couponCard?.completed &&
+            coupon?.couponId?.status &&
+            !coupon?.couponId?.couponCard?.completed &&
             !coupon?.couponId?.auction
         )
       );
@@ -37,7 +37,7 @@ export default function Coupons(Props) {
       setWinnerCoupons(
         couponData.filter(
           (coupon) =>
-            coupon?.couponId.couponCard?.winnerCoupon === coupon.couponId._id
+            coupon?.couponId?.couponCard?.winnerCoupon === coupon?.couponId?._id
         )
       );
 
@@ -46,7 +46,7 @@ export default function Coupons(Props) {
         couponData.filter(
           (coupon) =>
             !coupon?.couponId?.status &&
-            coupon?.couponId.couponCard?.winnerCoupon !== coupon.couponId._id
+            coupon?.couponId?.couponCard?.winnerCoupon !== coupon?.couponId?._id
         )
       );
     }
@@ -158,7 +158,7 @@ export default function Coupons(Props) {
         <div className="my-5">
           <p className="mb-2">Winner Coupons:-</p>
           {winnerCoupons && winnerCoupons.length ? (
-            <div className="w-full h-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 place-items-center md:place-items-start">
+            <div className="w-full h-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 md:gap-8 place-items-center md:place-items-start">
               {winnerCoupons.map((coupon, index) => (
                 <div
                   key={index}
@@ -173,51 +173,6 @@ export default function Coupons(Props) {
                   <p className="text-sm">
                     Price Money: {coupon?.couponId?.couponCard?.priceMoney} Rs
                   </p>
-                  <p className="text-sm">
-                    Premium: {coupon?.couponId?.couponCard?.premium} Rs
-                  </p>
-                  <p className="text-sm">
-                    Start:{" "}
-                    {new Date(
-                      coupon?.couponId?.couponCard?.startDate
-                    ).toLocaleString()}
-                  </p>
-                  <p className="text-sm">
-                    End:{" "}
-                    {new Date(
-                      coupon?.couponId?.couponCard?.endDate
-                    ).toLocaleString()}
-                  </p>
-                  {coupon?.couponId?.couponCard?.isEliminationStarted &&
-                    coupon?.couponId?.couponCard?.completed && (
-                      <div className="hidden md:block">
-                        <p className="text-sm">Elimination Dates</p>
-                        {coupon?.couponId?.couponCard?.eliminationStages?.map(
-                          (elimination, index) => (
-                            <p
-                              className="text-xs ps-3 flex items-center gap-2"
-                              key={index}
-                            >
-                              Date {index + 1} :-{" "}
-                              {new Date(elimination.stageDate).toLocaleString()}
-                              {elimination.status ? (
-                                <SiTicktick className="text-green-500" />
-                              ) : (
-                                <RiCloseFill
-                                  size={18}
-                                  className="text-red-500"
-                                />
-                              )}
-                            </p>
-                          )
-                        )}
-                      </div>
-                    )}
-                  {coupon?.couponId?.couponCard?.completed && (
-                    <p className="text-sm text-center mt-2">
-                      🎉Lucky Draw Completed🎉
-                    </p>
-                  )}
                   {coupon?.couponId?._id ===
                     coupon?.couponId?.couponCard?.winnerCoupon &&
                     coupon?.couponId?.couponCard?.completed && (
@@ -238,7 +193,7 @@ export default function Coupons(Props) {
         <div className="my-5">
           <p className="mb-2">Completed Coupons:-</p>
           {completedCoupons && completedCoupons.length ? (
-            <div className="w-full h-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 place-items-center md:place-items-start">
+            <div className="w-full h-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 md:gap-8 place-items-center md:place-items-start">
               {completedCoupons.map((coupon, index) => (
                 <div
                   key={index}
@@ -253,51 +208,6 @@ export default function Coupons(Props) {
                   <p className="text-sm">
                     Price Money: {coupon?.couponId?.couponCard?.priceMoney} Rs
                   </p>
-                  <p className="text-sm">
-                    Premium: {coupon?.couponId?.couponCard?.premium} Rs
-                  </p>
-                  <p className="text-sm">
-                    Start:{" "}
-                    {new Date(
-                      coupon?.couponId?.couponCard?.startDate
-                    ).toLocaleString()}
-                  </p>
-                  <p className="text-sm">
-                    End:{" "}
-                    {new Date(
-                      coupon?.couponId?.couponCard?.endDate
-                    ).toLocaleString()}
-                  </p>
-                  {/* {coupon?.couponId?.couponCard?.isEliminationStarted &&
-                    coupon?.couponId?.couponCard?.completed && (
-                      <div className="hidden md:block">
-                        <p className="text-sm">Elimination Dates</p>
-                        {coupon?.couponId?.couponCard?.eliminationStages?.map(
-                          (elimination, index) => (
-                            <p
-                              className="text-xs ps-3 flex items-center gap-2"
-                              key={index}
-                            >
-                              Date {index + 1} :-{" "}
-                              {new Date(elimination.stageDate).toLocaleString()}
-                              {elimination.status ? (
-                                <SiTicktick className="text-green-500" />
-                              ) : (
-                                <RiCloseFill
-                                  size={18}
-                                  className="text-red-500"
-                                />
-                              )}
-                            </p>
-                          )
-                        )}
-                      </div>
-                    )} */}
-                  {coupon?.couponId?.couponCard?.completed && (
-                    <p className="text-sm text-center mt-2">
-                      🎉Lucky Draw Completed🎉
-                    </p>
-                  )}
                 </div>
               ))}
             </div>
