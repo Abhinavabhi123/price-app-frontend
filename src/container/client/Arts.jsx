@@ -72,10 +72,6 @@ export default function Arts(Props) {
         "outline-4 outline-teal-500/80"
       } ${cardData.isStarted===true && "outline-4 outline-[#D7334E]"} `}
     >
-      {
-        console.log( nextCard," nextCard")
-        
-      }
       {nextCard && nextCard._id === cardData._id && (
         <div
           className="absolute bottom-[100.9%] translate-x-[-50%] left-[50%] w-[80%] h-5 bg-teal-500/80  rounded-t-md

@@ -4,6 +4,7 @@ import PrizeBox from "../../assets/prize-box.png";
 import { MdKeyboardArrowRight } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 import Footer from "../../container/client/Footer";
+import { FaGavel, FaShieldAlt, FaRegLightbulb } from "react-icons/fa";
 
 export default function LandingPage() {
   const navigate = useNavigate();
@@ -67,7 +68,48 @@ export default function LandingPage() {
           </div>
         </div>
       </section>
-      {/* <div className="w-full h-[200vh] bg-primary-color"></div> */}
+      {/* How It Works Section */}
+      <section
+        className="py-16 px-10 lg:px-44 text-white text-center"
+        data-aos="fade-up"
+      >
+        <h2 className="text-3xl font-bold mb-6">How It Works</h2>
+        <div className="grid md:grid-cols-3 gap-10">
+          <div
+            className="p-5 bg-gray-800 rounded-xl"
+            data-aos="fade-up"
+            data-aos-delay="100"
+          >
+            <FaRegLightbulb size={40} className="mx-auto text-yellow-400" />
+            <h3 className="text-xl font-semibold mt-4">Discover & List</h3>
+            <p className="text-gray-400 mt-2">
+              List your items for auction or explore available treasures.
+            </p>
+          </div>
+          <div
+            className="p-5 bg-gray-800 rounded-xl"
+            data-aos="fade-up"
+            data-aos-delay="200"
+          >
+            <FaGavel size={40} className="mx-auto text-red-400" />
+            <h3 className="text-xl font-semibold mt-4">Place Your Bids</h3>
+            <p className="text-gray-400 mt-2">
+              Engage in live bidding wars and secure your winnings.
+            </p>
+          </div>
+          <div
+            className="p-5 bg-gray-800 rounded-xl"
+            data-aos="fade-up"
+            data-aos-delay="300"
+          >
+            <FaShieldAlt size={40} className="mx-auto text-green-400" />
+            <h3 className="text-xl font-semibold mt-4">Win & Receive</h3>
+            <p className="text-gray-400 mt-2">
+              Complete secure transactions and get your items delivered.
+            </p>
+          </div>
+        </div>
+      </section>
       <Footer />
     </div>
   );

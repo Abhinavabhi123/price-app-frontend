@@ -42,7 +42,6 @@ export default function ChangePassword() {
       .required("Confirm password is required"),
   });
 
-  console.log(state, "state");
   const {
     values,
     errors,

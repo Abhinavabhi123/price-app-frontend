@@ -1,5 +1,6 @@
 import Footer from "../../container/client/Footer";
 import Header from "../../container/client/Header";
+import AboutImage from "../../assets/aboutImg.png";
 
 export default function AboutPage() {
   return (
@@ -17,6 +18,9 @@ export default function AboutPage() {
             items, our platform allows you to win amazing prizes through a
             transparent and competitive bidding process.
           </p>
+          <div className="flex justify-center items-center">
+            <img src={AboutImage} alt="about image" />
+          </div>
         </div>
         <div className="mt-4 space-y-5">
           <p className="text-lg md:text-2xl font-semibold">How It Works</p>
@@ -78,8 +82,13 @@ export default function AboutPage() {
           </p>
         </div>
         <div className="mt-5 space-y-5">
-          <p className="text-lg md:text-2xl font-semibold">Join the Auction Today!</p>
-          <p className="text-sm md:text-base">Ready to win exciting prizes and be part of the action? Sign up now and start bidding on your favorite coupons!</p>
+          <p className="text-lg md:text-2xl font-semibold">
+            Join the Auction Today!
+          </p>
+          <p className="text-sm md:text-base">
+            Ready to win exciting prizes and be part of the action? Sign up now
+            and start bidding on your favorite coupons!
+          </p>
         </div>
       </div>
       <Footer />

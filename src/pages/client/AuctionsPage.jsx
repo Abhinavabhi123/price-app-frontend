@@ -7,7 +7,10 @@ import { SiTicktick } from "react-icons/si";
 import { RiCloseFill } from "react-icons/ri";
 import { io } from "socket.io-client";
 import { jwtDecode } from "jwt-decode";
-import { errorToast } from "../../components/Notification/Notification";
+import {
+  errorToast,
+  successToast,
+} from "../../components/Notification/Notification";
 import SpinWheel from "../../assets/Fortune-Wheel.gif";
 const socket = io(import.meta.env.VITE_SERVER_URL);
 
@@ -46,7 +49,7 @@ export default function AuctionsPage() {
 
     useEffect(() => {
       socket.on("connect", () => {
-        console.log("Connected to WebSocket server", socket.id);
+        console.log("Connected to WebSocket server");
       });
 
       socket.on("clearTimer", () => {
@@ -55,27 +58,16 @@ export default function AuctionsPage() {
 
       socket.on(
         "timerUpdate",
+        // eslint-disable-next-line no-unused-vars
         ({ couponId: updatedCouponId, remainingTime }) => {
-          console.log(
-            updatedCouponId,
-            coupon._id,
-            updatedCouponId === coupon._id,
-            "timer"
-          );
           setTimer(Math.floor(remainingTime / 1000));
-          // if (updatedCouponId === coupon._id) {
-          //   setTimer(Math.floor(remainingTime / 1000));
-          // }
         }
       );
 
       socket.on("auctionEnded", ({ couponId: endedCouponId }) => {
-        console.log(endedCouponId === coupon._id, "endedCouponId");
+        // console.log(endedCouponId === coupon._id, "endedCouponId");
+        successToast(`Auction ended for ${endedCouponId}`);
         setChanged((prev) => !prev);
-
-        // if (endedCouponId === coupon._id) {
-        //   setChanged((prev) => !prev);
-        // }
       });
 
       return () => {
@@ -115,7 +107,7 @@ export default function AuctionsPage() {
     };
 
     return (
-      <div className="w-full md:max-w-72 min-h-20 relative h-fit px-2 pb-2 md:pb-0  md:p-4  bg-gray-300/50 rounded-xl shadow-xl bg-opacity-25">
+      <div className="w-full md:max-w-72 min-h-20 relative h-fit px-2 pb-2  md:p-4  bg-gray-300/50 rounded-xl shadow-xl bg-opacity-25">
         <p className="text-sm text-center">
           <span className="text-base">{coupon?.couponCard?.name}</span>{" "}
         </p>
@@ -123,7 +115,7 @@ export default function AuctionsPage() {
         <p className="text-sm hidden md:block">
           Price Money: {coupon?.couponCard?.priceMoney} Rs
         </p>
-       
+
         <p className="text-sm hidden md:block">
           Start: {new Date(coupon?.couponCard?.startDate).toLocaleString()}
         </p>
@@ -160,12 +152,20 @@ export default function AuctionsPage() {
                 <p className="text-xs ps-2">
                   Last Price:-{coupon?.auctionDetails?.auction_price || ""}
                 </p>
-                <p className="text-sm">Premium: {coupon?.couponCard?.premium} Rs</p>
+                <p className="text-sm">
+                  Premium: {coupon?.couponCard?.premium} Rs
+                </p>
                 <p className="text-xs ps-2 hidden md:block">
                   Date:-{coupon?.auctionDetails?.auction_date || ""}
                 </p>
               </div>
-              {timer ? <h1 className="text-white">Auction Timer: {formatTime(timer)}</h1> : ""}
+              {timer ? (
+                <h1 className="text-white ">
+                  Auction Timer: {formatTime(timer)}
+                </h1>
+              ) : (
+                ""
+              )}
               {coupon?.auctionDetails?.auction_user !== userId ? (
                 <div>
                   <label htmlFor="price" className="text-xs text-black">
@@ -198,7 +198,7 @@ export default function AuctionsPage() {
                   </div>
                 </div>
               ) : (
-                <div className="md:min-h-24 flex items-end">
+                <div className=" flex items-end">
                   <p className="text-xs text-green-400">
                     Congratulations! 🎉 Your bid has been placed successfully!
                     🚀 Best of luck in the auction!
@@ -213,7 +213,6 @@ export default function AuctionsPage() {
       </div>
     );
   }
-  console.log(auctionData, "auctionData");
 
   return (
     <div className="w-screen h-dvh md:h-full overflow-x-hidden bg-primary-color pb-20">

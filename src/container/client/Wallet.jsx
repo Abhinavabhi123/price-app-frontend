@@ -1,7 +1,6 @@
 import { useState, useRef } from "react";
 import UserWallet from "../../assets/user-wallet.png";
 import { IoIosArrowDown } from "react-icons/io";
-import GpayPayment from "../../container/client/GpayPayment";
 import Payment from "./Payment";
 
 export default function Wallet(Props) {

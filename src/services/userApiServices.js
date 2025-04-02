@@ -6,6 +6,7 @@ import {
 import {
   changePasswordWithEmailUrl,
   changePasswordWithMobileUrl,
+  changeUserNameUrl,
   changeUserProfileImageUrl,
   checkAnswerUrl,
   checkEmailAndGetOtpUrl,
@@ -982,17 +983,17 @@ export async function startAuction(
 }
 
 // functions to fetch all Auctions available
-export async function getAllAuctions(userId,setAuctionData) {
+export async function getAllAuctions(userId, setAuctionData) {
   try {
     const response = await axios.get(getAllAuctionUrls, {
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
-        userId
+        userId,
       },
     });
     if (response.status === 200 && response.data?.isSuccess) {
-      setAuctionData(response?.data?.auctionData)
+      setAuctionData(response?.data?.auctionData);
     }
   } catch (error) {
     if (error.response) {
@@ -1011,5 +1012,42 @@ export async function getAllAuctions(userId,setAuctionData) {
       errorToast("An unexpected error occurred.");
       console.error("Unexpected Error:", error.message);
     }
+  }
+}
+
+// function to change the user name
+export async function changeUserName(name, setChanged, setSubmitting,resetForm) {
+  try {
+    const response = await axios.get(changeUserNameUrl, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+        name: name,
+      },
+    });
+    if (response.status === 200 && response.data?.isSuccess) {
+      successToast(response?.data?.message);
+      setChanged((prev) => !prev);
+      resetForm();
+    }
+  } catch (error) {
+    if (error.response) {
+      const { data } = error.response;
+      if (data.errors && Array.isArray(data.errors)) {
+        // Show each validation error
+        data.errors.forEach((err) => errorToast(err.msg));
+      } else {
+        errorToast(error.response.data.message || "Something went wrong!");
+      }
+      console.error("Server Error:", error.response.data);
+    } else if (error.request) {
+      errorToast("No response from server. Please try again later.");
+      console.error("Request Error:", error.request);
+    } else {
+      errorToast("An unexpected error occurred.");
+      console.error("Unexpected Error:", error.message);
+    }
+  } finally {
+    setSubmitting(false);
   }
 }

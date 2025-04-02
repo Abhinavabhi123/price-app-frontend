@@ -60,7 +60,6 @@ export default function ForgetPassword() {
     },
     validationSchema: mobileValidationSchema,
     onSubmit: (values) => {
-      console.log(values);
       checkMobileAndGetOtp(
         values,
         setShowMobileOtpModal,

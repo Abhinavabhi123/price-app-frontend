@@ -62,8 +62,6 @@ export default function OtpModal(Props) {
           setSubmitting
         );
       } else if (otpType === "mobileRegisterOtp") {
-        console.log(data, values.otp,"data values.otp");
-
         userRegisterWithMobile(
           data,
           values.otp,

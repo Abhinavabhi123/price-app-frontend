@@ -98,8 +98,6 @@ export default function CreateCardForm() {
     },
     validationSchema,
     onSubmit: (values) => {
-      console.log(values, "valuessss");
-
       postCard(values, setSubmitting, navigate);
     },
   });

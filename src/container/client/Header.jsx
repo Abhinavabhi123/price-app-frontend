@@ -40,7 +40,7 @@ export default function Header() {
 
   return (
     <header
-      className={`w-full  h-16 flex items-center justify-between px-10 md:px-20 lg:px-32 text-white sticky top-0 left-0 transition-all duration-300 z-40 backdrop-blur-lg border border-white/20 shadow-lg`}
+      className={`w-full  h-16 flex items-center justify-between px-10 md:px-20 lg:px-32 text-white sticky top-0 left-0 transition-all duration-300 z-40 backdrop-blur-lg border-b md:border border-white/20 shadow-lg`}
     >
       {/* Left section */}
       <div>
@@ -76,7 +76,7 @@ export default function Header() {
             }`}
             onClick={() => navigate("/")}
           >
-            Cards
+            Arts
           </li>
           <li
             className={`min-w-20 cursor-pointer flex items-center justify-center gap-2 transition-all divide-neutral-400 hover:text-white ${

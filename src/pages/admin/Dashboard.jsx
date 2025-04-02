@@ -34,7 +34,6 @@ export default function Dashboard() {
     }
   }, [dashData]);
 
-  console.log(userArtData, "userArtData");
 
   return (
     <div className="w-screen h-full flex flex-col overflow-y-scroll ">

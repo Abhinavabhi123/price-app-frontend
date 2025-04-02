@@ -10,8 +10,13 @@ export default function Footer() {
           <img src={Logo} alt="logo" />
         </div>
         <div className=" w-full h-full flex flex-col">
-          <div className="w-full">
-            <p className="text-3xl font-semibold p-4 text-white">Website Name</p>
+          <div className="w-full relative">
+            <p className="text-3xl font-semibold p-4 text-white tracking-wider">
+              {import.meta.env.VITE_NAME}
+            </p>
+            <div className="absolute w-28 h-1 bg-[conic-gradient(from_90deg_at_40%_-25%,#ffd700,#f79d03,#ee6907,#e6390a,#de0d0d,#d61039,#cf1261,#c71585,#cf1261,#d61039,#de0d0d,#ee6907,#f79d03,#ffd700,#ffd700,#ffd700)] rounded-3xl bottom-2 left-16 transition-transform translate-x-[-50%]">
+              {" "}
+            </div>
           </div>
           <div className="w-full px-8 flex flex-col md:flex-row gap-5 ">
             <div>
@@ -52,7 +57,7 @@ export default function Footer() {
         </div>
       </div>
       <div className="flex h-10 mt-3 px-4 md:px-20 text-xs text-gray-400">
-        <div className=" border-t border-gray-400 w-full  py-5">helllo</div>
+        <div className=" border-t border-gray-400 w-full  py-5"></div>
       </div>
     </div>
   );

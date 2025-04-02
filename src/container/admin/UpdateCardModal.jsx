@@ -19,7 +19,6 @@ export default function UpdateCardModal(Props) {
   useEffect(() => {
     getCardImages(setCardImageData);
   }, []);
-  console.log(editDetails, "editDetails");
 
   function CardInputField(Props) {
     const {
