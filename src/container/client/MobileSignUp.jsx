@@ -65,7 +65,7 @@ export default function MobileSignUp() {
   return (
     <form className="space-y-3  w-full h-fit" onSubmit={handleSubmit}>
       <div className="space-y-2">
-        <p className="text-gray-400 text-sm"> Name</p>
+        <p className="text-gray-400 text-sm">Full Name</p>
         <LoginInput
           type="text"
           name="name"

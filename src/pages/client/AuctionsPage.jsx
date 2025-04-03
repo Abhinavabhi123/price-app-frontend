@@ -12,20 +12,28 @@ import {
   successToast,
 } from "../../components/Notification/Notification";
 import SpinWheel from "../../assets/Fortune-Wheel.gif";
+import { useNavigate } from "react-router-dom";
 const socket = io(import.meta.env.VITE_SERVER_URL);
 
 export default function AuctionsPage() {
   const [auctionData, setAuctionData] = useState([]);
+  const [userId,setUserId] = useState("");
+  const navigate = useNavigate();
 
   const [changed, setChanged] = useState(false);
 
-  const userId = jwtDecode(localStorage.getItem("PrizeUserTkn")).id;
-
+  const token = localStorage.getItem("PrizeUserTkn");
   useEffect(() => {
-    if (userId) {
+    if (token) {
+      const userId = jwtDecode(token).id;
+      if(userId){
+        setUserId(userId)
+      }
       getAllAuctions(userId, setAuctionData);
+    } else {
+      navigate("login");
     }
-  }, [userId, changed]);
+  }, [changed, navigate, token]);
 
   useEffect(() => {
     socket.on("bidUpdate", () => {

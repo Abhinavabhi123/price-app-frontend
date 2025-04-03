@@ -88,7 +88,7 @@ export default function LoginPage() {
             <div className="w-full h-10">
               {!isEmail ? (
                 <button
-                  className="flex w-full h-full  justify-center items-center cursor-pointer gap-2 bg-[#555658]/60 rounded-sm text-sm text-black"
+                  className="flex w-full h-full  justify-center items-center cursor-pointer gap-2 bg-[#555658]/60 rounded-sm text-sm text-white"
                   onClick={() => setIsEmail(true)}
                 >
                   <MdOutlineEmail size={20} />
@@ -96,7 +96,7 @@ export default function LoginPage() {
                 </button>
               ) : (
                 <button
-                  className="flex w-full h-full  justify-center items-center cursor-pointer gap-2 bg-[#555658]/60 rounded-sm text-sm text-black"
+                  className="flex w-full h-full  justify-center items-center cursor-pointer gap-2 bg-[#555658]/60 rounded-sm text-sm text-white"
                   onClick={() => setIsEmail(false)}
                 >
                   <FaPhone size={15} />

@@ -26,8 +26,8 @@ export default function UserManagement() {
 
   // Sorting Function
   const sortedData = [...userData].sort((a, b) => {
-    const valueA = a[sortField];
-    const valueB = b[sortField];
+    const valueA = a[sortField]?a[sortField]:"";
+    const valueB = b[sortField]?b[sortField]:"";
 
     if (typeof valueA === "string") {
       return sortOrder === "asc"

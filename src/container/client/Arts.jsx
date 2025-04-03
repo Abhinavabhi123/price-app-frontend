@@ -103,7 +103,7 @@ export default function Arts(Props) {
         <div className="w-full h-[60%] md:text-xs py-2 flex flex-col justify-between">
           <div>
             <p className="w-full truncate">Name :{art?.name}</p>
-            <p className="w-full truncate">{art?.description}</p>
+            {/* <p className="w-full truncate">{art?.description}</p> */}
             <p>Price : {art.price} /-</p>
             {/* Quantity section */}
             <div className="flex w-full justify-between items-center">
@@ -163,7 +163,6 @@ export default function Arts(Props) {
             <p>Lucky draw details:-</p>
             <p className=" md:text-[10px]">Name : {cardData.name}</p>
             <p className=" md:text-[10px]">Prize : {cardData.priceMoney}/-</p>
-            <p className=" md:text-[10px]">Premium : {cardData.premium}/-</p>
             {art.quantity > 0 && art.isAnswered && (
               <p className="text-[10px] font-semibold text-green-500">
                 You will get {art.quantity} coupons after purchasing this art.

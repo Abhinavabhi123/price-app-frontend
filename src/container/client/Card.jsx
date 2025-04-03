@@ -57,9 +57,6 @@ export default function Card(Props) {
           <p className="text-sm" data-aos="fade-up">
             Prize :- {cardData?.priceMoney}/- Rs
           </p>
-          <p className="text-sm" data-aos="fade-up">
-            Premium :- {cardData?.premium}/- Rs
-          </p>
           {cardData && (
             <div data-aos="fade-up">
               <Countdown date={cardData?.startDate} renderer={renderer} />

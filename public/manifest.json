@@ -1,0 +1,30 @@
+{
+  "name": "Waffit",
+  "short_name": "Waffit",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#000000",
+  "description": "Where Art Becomes Treasure Buy, Sell & Win",
+  "icons": [
+    {
+      "src": "./icons/waffit96.png",
+      "sizes": "96x96",
+      "type": "image/png"
+    },
+    {
+      "src": "./icons/waffit144.png",
+      "sizes": "144x144",
+      "type": "image/png"
+    },
+    {
+      "src": "./icons/waffit192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "./icons/waffit512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

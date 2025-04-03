@@ -74,8 +74,8 @@ export default function ArtManagement() {
 
   // Sorting Function
   const sortedData = [...artData].sort((a, b) => {
-    const valueA = a[sortField];
-    const valueB = b[sortField];
+    const valueA = a[sortField]? a[sortField]:"";
+    const valueB = b[sortField]?b[sortField]:"";
 
     if (typeof valueA === "string") {
       return sortOrder === "asc"

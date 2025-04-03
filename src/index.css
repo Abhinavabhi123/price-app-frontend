@@ -3,6 +3,7 @@
 
 /* defining tailwind variables */
 @theme {
+  /* --color-primary-color: #ffffff; */
   --color-primary-color: #000000;
   --color-admin-secondary-color: #222339;
   --color-admin-primary-color: #1b1c30;
