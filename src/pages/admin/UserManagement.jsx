@@ -26,8 +26,8 @@ export default function UserManagement() {
 
   // Sorting Function
   const sortedData = [...userData].sort((a, b) => {
-    const valueA = a[sortField]?a[sortField]:"";
-    const valueB = b[sortField]?b[sortField]:"";
+    const valueA = a[sortField] ? a[sortField] : "";
+    const valueB = b[sortField] ? b[sortField] : "";
 
     if (typeof valueA === "string") {
       return sortOrder === "asc"
@@ -123,75 +123,84 @@ export default function UserManagement() {
                   </tr>
                 </thead>
                 <tbody>
-                  {paginatedData.map((user, index) => (
-                    <tr
-                      key={index}
-                      className={
-                        index % 2 === 0 ? "bg-gray-500/50" : "bg-gray-600"
-                      }
-                    >
-                      <td className="text-center">
-                        {(currentPage - 1) * pageSize + index + 1}
-                      </td>
-                      <td className="text-center">
-                        <p className="max-w-48 truncate">
-                          {user?.name || "Null"}
-                        </p>
-                      </td>
-                      <td className="text-center">
-                        <p className="max-w-48 truncate">
-                          {user.email || "Null"}
-                        </p>
-                      </td>
-                      <td className="text-center">
-                        <img
-                          src={`${
-                            import.meta.env.VITE_SERVER_URL
-                          }/uploads/userImage/${user.picture}`}
-                          alt="user image"
-                          onError={(e) =>
-                            (e.target.src = user?.picture
-                              ? user?.picture
-                              : UserImage)
-                          }
-                          className="size-10 rounded-full object-contain"
-                        />
-                      </td>
-                      <td className="text-center">{user.coupons.length}</td>
-                      <td className="text-center ">
-                        {user.purchasedArts.length}
-                      </td>
-                      <td className="text-center ">
-                        {user.mobile ? user.mobile : "Null"}
-                      </td>
-                      <td className="text-center">
-                        <button
-                          className={`text-xs rounded-lg px-3 py-1 outline-none text-white cursor-pointer ${
-                            user.access ? "bg-green-500" : "bg-red-500"
-                          }`}
-                          // onClick={() => changeArtStatus(art?._id, setChange)}
-                        >
-                          {user.access ? "Active" : "Inactive"}
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
+                  {paginatedData.map((user, index) => {
+                    const isGoogleImage = user.picture?.startsWith("https");
+                    const hasCustomImage = user.picture && !isGoogleImage;
+
+                    const imageUrl = isGoogleImage
+                      ? user.picture
+                      : hasCustomImage
+                      ? `${import.meta.env.VITE_SERVER_URL}/uploads/userImage/${
+                          user.picture
+                        }`
+                      : UserImage;
+                    return (
+                      <tr
+                        key={index}
+                        className={
+                          index % 2 === 0 ? "bg-gray-500/50" : "bg-gray-600"
+                        }
+                      >
+                        <td className="text-center">
+                          {(currentPage - 1) * pageSize + index + 1}
+                        </td>
+                        <td className="text-center">
+                          <p className="max-w-48 truncate">
+                            {user?.name || "Null"}
+                          </p>
+                        </td>
+                        <td className="text-center">
+                          <p className="max-w-48 truncate">
+                            {user.email || "Null"}
+                          </p>
+                        </td>
+                        <td className="text-center">
+                          <img
+                            src={imageUrl}
+                            alt="User"
+                            onError={(e) => {
+                              e.target.onerror = null;
+                              e.target.src = UserImage;
+                            }}
+                            className="size-10 rounded-full object-cover"
+                          />
+                        </td>
+                        <td className="text-center">{user.coupons.length}</td>
+                        <td className="text-center ">
+                          {user.purchasedArts.length}
+                        </td>
+                        <td className="text-center ">
+                          {user.mobile ? user.mobile : "Null"}
+                        </td>
+                        <td className="text-center">
+                          <button
+                            className={`text-xs rounded-lg px-3 py-1 outline-none text-white cursor-pointer ${
+                              user.access ? "bg-green-500" : "bg-red-500"
+                            }`}
+                            // onClick={() => changeArtStatus(art?._id, setChange)}
+                          >
+                            {user.access ? "Active" : "Inactive"}
+                          </button>
+                        </td>
+                      </tr>
+                    );
+                  })}
                 </tbody>
               </table>
             </div>
-              {/* Pagination */}
-              <div className="flex justify-end mt-5">
-                <Pagination
-                  showSizeChanger
-                  onChange={(page, size) => {
-                    setCurrentPage(page);
-                    setPageSize(size);
-                  }}
-                  current={currentPage}
-                  pageSize={pageSize}
-                  total={userData.length}
-                />
-              </div>
+            {/* Pagination */}
+            <div className="flex justify-end mt-5">
+              <Pagination
+                showSizeChanger
+                onChange={(page, size) => {
+                  setCurrentPage(page);
+                  setPageSize(size);
+                }}
+                current={currentPage}
+                pageSize={pageSize}
+                total={userData.length}
+              />
+            </div>
           </div>
         ) : (
           <div className="w-full h-[100%] flex justify-center items-center">

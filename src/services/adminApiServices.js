@@ -38,7 +38,7 @@ export async function AdminSignUp(data, setSubmitting) {
       })
       .then((response) => {
         if (response.status === 200 && response.data.isSuccess) {
-          console.log(response.data.message);
+          // console.log(response.data.message);
         }
       });
   } catch (error) {
@@ -712,7 +712,6 @@ export async function getDashboardData(
       },
     });
     if (response.status === 200 && response?.data?.isSuccess) {
-      console.log(response, "res");
       setUserData(response?.data?.userData);
       setUserArtData(response?.data?.userArtData);
       setDashData(response?.data?.dashData);

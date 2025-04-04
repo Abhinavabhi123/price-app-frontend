@@ -48,3 +48,4 @@ export const getUserAuctionCouponsUrl = serverUrl + "/getUserAuctionCoupons";
 export const startAuctionUrl = serverUrl+"/startAuction";
 export const getAllAuctionUrls = serverUrl+"/getAllAuctions";
 export const changeUserNameUrl = serverUrl+"/changeUserName";
+export const updateUserDetailsUrl = serverUrl+"/updateUserDetails";

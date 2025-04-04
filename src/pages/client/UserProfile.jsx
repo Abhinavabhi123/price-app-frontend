@@ -65,12 +65,22 @@ export default function UserProfile() {
               className="size-36 md:size-56 rounded-3xl overflow-hidden bg-gray-500 backdrop-blur-md  absolute -top-20 left-[50%] -translate-x-[50%] md:left-[50%] group"
             >
               <img
-                src={`${import.meta.env.VITE_SERVER_URL}/uploads/userImage/${
-                  userData.picture
-                }`}
-                alt="user image"
-                onError={(e) => (e.target.src = UserProfileImage)}
+                src={
+                  userData.picture?.startsWith("https")
+                    ? userData.picture
+                    : userData.picture
+                    ? `${import.meta.env.VITE_SERVER_URL}/uploads/userImage/${
+                        userData.picture
+                      }`
+                    : UserProfileImage
+                }
+                alt="User"
+                onError={(e) => {
+                  e.target.onerror = null; // avoid infinite loop
+                  e.target.src = UserProfileImage;
+                }}
                 className="w-full h-full object-cover rounded-3xl bg-white scale-90"
+                onClick={() => navigate("/profile")}
               />
               <div
                 className="w-full h-full opacity-0 transition-opacity duration-150 rounded-3xl ease-in group-hover:opacity-100 bg-black/50 cursor-pointer  absolute top-0 left-0 flex justify-center items-center transform  group-hover:scale-100"
@@ -103,42 +113,54 @@ export default function UserProfile() {
       <div className="w-full h-10  md:px-28 px-10">
         <div className="flex h-full items-center bg-gray-400/30 px-2 overflow-x-scroll scrollbar-hide">
           <div
-            className={`flex items-center justify-center gap-2 border-x border-white px-5 cursor-pointer hover:text-blue-500 ${selected==="collections"&&"text-blue-500"}`}
+            className={`flex items-center justify-center gap-2 border-x border-white px-5 cursor-pointer hover:text-blue-500 ${
+              selected === "collections" && "text-blue-500"
+            }`}
             onClick={() => setSelected("collections")}
           >
             <BsCollection />
             <p>Collections</p>
           </div>
           <div
-            className={`hidden md:flex items-center justify-center gap-2 border-x md:border-r px-5 cursor-pointer border-white hover:text-blue-500 ${selected==="wallet"&&"text-blue-500"}`}
+            className={`hidden md:flex items-center justify-center gap-2 border-x md:border-r px-5 cursor-pointer border-white hover:text-blue-500 ${
+              selected === "wallet" && "text-blue-500"
+            }`}
             onClick={() => setSelected("wallet")}
           >
             <IoWalletOutline />
             <p>Wallet</p>
           </div>
           <div
-            className={`hidden  items-center justify-center gap-2 border-r px-5 cursor-pointer border-white hover:text-blue-500 ${selected==="sellArt"&&"text-blue-500"}`}
+            className={`hidden  items-center justify-center gap-2 border-r px-5 cursor-pointer border-white hover:text-blue-500 ${
+              selected === "sellArt" && "text-blue-500"
+            }`}
             onClick={() => setSelected("sellArt")}
           >
             <IoCloudUploadOutline />
             <p>Sell Your Art</p>
           </div>
           <div
-            className={`flex items-center justify-center gap-2 border-r px-5 cursor-pointer border-white hover:text-blue-500 ${selected==="coupons"&&"text-blue-500"}`}
+            className={`flex items-center justify-center gap-2 border-r px-5 cursor-pointer border-white hover:text-blue-500 ${
+              selected === "coupons" && "text-blue-500"
+            }`}
             onClick={() => setSelected("coupons")}
           >
             <IoTicketSharp />
             <p>Coupons</p>
           </div>
           <div
-            className={`flex items-center justify-center gap-2 border-r px-5 cursor-pointer border-white hover:text-blue-500 ${selected==="auction"&&"text-blue-500"}`}
+            className={`flex items-center justify-center gap-2 border-r px-5 cursor-pointer border-white hover:text-blue-500 ${
+              selected === "auction" && "text-blue-500"
+            }`}
             onClick={() => setSelected("auction")}
           >
             <RiAuctionLine size={20} />
             <p>Auction</p>
           </div>
           <div
-            className={`flex items-center justify-center gap-2 border-r px-5 cursor-pointer border-white hover:text-blue-500 ${selected==="settings"&&"text-blue-500"}`}
+            className={`flex items-center justify-center gap-2 border-r px-5 cursor-pointer border-white hover:text-blue-500 ${
+              selected === "settings" && "text-blue-500"
+            }`}
             onClick={() => setSelected("settings")}
           >
             <IoSettingsOutline />

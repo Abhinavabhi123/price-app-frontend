@@ -3,6 +3,7 @@ import * as yup from "yup";
 import { changeUserName, getOtp } from "../../services/userApiServices";
 import { useState } from "react";
 import OtpModal from "./OtpModal";
+import ProfileUpdate from "./ProfileUpdate";
 
 export default function Settings(Props) {
   const { setChanged, userData } = Props;
@@ -15,7 +16,8 @@ export default function Settings(Props) {
       .required("Mobile number is required"),
   });
   const nameValidationSchema = yup.object().shape({
-    name: yup.string()
+    name: yup
+      .string()
       .matches(/^[A-Za-z\s]+$/, "Name can only contain letters and spaces")
       .min(2, "Name must be at least 2 characters long")
       .max(50, "Name cannot exceed 50 characters")
@@ -46,8 +48,8 @@ export default function Settings(Props) {
       name: "",
     },
     validationSchema: nameValidationSchema,
-    onSubmit: (values,{setSubmitting,resetForm}) => {
-      changeUserName(values.name,setChanged,setSubmitting,resetForm);
+    onSubmit: (values, { setSubmitting, resetForm }) => {
+      changeUserName(values.name, setChanged, setSubmitting, resetForm);
     },
   });
 
@@ -67,6 +69,7 @@ export default function Settings(Props) {
     <div className="w-full h-fit md:px-28 p-10">
       <div className="w-full h-full">
         <p className="text-xl">Settings :-</p>
+        <ProfileUpdate setChanged={setChanged} userData={userData}/>
         <div className="flex justify-between items-center py-5">
           <div className="w-full h-fit md:w-1/2 ">
             <div className="space-y-5">

@@ -49,7 +49,12 @@ export default function TopBar() {
     <div className="w-full h-full max-w-[100vw] overflow-hidden bg-admin-active-color flex justify-center items-center px-6 md:px-10">
       <div className=" w-full flex justify-between items-center">
         <div className="w-fit">
-          <img src={Icon} alt="icon" className="size-8 md:size-10" />
+          <img
+            src={Icon}
+            alt="icon"
+            className="size-8 md:size-10"
+            onClick={() => navigate("/admin/dashboard")}
+          />
         </div>
         <div className="flex gap-4">
           <div className="size-8 hidden md:size-10 bg-admin-secondary-color rounded-md cursor-pointer drop-shadow-xl  justify-center items-center">

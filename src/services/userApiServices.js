@@ -25,6 +25,7 @@ import {
   registerUserWithEmailUrl,
   startAuctionUrl,
   updateMobileNumberUrl,
+  updateUserDetailsUrl,
   userLoginUrl,
   userLoginWithMobileUrl,
   verifyEmailOtpUrl,
@@ -1016,7 +1017,12 @@ export async function getAllAuctions(userId, setAuctionData) {
 }
 
 // function to change the user name
-export async function changeUserName(name, setChanged, setSubmitting,resetForm) {
+export async function changeUserName(
+  name,
+  setChanged,
+  setSubmitting,
+  resetForm
+) {
   try {
     const response = await axios.get(changeUserNameUrl, {
       headers: {
@@ -1029,6 +1035,41 @@ export async function changeUserName(name, setChanged, setSubmitting,resetForm) 
       successToast(response?.data?.message);
       setChanged((prev) => !prev);
       resetForm();
+    }
+  } catch (error) {
+    if (error.response) {
+      const { data } = error.response;
+      if (data.errors && Array.isArray(data.errors)) {
+        // Show each validation error
+        data.errors.forEach((err) => errorToast(err.msg));
+      } else {
+        errorToast(error.response.data.message || "Something went wrong!");
+      }
+      console.error("Server Error:", error.response.data);
+    } else if (error.request) {
+      errorToast("No response from server. Please try again later.");
+      console.error("Request Error:", error.request);
+    } else {
+      errorToast("An unexpected error occurred.");
+      console.error("Unexpected Error:", error.message);
+    }
+  } finally {
+    setSubmitting(false);
+  }
+}
+
+// function to update the user details
+export async function updateUserDetails(data, setSubmitting,setChanged) {
+  try {
+    const response = await axios.post(updateUserDetailsUrl, data, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    if (response.status === 200 && response.data?.isSuccess) {
+      successToast(response?.data?.message);
+      setChanged(prev=>!prev)
     }
   } catch (error) {
     if (error.response) {

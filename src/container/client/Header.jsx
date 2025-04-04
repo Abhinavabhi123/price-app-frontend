@@ -107,14 +107,23 @@ export default function Header() {
           Get Started
           <MdKeyboardArrowRight />
         </button>
-        {token && (
+        {token && user && (
           <div className="size-10 ms-2 cursor-pointer">
             <img
-              src={`${import.meta.env.VITE_SERVER_URL}/uploads/userImage/${
-                user?.picture
-              }`}
-              alt="user picture"
-              onError={(e) => (e.target.src = UserImage)} // Handles broken image links
+              src={
+                user.picture?.startsWith("https")
+                  ? user.picture
+                  : user.picture
+                  ? `${import.meta.env.VITE_SERVER_URL}/uploads/userImage/${
+                      user.picture
+                    }`
+                  : UserImage
+              }
+              alt="User"
+              onError={(e) => {
+                e.target.onerror = null; // avoid infinite loop
+                e.target.src = UserImage;
+              }}
               className="rounded-full w-full h-full object-cover outline"
               onClick={() => navigate("/profile")}
             />
