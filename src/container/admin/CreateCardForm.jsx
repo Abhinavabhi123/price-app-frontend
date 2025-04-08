@@ -370,7 +370,7 @@ export default function CreateCardForm() {
         <button
           onClick={() => resetForm()}
           type="reset"
-          className="rounded-lg bg-gray-400 outline-none px-3 py-1 text-sm cursor-pointer"
+          className="rounded-lg bg-gray-400 outline-none px-3 py-1 text-sm cursor-pointer text-black"
         >
           Clear
         </button>

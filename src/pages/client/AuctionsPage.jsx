@@ -17,12 +17,14 @@ import SpinWheel from "../../assets/Fortune-Wheel.gif";
 import { useNavigate } from "react-router-dom";
 import AuctionModal from "../../container/client/AuctionModal";
 import ParticipateAuctionModal from "../../container/client/ParticipateAuctionModal";
+
 const socket = io(import.meta.env.VITE_SERVER_URL);
 
 export default function AuctionsPage() {
   const [auctionData, setAuctionData] = useState([]);
   const [userId, setUserId] = useState("");
   const [couponData, setCouponData] = useState([]);
+  const [timers, setTimers] = useState({});
   const navigate = useNavigate();
   const [modalOpen, setModalOpen] = useState(false);
   const [modalData, setModalData] = useState({});
@@ -39,7 +41,6 @@ export default function AuctionsPage() {
     }
   }, [navigate, token]);
 
-  // Fetch auctions only when userId is available and `changed` toggles
   useEffect(() => {
     if (userId) {
       getAllAuctions(userId, setAuctionData);
@@ -60,47 +61,36 @@ export default function AuctionsPage() {
       errorToast(err.message);
     });
 
+    socket.on("timerUpdate", ({ couponId, remainingTime }) => {
+      setTimers((prev) => ({
+        ...prev,
+        [couponId]: Math.floor(remainingTime / 1000),
+      }));
+    });
+
+    socket.on("clearTimer", () => {
+      setTimers({});
+    });
+
+    socket.on("auctionEnded", ({ couponId }) => {
+      successToast(`Auction ended for ${couponId}`);
+      setChanged((prev) => !prev);
+    });
+
     return () => {
       socket.off("bidUpdate");
+      socket.off("updateAuction");
       socket.off("bidError");
+      socket.off("timerUpdate");
+      socket.off("clearTimer");
+      socket.off("auctionEnded");
     };
   }, []);
 
   function AuctionCoupon(Props) {
-    const { coupon } = Props;
+    const { coupon, timer } = Props;
     const [auctionModalOpen, setAuctionModalOpen] = useState(false);
-    const [timer, setTimer] = useState(0);
     const [auctionModalData, setAuctionModalData] = useState({});
-
-    useEffect(() => {
-      socket.on("connect", () => {
-        console.log("Connected to WebSocket server");
-      });
-
-      socket.on("clearTimer", () => {
-        setTimer(null);
-      });
-
-      socket.on(
-        "timerUpdate",
-        ({ couponId: updatedCouponId, remainingTime }) => {
-          if (updatedCouponId === coupon._id) {
-            setTimer(Math.floor(remainingTime / 1000));
-          }
-        }
-      );
-
-      socket.on("auctionEnded", ({ couponId: endedCouponId }) => {
-        // console.log(endedCouponId === coupon._id, "endedCouponId");
-        successToast(`Auction ended for ${endedCouponId}`);
-        setChanged((prev) => !prev);
-      });
-
-      return () => {
-        socket.off("timerUpdate");
-        socket.off("auctionEnded");
-      };
-    }, [coupon._id]);
 
     const formatTime = (seconds) => {
       const minutes = Math.floor(seconds / 60);
@@ -167,8 +157,8 @@ export default function AuctionsPage() {
                   Date:-{coupon?.auctionDetails?.auction_date || ""}
                 </p>
               </div>
-              {timer ? (
-                <h1 className="text-white ">
+              {timer != null ? (
+                <h1 className="text-white text-sm md:text-base">
                   Auction Timer: {formatTime(timer)}
                 </h1>
               ) : (
@@ -177,8 +167,7 @@ export default function AuctionsPage() {
               {coupon?.auctionDetails?.auction_user !== userId ? (
                 <div className="flex justify-center">
                   <button
-                    className="
-                  text-xs rounded-lg px-5 py-1  bg-admin-active-color shadow-xl mt-2 cursor-pointer"
+                    className="text-xs rounded-lg px-5 py-1  bg-admin-active-color shadow-xl mt-2 cursor-pointer"
                     onClick={() => {
                       setAuctionModalOpen(true);
                       setAuctionModalData(coupon);
@@ -204,7 +193,6 @@ export default function AuctionsPage() {
     );
   }
 
-  // function to close auction modal
   function closeModal() {
     setModalData({});
     setModalOpen(false);
@@ -231,7 +219,7 @@ export default function AuctionsPage() {
         <div className="w-full h-[65vh] flex flex-col gap-3 md:hidden bg-gray-800 overflow-y-scroll">
           {auctionData && auctionData.length > 0 ? (
             auctionData.map((coupon, index) => (
-              <AuctionCoupon coupon={coupon} key={index} />
+              <AuctionCoupon coupon={coupon} key={index} timer={timers[coupon._id]} />
             ))
           ) : (
             <div className="flex justify-center items-center w-full h-full">
@@ -243,7 +231,7 @@ export default function AuctionsPage() {
           {auctionData && auctionData.length > 0 ? (
             <div className="w-full h-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 place-items-center md:place-items-start">
               {auctionData.map((coupon, index) => (
-                <AuctionCoupon coupon={coupon} key={index} />
+                <AuctionCoupon coupon={coupon} key={index} timer={timers[coupon._id]} />
               ))}
             </div>
           ) : (
@@ -261,32 +249,31 @@ export default function AuctionsPage() {
             data={modalData}
             setChanged={setChanged}
           />
-          {couponData &&
-            couponData.map((coupon, index) => {
-              return (
-                <div
-                  key={index}
-                  className=" w-fit h-fit px-5 flex flex-col justify-center items-center"
-                >
-                  <div>
-                    <p
-                      className="text-red-500 cursor-pointer"
-                      onClick={() => {
-                        setModalData(coupon);
-                        setModalOpen(true);
-                      }}
-                    >
-                      List
-                    </p>
-                  </div>
-                  <div>
-                    <p className="bg-red-200 px-3 text-black">
-                      {coupon?.couponId?._id.slice(-8)}
-                    </p>
-                  </div>
+          {couponData.map((coupon, index) => {
+            return (
+              <div
+                key={index}
+                className=" w-fit h-fit px-5 flex flex-col justify-center items-center"
+              >
+                <div>
+                  <p
+                    className="text-red-500 cursor-pointer"
+                    onClick={() => {
+                      setModalData(coupon);
+                      setModalOpen(true);
+                    }}
+                  >
+                    List
+                  </p>
                 </div>
-              );
-            })}
+                <div>
+                  <p className="bg-red-200 px-3 text-black">
+                    {coupon?.couponId?._id.slice(-8)}
+                  </p>
+                </div>
+              </div>
+            );
+          })}
         </div>
       )}
     </div>

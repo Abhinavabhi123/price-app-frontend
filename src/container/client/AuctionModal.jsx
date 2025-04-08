@@ -74,7 +74,7 @@ export default function AuctionModal(Props) {
               <button
                 type="button"
                 onClick={handleSubmit}
-                className="text-xs rounded-lg px-3 py-1  bg-admin-active-color shadow-xl mt-2 cursor-pointer text-white"
+                className="text-xs rounded-lg px-3 py-1  bg-admin-active-color shadow-xl mt-2 cursor-pointer text-black"
               >
                 Start Auction
               </button>
