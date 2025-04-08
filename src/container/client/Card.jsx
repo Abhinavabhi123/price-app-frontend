@@ -44,7 +44,7 @@ export default function Card(Props) {
             <span className="text-3xl md:text-5xl font-extrabold "> & Win</span>
           </p>
           <p data-aos="fade-up" className="text-2xl md:mt-5">
-            {cardData?.name}
+            {cardData?.name?.name}
           </p>
           <p className="text-xs mt-1 md:mt-2 font-semibold" data-aos="fade-up">
             Unlock exclusive benefits with your gift card! Use this coupon to

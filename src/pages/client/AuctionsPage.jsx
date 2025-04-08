@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
 import Header from "../../container/client/Header";
-import { getAllAuctions } from "../../services/userApiServices";
-import { useFormik } from "formik";
-import * as Yup from "yup";
+import {
+  couponForAuction,
+  getAllAuctions,
+} from "../../services/userApiServices";
+
 import { SiTicktick } from "react-icons/si";
 import { RiCloseFill } from "react-icons/ri";
 import { io } from "socket.io-client";
@@ -13,30 +15,44 @@ import {
 } from "../../components/Notification/Notification";
 import SpinWheel from "../../assets/Fortune-Wheel.gif";
 import { useNavigate } from "react-router-dom";
+import AuctionModal from "../../container/client/AuctionModal";
+import ParticipateAuctionModal from "../../container/client/ParticipateAuctionModal";
 const socket = io(import.meta.env.VITE_SERVER_URL);
 
 export default function AuctionsPage() {
   const [auctionData, setAuctionData] = useState([]);
-  const [userId,setUserId] = useState("");
+  const [userId, setUserId] = useState("");
+  const [couponData, setCouponData] = useState([]);
   const navigate = useNavigate();
-
+  const [modalOpen, setModalOpen] = useState(false);
+  const [modalData, setModalData] = useState({});
   const [changed, setChanged] = useState(false);
 
   const token = localStorage.getItem("PrizeUserTkn");
+
   useEffect(() => {
     if (token) {
-      const userId = jwtDecode(token).id;
-      if(userId){
-        setUserId(userId)
-      }
-      getAllAuctions(userId, setAuctionData);
+      const id = jwtDecode(token).id;
+      setUserId(id);
     } else {
       navigate("login");
     }
-  }, [changed, navigate, token]);
+  }, [navigate, token]);
+
+  // Fetch auctions only when userId is available and `changed` toggles
+  useEffect(() => {
+    if (userId) {
+      getAllAuctions(userId, setAuctionData);
+      couponForAuction(userId, setCouponData);
+    }
+  }, [userId, changed]);
 
   useEffect(() => {
     socket.on("bidUpdate", () => {
+      setChanged((prev) => !prev);
+    });
+
+    socket.on("updateAuction", () => {
       setChanged((prev) => !prev);
     });
 
@@ -52,8 +68,9 @@ export default function AuctionsPage() {
 
   function AuctionCoupon(Props) {
     const { coupon } = Props;
+    const [auctionModalOpen, setAuctionModalOpen] = useState(false);
     const [timer, setTimer] = useState(0);
-    const auctionPrice = coupon?.auctionDetails?.auction_price || 0;
+    const [auctionModalData, setAuctionModalData] = useState({});
 
     useEffect(() => {
       socket.on("connect", () => {
@@ -66,9 +83,10 @@ export default function AuctionsPage() {
 
       socket.on(
         "timerUpdate",
-        // eslint-disable-next-line no-unused-vars
         ({ couponId: updatedCouponId, remainingTime }) => {
-          setTimer(Math.floor(remainingTime / 1000));
+          if (updatedCouponId === coupon._id) {
+            setTimer(Math.floor(remainingTime / 1000));
+          }
         }
       );
 
@@ -84,42 +102,27 @@ export default function AuctionsPage() {
       };
     }, [coupon._id]);
 
-    const validationSchema = Yup.object().shape({
-      price: Yup.number()
-        .typeError("Price must be a number")
-        .positive("Price must be greater than zero")
-        .required("Price is required")
-        .min(auctionPrice, `Price must be greater than ${auctionPrice}`),
-    });
-
-    const { values, errors, handleChange, handleBlur, handleSubmit, touched } =
-      useFormik({
-        initialValues: {
-          price: auctionPrice,
-        },
-        validationSchema,
-        context: { auction_price: auctionPrice },
-        onSubmit: (values) => {
-          socket.emit("placeBid", {
-            couponId: coupon._id,
-            userId,
-            bidAmount: values.price,
-          });
-        },
-      });
-
     const formatTime = (seconds) => {
       const minutes = Math.floor(seconds / 60);
       const secs = seconds % 60;
       return `${minutes}:${secs < 10 ? "0" : ""}${secs}`;
     };
 
+    function closeAuctionModal() {
+      setAuctionModalOpen(false);
+      setAuctionModalData({});
+    }
+
     return (
       <div className="w-full md:max-w-72 min-h-20 relative h-fit px-2 pb-2  md:p-4  bg-gray-300/50 rounded-xl shadow-xl bg-opacity-25">
-        <p className="text-sm text-center">
-          <span className="text-base">{coupon?.couponCard?.name}</span>{" "}
-        </p>
-        <p className="text-sm">ID :- {coupon?._id}</p>
+        <ParticipateAuctionModal
+          isModalOpen={auctionModalOpen}
+          handleCancel={closeAuctionModal}
+          coupon={auctionModalData}
+          socket={socket}
+          token={token}
+        />
+        <p className="text-sm">ID :- {coupon?._id.slice(-8)}</p>
         <p className="text-sm hidden md:block">
           Price Money: {coupon?.couponCard?.priceMoney} Rs
         </p>
@@ -137,7 +140,7 @@ export default function AuctionsPage() {
               {coupon?.couponCard?.eliminationStages?.map(
                 (elimination, index) => (
                   <p
-                    className="text-xs ps-3 flex items-center gap-2 hidden md:block"
+                    className="text-xs ps-3 items-center gap-2 hidden md:flex"
                     key={index}
                   >
                     Date {index + 1} :-{" "}
@@ -160,9 +163,6 @@ export default function AuctionsPage() {
                 <p className="text-xs ps-2">
                   Last Price:-{coupon?.auctionDetails?.auction_price || ""}
                 </p>
-                <p className="text-sm">
-                  Premium: {coupon?.couponCard?.premium} Rs
-                </p>
                 <p className="text-xs ps-2 hidden md:block">
                   Date:-{coupon?.auctionDetails?.auction_date || ""}
                 </p>
@@ -175,35 +175,17 @@ export default function AuctionsPage() {
                 ""
               )}
               {coupon?.auctionDetails?.auction_user !== userId ? (
-                <div>
-                  <label htmlFor="price" className="text-xs text-black">
-                    Auction Price
-                  </label>
-                  <input
-                    type="number"
-                    id="price"
-                    name="price"
-                    value={values.price}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    placeholder="Enter auction start price"
-                    className="w-full px-3 py-1 text-xs rounded-lg outline-none border border-white text-black bg-gray400/80 placeholder:text-gray-400"
-                  />
-                  {errors.price && touched.price && (
-                    <p className="text-xs text-red-500">{errors.price}</p>
-                  )}
-                  <p className="text-[8px] text-yellow-300">
-                    *When bidding the premium will debit from your wallet.*
-                  </p>
-                  <div className="flex justify-center items-center">
-                    <button
-                      type="button"
-                      onClick={handleSubmit}
-                      className="text-xs rounded-lg px-5 py-1  bg-admin-active-color shadow-xl mt-2 cursor-pointer"
-                    >
-                      Bid
-                    </button>
-                  </div>
+                <div className="flex justify-center">
+                  <button
+                    className="
+                  text-xs rounded-lg px-5 py-1  bg-admin-active-color shadow-xl mt-2 cursor-pointer"
+                    onClick={() => {
+                      setAuctionModalOpen(true);
+                      setAuctionModalData(coupon);
+                    }}
+                  >
+                    Enter
+                  </button>
                 </div>
               ) : (
                 <div className=" flex items-end">
@@ -222,8 +204,14 @@ export default function AuctionsPage() {
     );
   }
 
+  // function to close auction modal
+  function closeModal() {
+    setModalData({});
+    setModalOpen(false);
+  }
+
   return (
-    <div className="w-screen h-dvh md:h-full overflow-x-hidden bg-primary-color pb-20">
+    <div className="w-screen h-dvh md:min-h-full overflow-x-hidden bg-primary-color pb-20">
       <Header />
       <div className="w-full h-fit px-10 md:px-28 mt-3">
         {auctionData && auctionData.length > 0 && (
@@ -231,14 +219,22 @@ export default function AuctionsPage() {
             <img src={SpinWheel} alt="spin wheel" className="size-40" />
           </div>
         )}
+        {auctionData[0] && (
+          <p className="text-center">
+            Auction for{" "}
+            <span className="font-bold">
+              {auctionData[0]?.couponCard?.name?.name}
+            </span>
+          </p>
+        )}
         <p> Active Auctions Coupons:-</p>
-        <div className="w-full max-h-[80vh] flex flex-col gap-3 md:hidden bg-gray-800 overflow-x-scroll">
+        <div className="w-full h-[65vh] flex flex-col gap-3 md:hidden bg-gray-800 overflow-y-scroll">
           {auctionData && auctionData.length > 0 ? (
             auctionData.map((coupon, index) => (
               <AuctionCoupon coupon={coupon} key={index} />
             ))
           ) : (
-            <div className="flex justify-center items-center">
+            <div className="flex justify-center items-center w-full h-full">
               <p className="text-sm text-gray-500">No Auction available</p>
             </div>
           )}
@@ -251,12 +247,48 @@ export default function AuctionsPage() {
               ))}
             </div>
           ) : (
-            <div className="flex justify-center items-center">
+            <div className="flex justify-center items-center min-h-[70vh]">
               <p className="text-sm text-gray-500">No Auction available</p>
             </div>
           )}
         </div>
       </div>
+      {couponData.length > 0 && (
+        <div className="md:hidden flex w-full h-20 bg-gray-500/40 mt-5 items-center gap-3 px-5 overflow-x-scroll">
+          <AuctionModal
+            isModalOpen={modalOpen}
+            handleCancel={closeModal}
+            data={modalData}
+            setChanged={setChanged}
+          />
+          {couponData &&
+            couponData.map((coupon, index) => {
+              return (
+                <div
+                  key={index}
+                  className=" w-fit h-fit px-5 flex flex-col justify-center items-center"
+                >
+                  <div>
+                    <p
+                      className="text-red-500 cursor-pointer"
+                      onClick={() => {
+                        setModalData(coupon);
+                        setModalOpen(true);
+                      }}
+                    >
+                      List
+                    </p>
+                  </div>
+                  <div>
+                    <p className="bg-red-200 px-3 text-black">
+                      {coupon?.couponId?._id.slice(-8)}
+                    </p>
+                  </div>
+                </div>
+              );
+            })}
+        </div>
+      )}
     </div>
   );
 }

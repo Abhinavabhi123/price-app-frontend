@@ -4,6 +4,7 @@ import {
   successToast,
 } from "../components/Notification/Notification";
 import {
+  auctionParticipationUrl,
   changePasswordWithEmailUrl,
   changePasswordWithMobileUrl,
   changeUserNameUrl,
@@ -11,6 +12,7 @@ import {
   checkAnswerUrl,
   checkEmailAndGetOtpUrl,
   checkMobileAndGetOtpUrl,
+  couponForAuctionUrl,
   getAllAuctionUrls,
   getEmailOtpUrl,
   getGamesAndArtsUrl,
@@ -18,6 +20,7 @@ import {
   getUserAuctionCouponsUrl,
   getUserCouponsUrl,
   getUserDetailsUrl,
+  getWinnersUrl,
   googleAuthUrl,
   makeCouponForAuctionUrl,
   purchaseArtUrl,
@@ -216,12 +219,7 @@ export async function getUserDetails(
 }
 
 // function to get game and art data for games page
-export async function getGamesAndArts(
-  setLoading,
-  setCards,
-  setArts,
-  setNextCard
-) {
+export async function getGamesAndArts(setLoading, setCards, setNextCard) {
   try {
     const response = await axios.get(getGamesAndArtsUrl, {
       headers: {
@@ -231,13 +229,6 @@ export async function getGamesAndArts(
     if (response.status === 200 && response?.data?.isSuccess) {
       setLoading(false);
       setCards(response?.data?.cardData);
-      setArts(
-        response?.data?.artData.map((item) => ({
-          ...item,
-          isAnswered: false,
-          quantity: 0,
-        }))
-      );
       setNextCard(response?.data?.nextCard);
     }
   } catch (error) {
@@ -261,7 +252,13 @@ export async function getGamesAndArts(
 }
 
 // function to check the anser before buying art
-export async function checkAnswer(answer, id, setArtData, setSubmitting) {
+export async function checkAnswer(
+  answer,
+  id,
+  setArtData,
+  setSubmitting,
+  cardId
+) {
   try {
     const response = await axios.get(checkAnswerUrl, {
       headers: {
@@ -274,7 +271,7 @@ export async function checkAnswer(answer, id, setArtData, setSubmitting) {
       successToast(response?.data?.message);
       setArtData((prev) =>
         prev.map((item) =>
-          item._id === id ? { ...item, isAnswered: true } : item
+          item._id === cardId ? { ...item, isAnswered: true } : item
         )
       );
     }
@@ -347,21 +344,15 @@ export async function userRegisterWithMobile(
 
 // Function to user can  purchase art
 
-export async function purchaseArt(
-  artData,
-  cardId,
-  userId,
-  setChanged,
-  setPurchasing
-) {
+export async function purchaseArt(cardData, userId, setChanged, setPurchasing) {
   try {
     const response = await axios.get(purchaseArtUrl, {
       headers: {
         "Content-Type": "application/json",
-        id: artData?._id,
-        quantity: artData?.quantity,
+        id: cardData?.name?._id,
+        quantity: cardData?.quantity,
         Authorization: `Bearer ${token}`,
-        cardId,
+        cardId: cardData?._id,
         userId,
       },
     });
@@ -1059,7 +1050,7 @@ export async function changeUserName(
 }
 
 // function to update the user details
-export async function updateUserDetails(data, setSubmitting,setChanged) {
+export async function updateUserDetails(data, setSubmitting, setChanged) {
   try {
     const response = await axios.post(updateUserDetailsUrl, data, {
       headers: {
@@ -1069,7 +1060,7 @@ export async function updateUserDetails(data, setSubmitting,setChanged) {
     });
     if (response.status === 200 && response.data?.isSuccess) {
       successToast(response?.data?.message);
-      setChanged(prev=>!prev)
+      setChanged((prev) => !prev);
     }
   } catch (error) {
     if (error.response) {
@@ -1090,5 +1081,113 @@ export async function updateUserDetails(data, setSubmitting,setChanged) {
     }
   } finally {
     setSubmitting(false);
+  }
+}
+
+// function to participate in the auction my mobile user
+export async function auctionParticipation(
+  userId,
+  couponId,
+  price,
+  setChanged,
+  resetForm,
+  handleCancel
+) {
+  try {
+    const response = await axios.get(auctionParticipationUrl, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+        userId,
+        couponId,
+        price,
+      },
+    });
+    if (response.status === 200 && response?.data?.isSuccess) {
+      successToast(response?.data?.message);
+      resetForm();
+      setChanged((prev) => !prev);
+      handleCancel();
+    }
+  } catch (error) {
+    if (error.response) {
+      const { data } = error.response;
+      if (data.errors && Array.isArray(data.errors)) {
+        // Show each validation error
+        data.errors.forEach((err) => errorToast(err.msg));
+      } else {
+        errorToast(error.response.data.message || "Something went wrong!");
+      }
+      console.error("Server Error:", error.response.data);
+    } else if (error.request) {
+      errorToast("No response from server. Please try again later.");
+      console.error("Request Error:", error.request);
+    } else {
+      errorToast("An unexpected error occurred.");
+      console.error("Unexpected Error:", error.message);
+    }
+  }
+}
+
+// function for getting the coupon for auction
+export async function couponForAuction(id, setCouponData) {
+  try {
+    const response = await axios.get(couponForAuctionUrl, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+        id,
+      },
+    });
+    if (response.status === 200 && response.data?.isSuccess) {
+      setCouponData(response?.data?.data);
+    }
+  } catch (error) {
+    if (error.response) {
+      const { data } = error.response;
+      if (data.errors && Array.isArray(data.errors)) {
+        // Show each validation error
+        data.errors.forEach((err) => errorToast(err.msg));
+      } else {
+        errorToast(error.response.data.message || "Something went wrong!");
+      }
+      console.error("Server Error:", error.response.data);
+    } else if (error.request) {
+      errorToast("No response from server. Please try again later.");
+      console.error("Request Error:", error.request);
+    } else {
+      errorToast("An unexpected error occurred.");
+      console.error("Unexpected Error:", error.message);
+    }
+  }
+}
+
+
+// function to get the winners list of the lucky draw
+export async function getWinners(setWinners){
+  try {
+    const response =await axios.get(getWinnersUrl,{headers:{
+      "Content-Type": "application/json",
+    }})
+    if (response.status === 200 && response.data?.isSuccess) {
+      setWinners(response?.data?.winners)
+    }
+  } catch (error) {
+    if (error.response) {
+      const { data } = error.response;
+      if (data.errors && Array.isArray(data.errors)) {
+        // Show each validation error
+        data.errors.forEach((err) => errorToast(err.msg));
+      } else {
+        errorToast(error.response.data.message || "Something went wrong!");
+      }
+      console.error("Server Error:", error.response.data);
+    } else if (error.request) {
+      errorToast("No response from server. Please try again later.");
+      console.error("Request Error:", error.request);
+    } else {
+      errorToast("An unexpected error occurred.");
+      console.error("Unexpected Error:", error.message);
+    }
   }
 }

@@ -76,7 +76,7 @@ export default function UserProfile() {
                 }
                 alt="User"
                 onError={(e) => {
-                  e.target.onerror = null; // avoid infinite loop
+                  e.target.onerror = null;
                   e.target.src = UserProfileImage;
                 }}
                 className="w-full h-full object-cover rounded-3xl bg-white scale-90"

@@ -21,7 +21,6 @@ export default function Coupons(Props) {
     }
   }, [userData?._id]);
 
-
   useEffect(() => {
     if (couponData.length > 0) {
       // pending coupons
@@ -75,10 +74,12 @@ export default function Coupons(Props) {
                 >
                   <p className="text-sm text-center">
                     <span className="text-base">
-                      {coupon?.couponId?.couponCard?.name}
+                      {coupon?.couponId?.couponCard?.name?.name}
                     </span>{" "}
                   </p>
-                  <p className="text-sm">ID :- {coupon?.couponId?._id}</p>
+                  <p className="text-sm">
+                    ID :- {coupon?.couponId?._id.slice(-8)}
+                  </p>
                   <p className="text-sm">
                     Price Money: {coupon?.couponId?.couponCard?.priceMoney} Rs
                   </p>
@@ -166,10 +167,12 @@ export default function Coupons(Props) {
                 >
                   <p className="text-sm text-center">
                     <span className="text-base">
-                      {coupon?.couponId?.couponCard?.name}
+                      {coupon?.couponId?.couponCard?.name?.name}
                     </span>{" "}
                   </p>
-                  <p className="text-sm">ID :- {coupon?.couponId?._id}</p>
+                  <p className="text-sm">
+                    ID :- {coupon?.couponId?._id.slice(-8)}
+                  </p>
                   <p className="text-sm">
                     Price Money: {coupon?.couponId?.couponCard?.priceMoney} Rs
                   </p>
@@ -201,10 +204,12 @@ export default function Coupons(Props) {
                 >
                   <p className="text-sm text-center">
                     <span className="text-base">
-                      {coupon?.couponId?.couponCard?.name}
+                      {coupon?.couponId?.couponCard?.name?.name}
                     </span>{" "}
                   </p>
-                  <p className="text-sm">ID :- {coupon?.couponId?._id}</p>
+                  <p className="text-sm">
+                    ID :- {coupon?.couponId?._id.slice(-8)}
+                  </p>
                   <p className="text-sm">
                     Price Money: {coupon?.couponId?.couponCard?.priceMoney} Rs
                   </p>

@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import * as Yup from "yup";
 import {
   editCardDetails,
+  getArtForCardCreation,
   getCardImages,
 } from "../../services/adminApiServices";
 import { useNavigate } from "react-router-dom";
@@ -15,9 +16,11 @@ export default function UpdateCardModal(Props) {
   const [selected, setSelected] = useState("");
   const [active, setActive] = useState(false);
   const [cardImageData, setCardImageData] = useState([]);
+  const [artData, setArtData] = useState([]);
 
   useEffect(() => {
     getCardImages(setCardImageData);
+    getArtForCardCreation(setArtData);
   }, []);
 
   function CardInputField(Props) {
@@ -46,17 +49,7 @@ export default function UpdateCardModal(Props) {
   }
 
   const validationSchema = Yup.object().shape({
-    cardName: Yup.string()
-      .trim()
-      .required("Card name is required")
-      .min(3, "Card name must be at least 3 characters")
-      .max(50, "Card name cannot exceed 50 characters"),
-
-    cardId: Yup.string()
-      .trim()
-      .required("Card ID is required")
-      .matches(/^[A-Za-z0-9_-]+$/, "Card ID must be alphanumeric"),
-
+    cardName: Yup.string().trim().required("Card name is required"),
     priceMoney: Yup.number()
       .required("Price is required")
       .min(1, "Price must be greater than 0")
@@ -118,7 +111,6 @@ export default function UpdateCardModal(Props) {
   } = useFormik({
     initialValues: {
       cardName: "",
-      cardId: "",
       priceMoney: "",
       premium: "",
       startDate: "",
@@ -139,8 +131,7 @@ export default function UpdateCardModal(Props) {
   });
 
   useEffect(() => {
-    setFieldValue("cardName", editDetails.name);
-    setFieldValue("cardId", editDetails.cardId);
+    setFieldValue("cardName", editDetails?.name?._id);
     setFieldValue("priceMoney", editDetails.priceMoney);
     setFieldValue("premium", editDetails.premium);
     setFieldValue(
@@ -194,21 +185,33 @@ export default function UpdateCardModal(Props) {
               Name
               <span className="text-xs text-red-500"> *</span>
             </label>
-            <CardInputField
-              type="text"
-              id="cardName"
-              name="cardName"
-              value={values.cardName}
-              handleChange={handleChange}
-              handleBlur={handleBlur}
-              disabled={editDetails?.isStarted}
-            />
+
+            <div className="w-full border border-admin-active-color rounded-lg px-3">
+              <select
+                name="cardName"
+                id="cardName"
+                onChange={(e) => setFieldValue("cardName", e.target.value)}
+                onBlur={handleBlur}
+                className="w-full  outline-none text-sm py-2"
+              >
+                {artData.length > 0 &&
+                  artData.map((art, index) => (
+                    <option
+                      className="bg-white text-black "
+                      key={index}
+                      value={art?._id}
+                    >
+                    {art?.name}
+                    </option>
+                    ))}
+              </select>
+            </div>
             {errors?.cardName && touched?.cardName && (
               <p className="text-xs text-red-500">{errors.cardName}</p>
             )}
           </div>
           <div className="w-full">
-            <label htmlFor="cardId" className="text-xs font-semibold">
+            {/* <label htmlFor="cardId" className="text-xs font-semibold">
               Card Id
               <span className="text-xs text-red-500"> *</span>
             </label>
@@ -223,7 +226,7 @@ export default function UpdateCardModal(Props) {
             />
             {errors?.cardId && touched?.cardId && (
               <p className="text-xs text-red-500">{errors.cardId}</p>
-            )}
+            )} */}
           </div>
         </div>
         {/* row 2 */}

@@ -15,12 +15,19 @@ export default function Dashboard() {
   const [dashData, setDashData] = useState({});
   const token = localStorage.getItem("prizeAdminTkn");
   const [dashBarData, setDashBarData] = useState([]);
+  const [walletSummary, setWalletSummary] = useState({});
 
   useEffect(() => {
     if (token && token.length > 0) {
-      getDashboardData(setUserData, setUserArtData, setDashData);
+      getDashboardData(
+        setUserData,
+        setUserArtData,
+        setDashData,
+        setWalletSummary
+      );
     }
   }, [token]);
+  
 
   useEffect(() => {
     if (dashData) {
@@ -50,7 +57,7 @@ export default function Dashboard() {
                   <p className="text-[10px] text-gray-400">Outcome</p>
                   <p className="text-sm flex items-center gap-1">
                     <AiOutlineDollar size={15} />
-                    20000
+                    {walletSummary?.totalWithdrawn}
                   </p>
                 </div>
               </div>
@@ -62,13 +69,13 @@ export default function Dashboard() {
                   <p className="text-[10px] text-gray-400">Income</p>
                   <p className="text-sm flex items-center gap-1">
                     <AiOutlineDollar size={15} />
-                    20000
+                    {walletSummary?.totalInvested}
                   </p>
                 </div>
               </div>
             </div>
           </div>
-          <div className="flex flex-col gap-3 mt-8">
+          <div className="flex flex-col gap-3 mt-8 opacity-0">
             <div className="flex gap-10">
               {" "}
               <div className=" min-w-36 rounded-lg flex justify-between items-center py-2 px-5 gap-5">

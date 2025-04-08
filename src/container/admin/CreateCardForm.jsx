@@ -2,7 +2,11 @@ import { useEffect, useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import InputField from "../../components/admin/InputField";
-import { getCardImages, postCard } from "../../services/adminApiServices";
+import {
+  getArtForCardCreation,
+  getCardImages,
+  postCard,
+} from "../../services/adminApiServices";
 import { useNavigate } from "react-router-dom";
 import SubmissionLoading from "../../components/Loading/SubmissionLoading";
 
@@ -11,23 +15,15 @@ export default function CreateCardForm() {
   const [selected, setSelected] = useState("");
   const [active, setActive] = useState(false);
   const [cardImageData, setCardImageData] = useState([]);
+  const [artData, setArtData] = useState([]);
 
   useEffect(() => {
     getCardImages(setCardImageData);
+    getArtForCardCreation(setArtData);
   }, []);
 
   const validationSchema = Yup.object().shape({
-    cardName: Yup.string()
-      .trim()
-      .required("Card name is required")
-      .min(3, "Card name must be at least 3 characters")
-      .max(50, "Card name cannot exceed 50 characters"),
-
-    cardId: Yup.string()
-      .trim()
-      .required("Card ID is required")
-      .matches(/^[A-Za-z0-9_-]+$/, "Card ID must be alphanumeric"),
-
+    cardName: Yup.string().required("Card name is required"),
     priceMoney: Yup.number()
       .required("Price is required")
       .min(1, "Price must be greater than 0")
@@ -88,7 +84,6 @@ export default function CreateCardForm() {
   } = useFormik({
     initialValues: {
       cardName: "",
-      cardId: "",
       priceMoney: "",
       premium: "",
       startDate: "",
@@ -109,7 +104,6 @@ export default function CreateCardForm() {
     }
   }, [cardImageData, setFieldValue]);
 
-
   return (
     <form className="w-full h-fit space-y-3" onSubmit={handleSubmit}>
       {/* form row 1 */}
@@ -120,38 +114,41 @@ export default function CreateCardForm() {
             <span className="text-xs text-red-500"> *</span>
           </p>
           <div>
-            <InputField
+            {/* <InputField
               type="text"
               name="cardName"
               id="cardName"
               value={values?.cardName}
               handleChange={handleChange}
               handleBlur={handleBlur}
-            />
+            /> */}
+            <div className="w-full bg-white  rounded-lg  text-black  px-4">
+              <select
+                name="cardName"
+                id="cardName"
+                onChange={(e)=>setFieldValue("cardName",e.target.value)}
+                onBlur={handleBlur}
+                className="w-full  outline-none text-sm py-2"
+              >
+                <option hidden>Select</option>
+                {artData.length > 0 &&
+                  artData.map((art, index) => (
+                    <option
+                      className="bg-white text-black "
+                      key={index}
+                      value={art?._id}
+                    >
+                      {art?.name}
+                    </option>
+                  ))}
+              </select>
+            </div>
             {errors?.cardName && touched?.cardName && (
               <p className="text-xs text-red-500">{errors.cardName}</p>
             )}
           </div>
         </div>
-        <div className="w-full space-y-2">
-          <p className="text-xs">
-            Card Id
-            <span className="text-xs text-red-500"> *</span>
-          </p>
-          <div>
-            <InputField
-              type="text"
-              name="cardId"
-              id="cardId"
-              value={values?.cardId}
-              handleChange={handleChange}
-              handleBlur={handleBlur}
-            />
-            {errors?.cardId && touched?.cardId && (
-              <p className="text-xs text-red-500">{errors.cardId}</p>
-            )}
-          </div>
-        </div>
+        <div className="w-full space-y-2"></div>
       </div>
       {/* form row 2 */}
       <div className="flex flex-col md:flex-row gap-3">
@@ -312,9 +309,9 @@ export default function CreateCardForm() {
                 className="w-full cursor-pointer flex items-center justify-between bg-white border border-gray-300 py-2 text-black px-3 rounded-md text-sm"
               >
                 <img
-                  src={`${import.meta.env.VITE_SERVER_URL}/uploads/${
-                    selected?.image
-                  }`}
+                  src={`${
+                    selected?.image && import.meta.env.VITE_SERVER_URL
+                  }/uploads/${selected?.image}`}
                   alt="card image"
                   className="w-5 h-5 mr-2 outline-1 outline-admin-active-color"
                 />
@@ -333,9 +330,9 @@ export default function CreateCardForm() {
                       }}
                     >
                       <img
-                        src={`${import.meta.env.VITE_SERVER_URL}/uploads/${
-                          item.image
-                        }`}
+                        src={`${
+                          item.image && import.meta.env.VITE_SERVER_URL
+                        }/uploads/${item.image}`}
                         alt=""
                         className="w-5 h-5"
                       />
@@ -357,7 +354,7 @@ export default function CreateCardForm() {
           </div>
           <div className="size-40 ms-10 overflow-hidden rounded-lg outline-1 outline-red-500 mt-10">
             <img
-              src={`${import.meta.env.VITE_SERVER_URL}/uploads/${
+              src={`${selected && import.meta.env.VITE_SERVER_URL}/uploads/${
                 selected?.image
               }`}
               alt="selected card image"

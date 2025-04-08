@@ -19,6 +19,7 @@ import {
   getUsersUrl,
   getDashboardDataUrl,
   inactivateCardUrl,
+  getArtForCardCreationUrl,
 } from "./urls";
 import {
   errorToast,
@@ -217,6 +218,7 @@ export async function deleteCardImage(id, setImageUploaded = () => {}) {
 
 // function for posting card details
 export async function postCard(cardData, setSubmitting, navigate) {
+
   try {
     const response = await axios.post(
       postCardDetailsUrl,
@@ -461,7 +463,7 @@ export async function editArtDetails(
   setSubmitting
 ) {
   try {
-    const response = await axios.patch(
+    const response = await axios.post(
       editArtDetailsUrl,
       { ...data },
       {
@@ -703,7 +705,8 @@ export async function getUsers(updateState) {
 export async function getDashboardData(
   setUserData,
   setUserArtData,
-  setDashData
+  setDashData,
+  setWalletSummary
 ) {
   try {
     const response = await axios.get(getDashboardDataUrl, {
@@ -715,6 +718,45 @@ export async function getDashboardData(
       setUserData(response?.data?.userData);
       setUserArtData(response?.data?.userArtData);
       setDashData(response?.data?.dashData);
+      // console.log(response?.data);
+      setWalletSummary((prev) => ({
+        ...prev,
+        ...response?.data.walletSummary,
+      }));
+    }
+  } catch (error) {
+    if (error.response) {
+      const { data } = error.response;
+      if (data.errors && Array.isArray(data.errors)) {
+        // Show each validation error
+        data.errors.forEach((err) => errorToast(err.msg));
+      } else {
+        errorToast(error.response.data.message || "Something went wrong!");
+      }
+      console.error("Server Error:", error.response.data);
+    } else if (error.request) {
+      errorToast("No response from server. Please try again later.");
+      console.error("Request Error:", error.request);
+    } else {
+      errorToast("An unexpected error occurred.");
+      console.error("Unexpected Error:", error.message);
+    }
+  }
+}
+
+// function to get arts for the card creation
+export async function getArtForCardCreation(setArtData) {
+  try {
+    const response = await axios.get(getArtForCardCreationUrl, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    if (response.status === 200 && response?.data?.isSuccess) {
+      setArtData(response?.data?.artData);
+      if (response?.data?.artData.length === 0) {
+        errorToast("Please create Arts to complete card creation");
+      }
     }
   } catch (error) {
     if (error.response) {

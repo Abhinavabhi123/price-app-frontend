@@ -13,8 +13,7 @@ export default function CardPreviewModal(Props) {
         width={500}
       >
         <div className="w-full h-full border-t">
-          <p className="font-semibold">Name :- {data?.name}</p>
-          <p className="font-semibold">Card Id :- {data?.cardId}</p>
+          <p className="font-semibold">Name :- {data?.name?.name}</p>
           <p className="font-semibold">
             Start Date:-{" "}
             {data?.startDate ? new Date(data?.startDate).toLocaleString() : ""}

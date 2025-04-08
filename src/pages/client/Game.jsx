@@ -7,12 +7,11 @@ import Arts from "../../container/client/Arts";
 
 export default function Game() {
   const [cardData, setCardData] = useState({});
-  const [artData, setArtData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [nextCard, setNextCard] = useState({});
 
   useEffect(() => {
-    getGamesAndArts(setLoading, setCardData, setArtData, setNextCard);
+    getGamesAndArts(setLoading, setCardData, setNextCard);
   }, []);
 
   if (loading) {
@@ -38,13 +37,13 @@ export default function Game() {
             <p className="w-fit text-nowrap">Popular Art</p>
             <div className="w-full h-[1px] bg-gray-400" />
           </div>
-          <section className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-8 md:gap-4 mt-10">
-            {artData &&
-              artData.map((art, index) => (
+          <section className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-8 md:gap-4 mt-10 px-10 md:px-0">
+            {cardData &&
+              cardData.map((card, index) => (
                 <Arts
                   key={index}
-                  art={art}
-                  setArtData={setArtData}
+                  card={card}
+                  setCardData={setCardData}
                   cardData={cardData.length > 0 && cardData[index]}
                   nextCard={nextCard && nextCard}
                   index={index}

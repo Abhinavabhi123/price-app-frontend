@@ -86,7 +86,6 @@ export default function Wallet(Props) {
                 </div>
               )}
               {amount > 0 && amountEntered && <Payment />}
-              {/* {amount > 0 && amountEntered && <GpayPayment />} */}
             </div>
           )}
         </div>

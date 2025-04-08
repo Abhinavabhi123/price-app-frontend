@@ -19,6 +19,7 @@ export const changeArtStatusUrl = serverUrl + "/admin/changeArtStatus";
 export const editCardDetailsUrl = serverUrl + "/admin/editCardDetails";
 export const getUsersUrl = serverUrl + "/admin/getUsers";
 export const getDashboardDataUrl = serverUrl + "/admin/getDashboardData";
+export const getArtForCardCreationUrl = serverUrl+"/admin/getArtForCardCreation";
 
 // user Urls
 export const googleAuthUrl = serverUrl + "/googleAuth";
@@ -49,3 +50,6 @@ export const startAuctionUrl = serverUrl+"/startAuction";
 export const getAllAuctionUrls = serverUrl+"/getAllAuctions";
 export const changeUserNameUrl = serverUrl+"/changeUserName";
 export const updateUserDetailsUrl = serverUrl+"/updateUserDetails";
+export const auctionParticipationUrl = serverUrl+"/auctionParticipation"
+export const couponForAuctionUrl = serverUrl+"/couponForAuction";
+export const getWinnersUrl = serverUrl+"/getWinners";

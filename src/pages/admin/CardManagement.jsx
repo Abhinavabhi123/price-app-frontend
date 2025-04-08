@@ -107,16 +107,17 @@ export default function CardManagement() {
     }
     return sortOrder === "asc" ? valueA - valueB : valueB - valueA;
   });
+  
 
   // Search Filter
   const filteredData = sortedData.filter(
     (card) =>
-      card.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      card.cardId.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      card.name.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      // card.cardId.toLowerCase().includes(searchQuery.toLowerCase()) ||
       card.startDate.toLowerCase().includes(searchQuery.toLowerCase()) ||
       card.endDate.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      card.priceMoney.includes(Number(searchQuery)) ||
-      card.premium.includes(Number(searchQuery))
+      card?.priceMoney?.toString().includes(searchQuery) ||
+      card?.premium?.toString().includes(searchQuery)
   );
 
   // Pagination Logic
@@ -296,8 +297,8 @@ export default function CardManagement() {
                       }`}
                     >
                       <td className="text-center">{item.id || index + 1}</td>
-                      <td className="text-center">{item?.name || ""}</td>
-                      <td className="text-center">{item?.cardId || ""}</td>
+                      <td className="text-center">{item?.name?.name || ""}</td>
+                      <td className="text-center">{"Null"}</td>
                       <td className="text-center">{item?.priceMoney || ""}</td>
                       <td className="text-center">{item?.premium || ""}</td>
                       <td className="text-center">

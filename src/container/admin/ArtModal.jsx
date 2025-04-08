@@ -105,6 +105,7 @@ export default function ArtModal(Props) {
     onSubmit: (values) => {
       if (Object.keys(data).length === 0) {
         //  create function
+        
         postArtDetails(values, setSubmitting, setChange, handleCancel);
       } else {
         MySwal.fire({

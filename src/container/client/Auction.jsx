@@ -17,30 +17,28 @@ export default function Auction(Props) {
   const [auctionData, setAuctionData] = useState([]);
   const [changed, setChanged] = useState(false);
 
-
   useEffect(() => {
     if (userId) {
       getUserAuctionCoupons(userId, setAuctionData);
     }
   }, [userId, changed]);
 
-  
   useEffect(() => {
     socket.on("bidUpdate", () => {
       setChanged((prev) => !prev);
     });
-  
+
     socket.on("bidError", (err) => {
       errorToast(err.message);
     });
     socket.on("auctionEnded", () => {
       setChanged((prev) => !prev);
     });
-  
+
     return () => {
       socket.off("bidUpdate");
       socket.off("bidError");
-      socket.off("auctionEnded")
+      socket.off("auctionEnded");
     };
   }, []);
 
@@ -82,10 +80,10 @@ export default function Auction(Props) {
       <div className="w-full max-w-72 min-h-20 relative h-fit p-4  bg-gray-300/50 rounded-xl shadow-xl bg-opacity-25">
         <p className="text-sm text-center">
           <span className="text-base">
-            {coupon?.couponId?.couponCard?.name}
+            {coupon?.couponId?.couponCard?.name?.name}
           </span>{" "}
         </p>
-        <p className="text-sm">ID :- {coupon?.couponId?._id}</p>
+        <p className="text-sm">ID :- {coupon?.couponId?._id.slice(-8)}</p>
         <p className="text-sm">
           Price Money: {coupon?.couponId?.couponCard?.priceMoney} Rs
         </p>
@@ -163,7 +161,9 @@ export default function Auction(Props) {
               <p className="text-xs ps-2">
                 Price:-{coupon?.couponId.auctionDetails?.auction_price || ""}
               </p>
-              <p className="text-xs ps-2">Date:-{coupon?.couponId.auctionDetails?.auction_date || ""}</p>
+              <p className="text-xs ps-2">
+                Date:-{coupon?.couponId.auctionDetails?.auction_date || ""}
+              </p>
             </div>
           )}
         </div>

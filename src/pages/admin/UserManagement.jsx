@@ -5,9 +5,13 @@ import { Empty, Pagination, Input } from "antd";
 import { FiChevronUp } from "react-icons/fi";
 import { IoIosArrowDown } from "react-icons/io";
 import UserImage from "../../assets/userImage.png";
+import { IoEyeOutline } from "react-icons/io5";
+import UserPreviewModal from "../../container/admin/UserPreviewModal";
 
 export default function UserManagement() {
   const [userData, setUserData] = useState([]);
+  const [isModalOpen,setIsModalOpen] = useState(false);
+  const [userPreviewData,setUserPreviewData] = useState({})
 
   // Sorting State
   const [sortField, setSortField] = useState("name");
@@ -52,8 +56,13 @@ export default function UserManagement() {
     currentPage * pageSize
   );
 
+  function closeModal(){
+    setIsModalOpen(false);
+  }
+
   return (
     <section className="w-full h-full">
+      <UserPreviewModal isModalOpen={isModalOpen} handleCancel={closeModal} data={userPreviewData}/>
       <div className="w-full h-[10%]">
         <PageHeader
           title="User Management"
@@ -172,12 +181,19 @@ export default function UserManagement() {
                         <td className="text-center ">
                           {user.mobile ? user.mobile : "Null"}
                         </td>
-                        <td className="text-center">
+                        <td className="text-center flex justify-center items-center">
+                          <button
+                            className={`text-xs rounded-lg px-3 py-1 outline-none text-white cursor-pointer`}
+                          >
+                            <IoEyeOutline size={18} onClick={()=>{
+                              setUserPreviewData(user);
+                              setIsModalOpen(true)
+                            }} />
+                          </button>
                           <button
                             className={`text-xs rounded-lg px-3 py-1 outline-none text-white cursor-pointer ${
                               user.access ? "bg-green-500" : "bg-red-500"
                             }`}
-                            // onClick={() => changeArtStatus(art?._id, setChange)}
                           >
                             {user.access ? "Active" : "Inactive"}
                           </button>

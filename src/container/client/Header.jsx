@@ -10,6 +10,7 @@ import { IoHome } from "react-icons/io5";
 import { RiDashboardHorizontalFill } from "react-icons/ri";
 import { FaTicketAlt } from "react-icons/fa";
 import { FaRegCircleUser } from "react-icons/fa6";
+import { GiPodiumWinner } from "react-icons/gi";
 
 function NavLink(Props) {
   const { title, link, activeLink, setShow } = Props;
@@ -85,6 +86,14 @@ export default function Header() {
             onClick={() => navigate("/auctions")}
           >
             Auctions
+          </li>
+          <li
+            className={`min-w-20 cursor-pointer flex items-center justify-center gap-2 transition-all divide-neutral-400 hover:text-white ${
+              location === "/results" && "text-white"
+            }`}
+            onClick={() => navigate("/results")}
+          >
+            Results
           </li>
         </ul>
       </nav>
@@ -213,6 +222,15 @@ export default function Header() {
             onClick={() => navigate("/auctions")}
             className={`${
               location === "/auctions" ? "text-blue-500" : "text-white"
+            }`}
+          />
+        </div>
+        <div>
+          <GiPodiumWinner
+            size={23}
+            onClick={() => navigate("/results")}
+            className={`${
+              location === "/results" ? "text-blue-500" : "text-white"
             }`}
           />
         </div>
