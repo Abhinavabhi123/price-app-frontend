@@ -7,7 +7,7 @@ export default function AboutPage() {
     <div className="w-screen bg-primary-color text-white">
       <Header />
       <div className="w-full min-h-[25rem] bg-transparent px-10 md:px-28 py-10">
-        <div className="space-y-5">
+        <div className="space-y-5" data-aos="fade-down">
           <p className="text-xl md:text-3xl font-semibold">
             Welcome to Prize Auction App!
           </p>
@@ -19,12 +19,12 @@ export default function AboutPage() {
             transparent and competitive bidding process.
           </p>
           <div className="flex justify-center items-center">
-            <img src={AboutImage} alt="about image" />
+            <img src={AboutImage} alt="about image" data-aos="zoom-in-right" />
           </div>
         </div>
         <div className="mt-4 space-y-5">
-          <p className="text-lg md:text-2xl font-semibold">How It Works</p>
-          <ul className="ps-5 text-sm md:text-base">
+          <p className="text-lg md:text-2xl font-semibold" data-aos="fade-right">How It Works</p>
+          <ul className="ps-5 text-sm md:text-base" data-aos="fade-right"  data-aos-delay="150">
             <li>
               🔹 Bid on Coupons & Prizes – Users can place bids on available
               coupons and prizes in a live auction.{" "}
@@ -48,8 +48,8 @@ export default function AboutPage() {
           </ul>
         </div>
         <div className="mt-5 space-y-5">
-          <p className="text-lg md:text-2xl font-semibold">Why Choose Us?</p>
-          <ul className="space-y-3 ps-5 text-sm  md:text-base">
+          <p className="text-lg md:text-2xl font-semibold" data-aos="fade-right">Why Choose Us?</p>
+          <ul className="space-y-3 ps-5 text-sm  md:text-base" data-aos="fade-right"  data-aos-delay="150">
             <li>
               Real-Time Bidding: Engage in live auctions with a seamless
               experience.
@@ -73,8 +73,8 @@ export default function AboutPage() {
           </ul>
         </div>
         <div className="mt-5 space-y-5">
-          <p className="text-lg md:text-2xl font-semibold">Our Vision</p>
-          <p className="ps-5 text-sm md:text-base">
+          <p className="text-lg md:text-2xl font-semibold" data-aos="fade-right" >Our Vision</p>
+          <p className="ps-5 text-sm md:text-base" data-aos="fade-right"  data-aos-delay="150">
             Our mission is to redefine online auctions by making them more
             engaging, fair, and rewarding for all users. We aim to create a
             community where users enjoy the thrill of bidding while winning
@@ -82,10 +82,10 @@ export default function AboutPage() {
           </p>
         </div>
         <div className="mt-5 space-y-5">
-          <p className="text-lg md:text-2xl font-semibold">
+          <p className="text-lg md:text-2xl font-semibold" data-aos="fade-right" >
             Join the Auction Today!
           </p>
-          <p className="text-sm md:text-base">
+          <p className="text-sm md:text-base" data-aos="fade-right"  data-aos-delay="150">
             Ready to win exciting prizes and be part of the action? Sign up now
             and start bidding on your favorite coupons!
           </p>

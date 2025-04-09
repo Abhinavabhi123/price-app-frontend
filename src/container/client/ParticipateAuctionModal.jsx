@@ -83,7 +83,7 @@ export default function ParticipateAuctionModal(Props) {
             <button
               type="button"
               onClick={handleSubmit}
-              className="text-xs rounded-lg px-5 py-1  bg-admin-active-color shadow-xl mt-2 cursor-pointer"
+              className="text-xs rounded-lg px-5 py-1  bg-admin-active-color shadow-xl mt-2 cursor-pointer text-white"
             >
               Bid
             </button>

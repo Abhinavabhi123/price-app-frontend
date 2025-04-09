@@ -19,7 +19,7 @@ export default function Game() {
   }
 
   return (
-    <div className="w-screen h-dvh md:h-fit overflow-x-hidden bg-primary-color pb-20">
+    <div className="w-screen min-h-dvh md:h-fit overflow-x-hidden bg-primary-color pb-20">
       <Header />
       {/* card showing section */}
       {nextCard && Object.keys(nextCard).length > 0 ? (

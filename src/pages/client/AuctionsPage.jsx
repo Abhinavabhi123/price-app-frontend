@@ -29,6 +29,11 @@ export default function AuctionsPage() {
   const [modalOpen, setModalOpen] = useState(false);
   const [modalData, setModalData] = useState({});
   const [changed, setChanged] = useState(false);
+  const [isModalOpenGlobally, setIsModalOpenGlobally] = useState(false);
+
+  const [auctionModalOpen, setAuctionModalOpen] = useState(false);
+  const [auctionModalData, setAuctionModalData] = useState({});
+  
 
   const token = localStorage.getItem("PrizeUserTkn");
 
@@ -51,6 +56,7 @@ export default function AuctionsPage() {
   useEffect(() => {
     socket.on("bidUpdate", () => {
       setChanged((prev) => !prev);
+      closeAuctionModal()
     });
 
     socket.on("updateAuction", () => {
@@ -62,10 +68,16 @@ export default function AuctionsPage() {
     });
 
     socket.on("timerUpdate", ({ couponId, remainingTime }) => {
-      setTimers((prev) => ({
-        ...prev,
-        [couponId]: Math.floor(remainingTime / 1000),
-      }));
+      // setTimers((prev) => ({
+      //   ...prev,
+      //   [couponId]: Math.floor(remainingTime / 1000),
+      // }));
+      if (!isModalOpenGlobally) {
+        setTimers((prev) => ({
+          ...prev,
+          [couponId]: Math.floor(remainingTime / 1000),
+        }));
+      }
     });
 
     socket.on("clearTimer", () => {
@@ -85,12 +97,18 @@ export default function AuctionsPage() {
       socket.off("clearTimer");
       socket.off("auctionEnded");
     };
-  }, []);
+  }, [isModalOpenGlobally]);
+
+  function closeAuctionModal() {
+    setAuctionModalOpen(false);
+    setAuctionModalData({});
+    setIsModalOpenGlobally(false);
+  }
+  
 
   function AuctionCoupon(Props) {
-    const { coupon, timer } = Props;
-    const [auctionModalOpen, setAuctionModalOpen] = useState(false);
-    const [auctionModalData, setAuctionModalData] = useState({});
+    const { coupon, timer, setIsModalOpenGlobally } = Props;
+
 
     const formatTime = (seconds) => {
       const minutes = Math.floor(seconds / 60);
@@ -98,20 +116,11 @@ export default function AuctionsPage() {
       return `${minutes}:${secs < 10 ? "0" : ""}${secs}`;
     };
 
-    function closeAuctionModal() {
-      setAuctionModalOpen(false);
-      setAuctionModalData({});
-    }
+
 
     return (
       <div className="w-full md:max-w-72 min-h-20 relative h-fit px-2 pb-2  md:p-4  bg-gray-300/50 rounded-xl shadow-xl bg-opacity-25">
-        <ParticipateAuctionModal
-          isModalOpen={auctionModalOpen}
-          handleCancel={closeAuctionModal}
-          coupon={auctionModalData}
-          socket={socket}
-          token={token}
-        />
+       
         <p className="text-sm">ID :- {coupon?._id.slice(-8)}</p>
         <p className="text-sm hidden md:block">
           Price Money: {coupon?.couponCard?.priceMoney} Rs
@@ -157,7 +166,7 @@ export default function AuctionsPage() {
                   Date:-{coupon?.auctionDetails?.auction_date || ""}
                 </p>
               </div>
-              {timer != null ? (
+              {timer != null&& !auctionModalOpen ? (
                 <h1 className="text-white text-sm md:text-base">
                   Auction Timer: {formatTime(timer)}
                 </h1>
@@ -171,6 +180,7 @@ export default function AuctionsPage() {
                     onClick={() => {
                       setAuctionModalOpen(true);
                       setAuctionModalData(coupon);
+                      setIsModalOpenGlobally(true);
                     }}
                   >
                     Enter
@@ -200,6 +210,13 @@ export default function AuctionsPage() {
 
   return (
     <div className="w-screen h-dvh md:min-h-full overflow-x-hidden bg-primary-color pb-20">
+       <ParticipateAuctionModal
+          isModalOpen={auctionModalOpen}
+          handleCancel={closeAuctionModal}
+          coupon={auctionModalData}
+          socket={socket}
+          token={token}
+        />
       <Header />
       <div className="w-full h-fit px-10 md:px-28 mt-3">
         {auctionData && auctionData.length > 0 && (
@@ -219,7 +236,12 @@ export default function AuctionsPage() {
         <div className="w-full h-[65vh] flex flex-col gap-3 md:hidden bg-gray-800 overflow-y-scroll">
           {auctionData && auctionData.length > 0 ? (
             auctionData.map((coupon, index) => (
-              <AuctionCoupon coupon={coupon} key={index} timer={timers[coupon._id]} />
+              <AuctionCoupon
+                coupon={coupon}
+                key={index}
+                timer={timers[coupon._id]}
+                setIsModalOpenGlobally={setIsModalOpenGlobally}
+              />
             ))
           ) : (
             <div className="flex justify-center items-center w-full h-full">
@@ -231,7 +253,12 @@ export default function AuctionsPage() {
           {auctionData && auctionData.length > 0 ? (
             <div className="w-full h-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 place-items-center md:place-items-start">
               {auctionData.map((coupon, index) => (
-                <AuctionCoupon coupon={coupon} key={index} timer={timers[coupon._id]} />
+                <AuctionCoupon
+                  coupon={coupon}
+                  key={index}
+                  timer={timers[coupon._id]}
+                  setIsModalOpenGlobally={setIsModalOpenGlobally}
+                />
               ))}
             </div>
           ) : (
@@ -249,6 +276,7 @@ export default function AuctionsPage() {
             data={modalData}
             setChanged={setChanged}
           />
+
           {couponData.map((coupon, index) => {
             return (
               <div
