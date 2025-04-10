@@ -110,7 +110,7 @@ export default function ProfileUpdate(Props) {
                 value={values.location}
                 onChange={handleChange}
                 onBlur={handleBlur}
-                className="w-1/2 px-3 py-2 outline-none rounded-lg border border-admin-active-color"
+                className="w-full md:w-1/2 px-3 py-2 outline-none rounded-lg border border-admin-active-color"
               />
               <button type="button" className="p-2 relative">
                 <IoLocationSharp
@@ -140,7 +140,7 @@ export default function ProfileUpdate(Props) {
               value={values.age}
               onChange={handleChange}
               onBlur={handleBlur}
-              className="w-1/2 px-3 py-2 outline-none rounded-lg border border-admin-active-color"
+              className="w-full md:w-1/2 px-3 py-2 outline-none rounded-lg border border-admin-active-color"
             />
             {errors.age && touched.age && (
               <p className="text-xs text-red-500">{errors.age}</p>
@@ -152,7 +152,7 @@ export default function ProfileUpdate(Props) {
             Gender
           </label>
           <div>
-            <div className="w-1/2  border border-admin-active-color h-10 px-3 rounded-lg">
+            <div className="w-full md:w-1/2  border border-admin-active-color h-10 px-3 rounded-lg">
               <select
                 id="gender"
                 value={values.gender}
@@ -180,7 +180,7 @@ export default function ProfileUpdate(Props) {
             </div>
           </div>
         </div>
-        <div className="w-1/2 flex justify-center items-center gap-4">
+        <div className="w-full md:w-1/2 flex justify-center items-center gap-4">
           <button
             type="reset"
             disabled={isSubmitting}
